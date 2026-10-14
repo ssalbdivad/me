@@ -1,0 +1,369 @@
+/* ---------- talks ---------- */
+.talks {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 48px var(--gutter);
+}
+.talk {
+	display: grid;
+	align-content: start;
+	gap: 0;
+	min-width: 0;
+}
+.talk-media {
+	position: relative;
+	aspect-ratio: 16 / 9;
+	border-radius: 16px;
+	overflow: hidden;
+	background: var(--sunk);
+	box-shadow: 0 0 0 1px var(--rule-soft);
+}
+.talk-poster {
+	position: absolute;
+	inset: 0;
+	display: block;
+	color: #080d17;
+}
+.talk-poster img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: scale 0.46s var(--ease-out);
+}
+.talk-poster::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(transparent 40%, rgb(8 13 23 / 0.9));
+	pointer-events: none;
+}
+.talk-poster:hover img {
+	scale: 1.02;
+}
+.talk-poster:focus-visible {
+	outline-offset: -3px;
+	border-radius: 16px;
+}
+.talk-play {
+	position: absolute;
+	z-index: 1;
+	left: 50%;
+	top: 50%;
+	display: grid;
+	place-items: center;
+	width: 64px;
+	height: 64px;
+	margin: -32px 0 0 -32px;
+	border-radius: 50%;
+	background: #f5cf8f;
+	box-shadow: 0 8px 28px -8px rgb(245 207 143 / 0.6);
+	transition:
+		box-shadow 0.16s,
+		scale 0.16s var(--ease-out);
+}
+.talk-play svg {
+	width: 26px;
+	height: 26px;
+	margin-left: 3px;
+	fill: #080d17;
+}
+.talk-poster:hover .talk-play,
+.talk-poster:focus-visible .talk-play {
+	box-shadow:
+		0 0 0 8px rgb(245 207 143 / 0.15),
+		0 8px 28px -8px rgb(245 207 143 / 0.6);
+	scale: 1.04;
+}
+.talk-len,
+.talk-out {
+	position: absolute;
+	z-index: 1;
+	border-radius: 999px;
+	background: color-mix(in oklab, #111a2b 80%, transparent);
+	backdrop-filter: blur(8px);
+	color: #eeeeee;
+}
+.talk-len {
+	top: 12px;
+	right: 12px;
+	padding: 4px 10px;
+	font-size: 12.5px;
+	line-height: 1.3;
+}
+.talk-out {
+	left: 16px;
+	bottom: 16px;
+	display: inline-flex;
+	align-items: center;
+	height: 40px;
+	padding: 0 16px;
+	font: 700 15px / 1 var(--sans);
+	background: #f5cf8f;
+	color: #080d17;
+	box-shadow: 0 6px 20px -8px rgb(245 207 143 / 0.55);
+	transition: box-shadow 0.16s;
+}
+.talk-poster:hover .talk-out {
+	box-shadow:
+		0 0 0 4px rgb(245 207 143 / 0.16),
+		0 8px 24px -8px rgb(245 207 143 / 0.6);
+}
+.talk-frame {
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	width: 100%;
+	height: 100%;
+	border: 0;
+	opacity: 0;
+	transition: opacity 0.2s var(--ease-out);
+}
+.talk-frame[data-loaded="true"] {
+	opacity: 1;
+}
+.talk-title {
+	margin: 20px 0 0;
+	font-size: clamp(1.1875rem, 1.1rem + 0.35vw, 1.4375rem);
+	font-weight: 700;
+	line-height: 1.25;
+	letter-spacing: -0.015em;
+	text-wrap: balance;
+}
+.talk-meta {
+	margin: 8px 0 0;
+	font-size: 13.5px;
+	color: var(--copper);
+}
+.talk-cap {
+	margin: 12px 0 0;
+	max-width: 58ch;
+	color: var(--ink-2);
+	font-size: 16.5px;
+	line-height: 1.55;
+}
+.link-quiet {
+	transition: color 0.16s;
+}
+.link-quiet:hover {
+	color: var(--ink);
+}
+
+/* on mic + about it */
+.mic {
+	margin-top: 56px;
+	border-top: 1px solid var(--rule);
+}
+.mic-label {
+	margin: 18px 0 4px;
+	font-weight: 400;
+	font-size: 13.5px;
+	color: var(--ink-3);
+}
+.about-label {
+	margin-top: 28px;
+}
+.mic ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.mic-list li {
+	border-bottom: 1px solid var(--rule-soft);
+}
+.mic-list a {
+	display: grid;
+	grid-template-columns: minmax(0, 3.2fr) 80px minmax(0, 6fr);
+	gap: 4px var(--gutter);
+	align-items: baseline;
+	min-height: 52px;
+	padding: 14px 0;
+	box-sizing: border-box;
+	font: 400 14.5px / 1.45 var(--mono);
+	color: var(--ink-2);
+}
+.mic-show {
+	color: var(--ink);
+}
+.mic-len {
+	color: var(--gold);
+	text-align: right;
+}
+.mic-ch {
+	color: var(--sky);
+}
+.mic-list a:hover .mic-ch {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	text-decoration-thickness: 1px;
+}
+.nowrap {
+	white-space: nowrap;
+}
+.about {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0 28px;
+	font-size: 15px;
+	line-height: 1.7;
+}
+.about a {
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	color: var(--ink-2);
+	transition: color 0.16s;
+}
+.about a:hover {
+	color: var(--sky);
+}
+
+/* ---------- said: quotes typeset as string literals ---------- */
+.said {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 44px calc(var(--gutter) * 2);
+}
+.quote {
+	margin: 0;
+}
+.quote blockquote {
+	margin: 0;
+}
+.quote blockquote p {
+	margin: 0;
+	font: 500 20px / 1.45 var(--sans);
+	letter-spacing: -0.005em;
+	color: var(--gold);
+	text-wrap: pretty;
+}
+.q-mark {
+	font-family: var(--mono);
+	font-weight: 400;
+	color: var(--blue);
+}
+.quote blockquote p > .q-mark:first-child {
+	/* hang the opening mark so every line of the body aligns */
+	display: inline-block;
+	width: 0.6em;
+	margin-left: -0.6em;
+}
+.quote figcaption {
+	margin-top: 12px;
+	font-size: 13px;
+	line-height: 1.5;
+	color: var(--ink-3);
+}
+.quote figcaption .dash {
+	color: var(--copper);
+}
+.quote figcaption a {
+	color: var(--sky);
+}
+.quote figcaption a:hover {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+.said-self {
+	align-self: end;
+}
+.quote-self {
+	padding-top: 20px;
+	border-top: 1px solid var(--rule-soft);
+}
+.quote-self blockquote p {
+	font-size: 17px;
+}
+@media (pointer: coarse) {
+	/* source links sit in running text: grow the hit area without moving layout */
+	.quote figcaption a {
+		display: inline-block;
+		padding-block: 12px;
+		margin-block: -12px;
+	}
+}
+
+/* ---------- before ---------- */
+.bf-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border-top: 1px solid var(--rule);
+}
+.bf-list li {
+	display: grid;
+	grid-template-columns: 96px 120px minmax(0, 1fr);
+	gap: 4px var(--gutter);
+	align-items: baseline;
+	padding: 16px 0 18px;
+	border-bottom: 1px solid var(--rule-soft);
+}
+.bf-when {
+	font-size: 14px;
+	color: var(--ink-3);
+}
+.bf-what {
+	font-weight: 700;
+	color: var(--ink);
+}
+.bf-list p {
+	margin: 0;
+	max-width: 34em;
+	color: var(--ink-2);
+}
+
+@media (max-width: 760px) {
+	.talks {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 40px;
+	}
+	.talk-media,
+	.talk-poster:focus-visible {
+		border-radius: 12px;
+	}
+	.talk-cap {
+		font-size: 16px;
+	}
+	.mic-list a {
+		grid-template-columns: minmax(0, 1fr) auto;
+		font-size: 13.5px;
+	}
+	.about {
+		display: grid;
+		gap: 0;
+	}
+	.mic-ch {
+		grid-column: 1 / -1;
+	}
+	.said {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 32px;
+	}
+	.quote blockquote p {
+		font-size: 18px;
+	}
+	.quote-self blockquote p {
+		font-size: 16px;
+	}
+	.bf-list li {
+		grid-template-columns: 64px minmax(0, 1fr);
+	}
+	.bf-list p {
+		grid-column: 2;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.talk-poster img,
+	.talk-play {
+		transition: none;
+	}
+	.talk-poster:hover img,
+	.talk-poster:hover .talk-play,
+	.talk-poster:focus-visible .talk-play {
+		scale: none;
+	}
+}

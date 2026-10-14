@@ -1,0 +1,167 @@
+{
+	"fetchedAt": "2026-10-14T07:32:34.352Z",
+	"window": {
+		"start": "2026-09-13",
+		"end": "2026-10-12"
+	},
+	"npm": {
+		"arktype": {
+			"downloads": 9055997,
+			"monthly": [
+				{
+					"month": "2025-05",
+					"downloads": 1079784
+				},
+				{
+					"month": "2025-06",
+					"downloads": 1136590
+				},
+				{
+					"month": "2025-07",
+					"downloads": 1317906
+				},
+				{
+					"month": "2025-08",
+					"downloads": 1525720
+				},
+				{
+					"month": "2025-09",
+					"downloads": 1660025
+				},
+				{
+					"month": "2025-10",
+					"downloads": 1593099
+				},
+				{
+					"month": "2025-11",
+					"downloads": 1583369
+				},
+				{
+					"month": "2025-12",
+					"downloads": 1582438
+				},
+				{
+					"month": "2026-01",
+					"downloads": 2029134
+				},
+				{
+					"month": "2026-02",
+					"downloads": 2867300
+				},
+				{
+					"month": "2026-03",
+					"downloads": 4360752
+				},
+				{
+					"month": "2026-04",
+					"downloads": 3681352
+				},
+				{
+					"month": "2026-05",
+					"downloads": 4166260
+				},
+				{
+					"month": "2026-06",
+					"downloads": 4539070
+				},
+				{
+					"month": "2026-07",
+					"downloads": 5574421
+				},
+				{
+					"month": "2026-08",
+					"downloads": 7110764
+				},
+				{
+					"month": "2026-09",
+					"downloads": 8015499
+				}
+			]
+		},
+		"@standard-schema/spec": {
+			"downloads": 551490697,
+			"monthly": [
+				{
+					"month": "2025-05",
+					"downloads": 6640464
+				},
+				{
+					"month": "2025-06",
+					"downloads": 8883705
+				},
+				{
+					"month": "2025-07",
+					"downloads": 14057787
+				},
+				{
+					"month": "2025-08",
+					"downloads": 26052939
+				},
+				{
+					"month": "2025-09",
+					"downloads": 35413332
+				},
+				{
+					"month": "2025-10",
+					"downloads": 49554473
+				},
+				{
+					"month": "2025-11",
+					"downloads": 61839260
+				},
+				{
+					"month": "2025-12",
+					"downloads": 71818953
+				},
+				{
+					"month": "2026-01",
+					"downloads": 94261879
+				},
+				{
+					"month": "2026-02",
+					"downloads": 119024278
+				},
+				{
+					"month": "2026-03",
+					"downloads": 190484517
+				},
+				{
+					"month": "2026-04",
+					"downloads": 223130693
+				},
+				{
+					"month": "2026-05",
+					"downloads": 256260778
+				},
+				{
+					"month": "2026-06",
+					"downloads": 320353784
+				},
+				{
+					"month": "2026-07",
+					"downloads": 388578165
+				},
+				{
+					"month": "2026-08",
+					"downloads": 431093878
+				},
+				{
+					"month": "2026-09",
+					"downloads": 472411495
+				}
+			]
+		},
+		"@ark/attest": {
+			"downloads": 427538
+		},
+		"pullfrog": {
+			"downloads": 211712
+		}
+	},
+	"stars": {
+		"arktypeio/arktype": 7874,
+		"standard-schema/standard-schema": 3650,
+		"pullfrog/pullfrog": 1309
+	},
+	"followers": 404
+}

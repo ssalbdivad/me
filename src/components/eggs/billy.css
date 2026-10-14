@@ -1,0 +1,106 @@
+/* Billy peeks up from the bottom-right (egg: type `billy`, or the Konami code) */
+.billy {
+	--billy-ink: #eceae4;
+	--billy-acc: #5cb98d;
+	--billy-lens: #1d3129;
+	--billy-glint: #ffffff;
+	--billy-face: var(--raised);
+	--billy-cap: #1b4d99;
+	--billy-seam: rgb(255 255 255 / 0.22);
+	--billy-button: #ff6b2c;
+	position: fixed;
+	right: clamp(12px, 3vw, 40px);
+	bottom: -8px;
+	z-index: 90;
+	display: flex;
+	align-items: flex-end;
+	gap: 6px;
+	pointer-events: none;
+}
+:root[data-theme="light"] .billy {
+	--billy-ink: #191c1f;
+	--billy-acc: #2f7d5b;
+	--billy-lens: #eaf3ee;
+	--billy-seam: rgb(255 255 255 / 0.3);
+}
+.billy-head {
+	all: unset;
+	cursor: pointer;
+	pointer-events: auto;
+	display: block;
+	width: clamp(124px, 12.5vw, 168px);
+	filter: drop-shadow(0 18px 30px rgb(0 0 0 / 0.45));
+}
+.billy-head:focus-visible {
+	outline: 2px solid var(--blue);
+	outline-offset: 3px;
+	border-radius: 16px;
+}
+.billy-svg {
+	display: block;
+	width: 100%;
+	height: auto;
+	overflow: visible;
+}
+.billy-bubble {
+	pointer-events: auto;
+	position: relative;
+	margin: 0 -4px clamp(104px, 11vw, 140px) 0;
+	max-width: 230px;
+	padding: 12px 16px 13px;
+	border-radius: 14px 14px 4px 14px;
+	background: var(--popover-bg);
+	backdrop-filter: blur(14px) saturate(140%);
+	border: 1px solid var(--popover-border);
+	box-shadow: var(--shadow-pop);
+	font: 500 15.5px / 1.4 var(--sans);
+	color: var(--ink);
+	transform-origin: 100% 100%;
+	text-wrap: balance;
+}
+/* the tail, pointing down at Billy */
+.billy-bubble::after {
+	content: "";
+	position: absolute;
+	right: 18px;
+	bottom: -7px;
+	width: 12px;
+	height: 12px;
+	rotate: 45deg;
+	background: var(--raised);
+	border-right: 1px solid var(--popover-border);
+	border-bottom: 1px solid var(--popover-border);
+}
+.billy-link {
+	display: block;
+	margin-top: 6px;
+	font: 400 12.5px / 1.2 var(--mono);
+	color: var(--sky);
+}
+.billy-link:hover {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+.billy-sweep {
+	opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+	.billy-sweep {
+		animation: billy-glint 0.6s var(--ease-draw) 0.55s both;
+	}
+}
+@keyframes billy-glint {
+	0% {
+		opacity: 0.85;
+		translate: 0 0;
+	}
+	100% {
+		opacity: 0.85;
+		translate: 90px 0;
+	}
+}
+@media print {
+	.billy {
+		display: none;
+	}
+}

@@ -1,0 +1,564 @@
+{
+	"measuredAt": "2026-10-13T22:41:25.339Z",
+	"attest": "0.57.0",
+	"results": {
+		"5.8.2": {
+			"functional": [
+				{
+					"keys": 2,
+					"calls": 1,
+					"instantiations": 30,
+					"ts2589": false
+				},
+				{
+					"keys": 3,
+					"calls": 2,
+					"instantiations": 77,
+					"ts2589": false
+				},
+				{
+					"keys": 4,
+					"calls": 3,
+					"instantiations": 163,
+					"ts2589": false
+				},
+				{
+					"keys": 5,
+					"calls": 4,
+					"instantiations": 360,
+					"ts2589": false
+				},
+				{
+					"keys": 6,
+					"calls": 5,
+					"instantiations": 884,
+					"ts2589": false
+				},
+				{
+					"keys": 7,
+					"calls": 6,
+					"instantiations": 2383,
+					"ts2589": false
+				},
+				{
+					"keys": 8,
+					"calls": 7,
+					"instantiations": 6801,
+					"ts2589": false
+				},
+				{
+					"keys": 9,
+					"calls": 8,
+					"instantiations": 19970,
+					"ts2589": false
+				},
+				{
+					"keys": 10,
+					"calls": 9,
+					"instantiations": 59386,
+					"ts2589": false
+				},
+				{
+					"keys": 11,
+					"calls": 10,
+					"instantiations": 177537,
+					"ts2589": false
+				},
+				{
+					"keys": 12,
+					"calls": 11,
+					"instantiations": 531887,
+					"ts2589": false
+				},
+				{
+					"keys": 13,
+					"calls": 12,
+					"instantiations": 1594828,
+					"ts2589": false
+				},
+				{
+					"keys": 14,
+					"calls": 13,
+					"instantiations": 4783536,
+					"ts2589": false
+				},
+				{
+					"keys": 15,
+					"calls": 14,
+					"instantiations": 14349539,
+					"ts2589": false
+				},
+				{
+					"keys": 16,
+					"calls": 15,
+					"instantiations": 24349567,
+					"ts2589": true
+				}
+			],
+			"chained": [
+				{
+					"keys": 2,
+					"calls": 1,
+					"instantiations": 98,
+					"ts2589": false
+				},
+				{
+					"keys": 3,
+					"calls": 2,
+					"instantiations": 250,
+					"ts2589": false
+				},
+				{
+					"keys": 4,
+					"calls": 3,
+					"instantiations": 524,
+					"ts2589": false
+				},
+				{
+					"keys": 5,
+					"calls": 4,
+					"instantiations": 1136,
+					"ts2589": false
+				},
+				{
+					"keys": 6,
+					"calls": 5,
+					"instantiations": 2734,
+					"ts2589": false
+				},
+				{
+					"keys": 7,
+					"calls": 6,
+					"instantiations": 7262,
+					"ts2589": false
+				},
+				{
+					"keys": 8,
+					"calls": 7,
+					"instantiations": 20552,
+					"ts2589": false
+				},
+				{
+					"keys": 9,
+					"calls": 8,
+					"instantiations": 60100,
+					"ts2589": false
+				},
+				{
+					"keys": 10,
+					"calls": 9,
+					"instantiations": 178394,
+					"ts2589": false
+				},
+				{
+					"keys": 11,
+					"calls": 10,
+					"instantiations": 532898,
+					"ts2589": false
+				},
+				{
+					"keys": 12,
+					"calls": 11,
+					"instantiations": 1596004,
+					"ts2589": false
+				},
+				{
+					"keys": 13,
+					"calls": 12,
+					"instantiations": 4784888,
+					"ts2589": false
+				},
+				{
+					"keys": 14,
+					"calls": 13,
+					"instantiations": 9785026,
+					"ts2589": true
+				},
+				{
+					"keys": 15,
+					"calls": 14,
+					"instantiations": 14785170,
+					"ts2589": true
+				},
+				{
+					"keys": 16,
+					"calls": 15,
+					"instantiations": 14785298,
+					"ts2589": true
+				}
+			]
+		},
+		"5.9.3": {
+			"functional": [
+				{
+					"keys": 2,
+					"calls": 1,
+					"instantiations": 14,
+					"ts2589": false
+				},
+				{
+					"keys": 3,
+					"calls": 2,
+					"instantiations": 33,
+					"ts2589": false
+				},
+				{
+					"keys": 4,
+					"calls": 3,
+					"instantiations": 55,
+					"ts2589": false
+				},
+				{
+					"keys": 5,
+					"calls": 4,
+					"instantiations": 80,
+					"ts2589": false
+				},
+				{
+					"keys": 6,
+					"calls": 5,
+					"instantiations": 108,
+					"ts2589": false
+				},
+				{
+					"keys": 7,
+					"calls": 6,
+					"instantiations": 139,
+					"ts2589": false
+				},
+				{
+					"keys": 8,
+					"calls": 7,
+					"instantiations": 173,
+					"ts2589": false
+				},
+				{
+					"keys": 9,
+					"calls": 8,
+					"instantiations": 210,
+					"ts2589": false
+				},
+				{
+					"keys": 10,
+					"calls": 9,
+					"instantiations": 250,
+					"ts2589": false
+				},
+				{
+					"keys": 11,
+					"calls": 10,
+					"instantiations": 293,
+					"ts2589": false
+				},
+				{
+					"keys": 12,
+					"calls": 11,
+					"instantiations": 339,
+					"ts2589": false
+				},
+				{
+					"keys": 13,
+					"calls": 12,
+					"instantiations": 388,
+					"ts2589": false
+				},
+				{
+					"keys": 14,
+					"calls": 13,
+					"instantiations": 440,
+					"ts2589": false
+				},
+				{
+					"keys": 15,
+					"calls": 14,
+					"instantiations": 495,
+					"ts2589": false
+				},
+				{
+					"keys": 16,
+					"calls": 15,
+					"instantiations": 553,
+					"ts2589": false
+				}
+			],
+			"chained": [
+				{
+					"keys": 2,
+					"calls": 1,
+					"instantiations": 36,
+					"ts2589": false
+				},
+				{
+					"keys": 3,
+					"calls": 2,
+					"instantiations": 85,
+					"ts2589": false
+				},
+				{
+					"keys": 4,
+					"calls": 3,
+					"instantiations": 144,
+					"ts2589": false
+				},
+				{
+					"keys": 5,
+					"calls": 4,
+					"instantiations": 213,
+					"ts2589": false
+				},
+				{
+					"keys": 6,
+					"calls": 5,
+					"instantiations": 292,
+					"ts2589": false
+				},
+				{
+					"keys": 7,
+					"calls": 6,
+					"instantiations": 381,
+					"ts2589": false
+				},
+				{
+					"keys": 8,
+					"calls": 7,
+					"instantiations": 480,
+					"ts2589": false
+				},
+				{
+					"keys": 9,
+					"calls": 8,
+					"instantiations": 589,
+					"ts2589": false
+				},
+				{
+					"keys": 10,
+					"calls": 9,
+					"instantiations": 708,
+					"ts2589": false
+				},
+				{
+					"keys": 11,
+					"calls": 10,
+					"instantiations": 837,
+					"ts2589": false
+				},
+				{
+					"keys": 12,
+					"calls": 11,
+					"instantiations": 976,
+					"ts2589": false
+				},
+				{
+					"keys": 13,
+					"calls": 12,
+					"instantiations": 1125,
+					"ts2589": false
+				},
+				{
+					"keys": 14,
+					"calls": 13,
+					"instantiations": 1284,
+					"ts2589": false
+				},
+				{
+					"keys": 15,
+					"calls": 14,
+					"instantiations": 1453,
+					"ts2589": false
+				},
+				{
+					"keys": 16,
+					"calls": 15,
+					"instantiations": 1632,
+					"ts2589": false
+				}
+			]
+		},
+		"6.0.3": {
+			"functional": [
+				{
+					"keys": 2,
+					"calls": 1,
+					"instantiations": 14,
+					"ts2589": false
+				},
+				{
+					"keys": 3,
+					"calls": 2,
+					"instantiations": 33,
+					"ts2589": false
+				},
+				{
+					"keys": 4,
+					"calls": 3,
+					"instantiations": 55,
+					"ts2589": false
+				},
+				{
+					"keys": 5,
+					"calls": 4,
+					"instantiations": 80,
+					"ts2589": false
+				},
+				{
+					"keys": 6,
+					"calls": 5,
+					"instantiations": 108,
+					"ts2589": false
+				},
+				{
+					"keys": 7,
+					"calls": 6,
+					"instantiations": 139,
+					"ts2589": false
+				},
+				{
+					"keys": 8,
+					"calls": 7,
+					"instantiations": 173,
+					"ts2589": false
+				},
+				{
+					"keys": 9,
+					"calls": 8,
+					"instantiations": 210,
+					"ts2589": false
+				},
+				{
+					"keys": 10,
+					"calls": 9,
+					"instantiations": 250,
+					"ts2589": false
+				},
+				{
+					"keys": 11,
+					"calls": 10,
+					"instantiations": 293,
+					"ts2589": false
+				},
+				{
+					"keys": 12,
+					"calls": 11,
+					"instantiations": 339,
+					"ts2589": false
+				},
+				{
+					"keys": 13,
+					"calls": 12,
+					"instantiations": 388,
+					"ts2589": false
+				},
+				{
+					"keys": 14,
+					"calls": 13,
+					"instantiations": 440,
+					"ts2589": false
+				},
+				{
+					"keys": 15,
+					"calls": 14,
+					"instantiations": 495,
+					"ts2589": false
+				},
+				{
+					"keys": 16,
+					"calls": 15,
+					"instantiations": 553,
+					"ts2589": false
+				}
+			],
+			"chained": [
+				{
+					"keys": 2,
+					"calls": 1,
+					"instantiations": 36,
+					"ts2589": false
+				},
+				{
+					"keys": 3,
+					"calls": 2,
+					"instantiations": 85,
+					"ts2589": false
+				},
+				{
+					"keys": 4,
+					"calls": 3,
+					"instantiations": 144,
+					"ts2589": false
+				},
+				{
+					"keys": 5,
+					"calls": 4,
+					"instantiations": 213,
+					"ts2589": false
+				},
+				{
+					"keys": 6,
+					"calls": 5,
+					"instantiations": 292,
+					"ts2589": false
+				},
+				{
+					"keys": 7,
+					"calls": 6,
+					"instantiations": 381,
+					"ts2589": false
+				},
+				{
+					"keys": 8,
+					"calls": 7,
+					"instantiations": 480,
+					"ts2589": false
+				},
+				{
+					"keys": 9,
+					"calls": 8,
+					"instantiations": 589,
+					"ts2589": false
+				},
+				{
+					"keys": 10,
+					"calls": 9,
+					"instantiations": 708,
+					"ts2589": false
+				},
+				{
+					"keys": 11,
+					"calls": 10,
+					"instantiations": 837,
+					"ts2589": false
+				},
+				{
+					"keys": 12,
+					"calls": 11,
+					"instantiations": 976,
+					"ts2589": false
+				},
+				{
+					"keys": 13,
+					"calls": 12,
+					"instantiations": 1125,
+					"ts2589": false
+				},
+				{
+					"keys": 14,
+					"calls": 13,
+					"instantiations": 1284,
+					"ts2589": false
+				},
+				{
+					"keys": 15,
+					"calls": 14,
+					"instantiations": 1453,
+					"ts2589": false
+				},
+				{
+					"keys": 16,
+					"calls": 15,
+					"instantiations": 1632,
+					"ts2589": false
+				}
+			]
+		}
+	}
+}

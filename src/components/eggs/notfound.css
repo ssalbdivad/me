@@ -1,0 +1,324 @@
+/* the 404 page: your URL, parsed by ArkType */
+.nf {
+	display: block;
+	min-height: calc(100dvh - 72px - 220px);
+}
+.nf-inner {
+	max-width: 760px;
+	padding-top: clamp(40px, 9vh, 112px);
+	display: grid;
+	gap: 18px;
+	justify-items: start;
+}
+.nf-title {
+	margin: 0;
+	font-size: clamp(2.75rem, 1.9rem + 3.4vw, 4.75rem);
+	font-weight: 800;
+	letter-spacing: -0.04em;
+	line-height: 0.98;
+}
+.nf-deck {
+	margin: 0;
+	max-width: 46ch;
+	color: var(--ink-2);
+	font-size: var(--fs-lede);
+	line-height: 1.4;
+}
+.nf-deck code {
+	color: var(--gold);
+	font-size: 0.9em;
+}
+
+/* the card: same surface language as the hero code card */
+.nf-card {
+	justify-self: stretch;
+	position: relative;
+	margin: 18px 0 0;
+	border-radius: 16px;
+	isolation: isolate;
+	background: linear-gradient(
+		180deg,
+		color-mix(in oklab, var(--surface) 92%, var(--blue) 8%),
+		var(--surface)
+	);
+	border: 1px solid var(--rule);
+	box-shadow:
+		0 1px 0 rgb(255 255 255 / 0.04) inset,
+		0 30px 60px -30px rgb(0 0 0 / 0.7),
+		0 0 80px -30px rgb(149 88 248 / 0.35);
+}
+:root[data-theme="light"] .nf-card {
+	/* the dark card's blue-mixed gradient reads grey-green on parchment */
+	background: linear-gradient(180deg, var(--raised), var(--surface));
+	box-shadow:
+		0 30px 60px -36px rgb(20 33 61 / 0.35),
+		0 0 0 1px rgb(20 33 61 / 0.04);
+}
+.nf-card::before {
+	content: "";
+	position: absolute;
+	inset: -1px;
+	border-radius: inherit;
+	padding: 1px;
+	z-index: -1;
+	pointer-events: none;
+	background: linear-gradient(
+		160deg,
+		color-mix(in oklab, var(--violet) 55%, transparent),
+		transparent 35%,
+		transparent 70%,
+		color-mix(in oklab, var(--sky) 30%, transparent)
+	);
+	-webkit-mask:
+		linear-gradient(#000 0 0) content-box,
+		linear-gradient(#000 0 0);
+	-webkit-mask-composite: xor;
+	mask-composite: exclude;
+}
+.nf-card figcaption {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 14px 20px;
+	border-bottom: 1px solid var(--rule-soft);
+	font: 400 12.5px / 1.2 var(--mono);
+	color: var(--ink-3);
+}
+/* the no-JS card shows the prerendered example, not the visitor's URL */
+html:not(.js) .nf-js,
+html.js .nf-nojs {
+	display: none;
+}
+.nf-card figcaption b {
+	font-weight: 400;
+	color: var(--ink-2);
+}
+.nf-code {
+	padding: 26px 24px 24px;
+	display: grid;
+	gap: 6px;
+}
+.nf-line {
+	font-size: clamp(20px, 1rem + 1.6vw, 32px);
+	line-height: 1.45;
+	overflow-wrap: anywhere;
+	color: var(--ink);
+}
+.nf-fn {
+	font-family: var(--cursive);
+	font-style: italic;
+	font-feature-settings: "ss01";
+	color: var(--sky);
+}
+.nf-p {
+	color: var(--gold);
+}
+.nf-src,
+.nf-str {
+	color: var(--gold);
+}
+:root[data-theme="light"] .nf-src,
+:root[data-theme="light"] .nf-str {
+	color: #844c13;
+}
+
+/* ArkType's errorSquiggle, drawn left→right like the editor reporting it */
+.nf-src {
+	position: relative;
+	display: inline-block;
+	max-width: 100%;
+}
+.nf-src.nf-err::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -2px;
+	height: 4px;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 3' width='6' height='3'%3E%3Cg fill='%239558f8'%3E%3Cpolygon points='5.5,0 2.5,3 1.1,3 4.1,0'/%3E%3Cpolygon points='4,0 6,2 6,0.6 5.4,0'/%3E%3Cpolygon points='0,2 1,3 2.4,3 0,0.6'/%3E%3C/g%3E%3C/svg%3E")
+		repeat-x left bottom / 8px 4px;
+}
+.nf-new {
+	display: inline-block;
+	color: var(--teal);
+}
+.nf-status {
+	margin: 0;
+	min-height: 1.6em;
+	font: 400 15px / 1.6 var(--mono);
+	overflow-wrap: anywhere;
+}
+.nf-status.err {
+	color: var(--violet-text);
+}
+.nf-status.err::before {
+	content: "✕ ";
+	color: var(--violet);
+}
+.nf-status.ok {
+	color: var(--teal);
+}
+/* held until arktype has parsed the real path (set before paint) */
+.nf-card[data-pending] .nf-status {
+	visibility: hidden;
+}
+.nf-card[data-pending] .nf-src.nf-err::after {
+	visibility: hidden;
+}
+.nf-fixed {
+	display: grid;
+	gap: 6px;
+	margin-top: 14px;
+	padding-top: 18px;
+	border-top: 1px dashed var(--rule);
+}
+.nf-check {
+	font-size: clamp(15px, 0.8rem + 0.6vw, 19px);
+}
+.nf-eg {
+	font-size: 13.5px;
+	color: var(--ink-3);
+}
+.nf-static .code pre.shiki {
+	font-size: 17px;
+	padding-bottom: 64px;
+}
+.nf-static .code .twoslash-popup-container {
+	max-width: min(440px, calc(100vw - 150px));
+}
+
+.nf-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-top: 10px;
+}
+.nf-actions .btn {
+	height: 48px;
+	padding: 0 22px;
+	font-size: 16.5px;
+}
+.nf-add {
+	font-family: var(--mono);
+	font-weight: 600;
+}
+.nf-add:disabled {
+	opacity: 0.6;
+	cursor: progress;
+}
+.nf-verdict {
+	margin: 0;
+	max-width: 52ch;
+	font-size: 19px;
+	line-height: 1.6;
+	color: var(--ink);
+	text-wrap: pretty;
+}
+/* focused programmatically after "add the slash"; it's text, not a control */
+.nf-verdict:focus {
+	outline: none;
+}
+.nf-resume {
+	margin: 0;
+	/* the // hangs, so a wrapped line lines up with the text after it */
+	padding-left: 3ch;
+	text-indent: -3ch;
+	font-size: 14px;
+	color: var(--ink-2);
+}
+.nf-fact {
+	margin: 24px 0 0;
+	font-size: 13px;
+	line-height: 1.7;
+	color: var(--ink-3);
+}
+.nf-fact .nf-comment {
+	display: block;
+	/* mono, so 3ch is exactly "// " */
+	padding-left: 3ch;
+	text-indent: -3ch;
+}
+.nf-fact .link {
+	color: inherit;
+	text-decoration-color: color-mix(in oklab, var(--ink-3) 40%, transparent);
+}
+.nf-fact b {
+	font-weight: 400;
+	color: var(--gold);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.nf-src.nf-err::after {
+		animation: nf-squiggle 0.18s var(--ease-out) 0.05s both;
+	}
+	.nf-status {
+		animation: nf-in 0.28s var(--ease-out) both;
+	}
+	.nf-new {
+		animation: nf-pop 0.46s var(--ease-pop) both;
+	}
+	.nf-fixed {
+		animation: nf-in 0.32s var(--ease-out) both;
+	}
+	.nf-fixed > :nth-child(2) {
+		animation-delay: 0.12s;
+	}
+	.nf-fixed > :nth-child(3) {
+		animation-delay: 0.24s;
+	}
+	.nf-verdict:not(:empty) {
+		animation: nf-in 0.4s var(--ease-out) 0.3s both;
+	}
+}
+@keyframes nf-squiggle {
+	from {
+		clip-path: inset(0 100% 0 0);
+	}
+	to {
+		clip-path: inset(0 0 0 0);
+	}
+}
+@keyframes nf-in {
+	from {
+		opacity: 0;
+		translate: 0 6px;
+	}
+}
+@keyframes nf-pop {
+	0% {
+		scale: 0.2;
+		translate: 0 -0.4em;
+		opacity: 0;
+	}
+	60% {
+		scale: 1.35;
+		opacity: 1;
+	}
+	100% {
+		scale: 1;
+		translate: 0 0;
+	}
+}
+
+@media (max-width: 760px) {
+	.nf-card figcaption > span:last-child {
+		display: none;
+	}
+	.nf-code {
+		padding: 20px 18px;
+	}
+	.nf-static .code pre.shiki {
+		font-size: 14px;
+		padding-bottom: 92px;
+	}
+	.nf-status {
+		font-size: 14px;
+	}
+	.nf-verdict {
+		font-size: 17px;
+	}
+	.nf-actions .btn {
+		flex: 1 1 auto;
+		justify-content: center;
+	}
+}

@@ -1,17 +1,54 @@
 {
-  "name": "me",
-  "type": "module",
-  "version": "0.0.1",
-  "engines": {
-    "node": ">=22.12.0"
-  },
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "astro": "^7.3.8"
-  }
+	"name": "me",
+	"private": true,
+	"type": "module",
+	"packageManager": "pnpm@10.18.2",
+	"engines": {
+		"node": ">=22.18.0"
+	},
+	"scripts": {
+		"dev": "vite dev",
+		"build": "node scripts/prebuild.ts && vite build",
+		"preview": "node scripts/serve.ts",
+		"stats": "node scripts/stats.ts",
+		"snippets": "node scripts/snippets.ts",
+		"typecheck": "node node_modules/tsgo/bin/tsc --noEmit",
+		"bench": "node bench/merge-chain/run.ts",
+		"format": "prettier --write .",
+		"format:check": "prettier --check ."
+	},
+	"dependencies": {
+		"@fontsource-variable/atkinson-hyperlegible-next": "5.3.0",
+		"@fontsource-variable/cascadia-code": "5.3.0",
+		"@tanstack/react-router": "1.170.44",
+		"@tanstack/react-start": "1.169.1",
+		"arkregex": "0.0.13",
+		"arktype": "2.2.8",
+		"motion": "14.2.0",
+		"react": "19.3.0",
+		"react-dom": "19.3.0"
+	},
+	"devDependencies": {
+		"@shikijs/twoslash": "4.5.0",
+		"@tailwindcss/vite": "4.3.3",
+		"@types/node": "26.6.5",
+		"@types/react": "19.3.0",
+		"@types/react-dom": "19.3.0",
+		"@vitejs/plugin-react": "6.1.2",
+		"oxc-transform-react": "0.152.0",
+		"playwright": "1.64.0",
+		"prettier": "3.6.2",
+		"shiki": "4.5.0",
+		"tailwindcss": "4.3.3",
+		"tsgo": "npm:typescript@7.0.2",
+		"typescript": "6.0.3",
+		"vite": "8.3.4"
+	},
+	"prettier": {
+		"useTabs": true,
+		"semi": false,
+		"trailingComma": "none",
+		"experimentalTernaries": true,
+		"arrowParens": "avoid"
+	}
 }

@@ -1,0 +1,496 @@
+/*
+ * Cmd+P is a résumé: ArkLight ink on paper, the static numbers and the
+ * prose, no islands. Charts, posters, the replay and the code card are
+ * screen-only; their words (h3s, credit lines, captions) stay.
+ */
+@media print {
+	@page {
+		size: letter;
+		margin: 0.4in 0.45in 0.45in;
+	}
+
+	/* ArkLight, whatever theme was on screen (html:root outranks the token blocks) */
+	html:root,
+	html:root[data-theme] {
+		color-scheme: light;
+		--bg: #ffffff;
+		--sunk: #ffffff;
+		--surface: #ffffff;
+		--raised: #ffffff;
+		--ink: #14213d;
+		--ink-2: #2e4775;
+		--ink-3: #5e5e70;
+		--gold: #844c13;
+		--gold-hi: #844c13;
+		--copper: #9a5a17;
+		--teal: #03776b;
+		--sky: #0063b1;
+		--blue: #07538e;
+		--violet-text: #6d35d6;
+		--before: #7d45e0;
+		--after: #04968a;
+		--rule: #e3d7b8;
+		--rule-soft: #eee6cf;
+		--glow-a: transparent;
+		--glow-b: transparent;
+		--grain: 0;
+		--fs-display: 30pt;
+		--fs-h2: 15pt;
+		--fs-h3: 11.5pt;
+		--fs-lede: 12pt;
+		--fs-body: 9.5pt;
+		--fs-stat: 20pt;
+		--margin: 0px;
+		--gutter: 14px;
+	}
+	html,
+	body {
+		background: #ffffff !important;
+		color: var(--ink);
+	}
+	body {
+		font-size: 9.5pt;
+		line-height: 1.45;
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+	}
+	body::before {
+		display: none;
+	}
+	/* nothing moves on paper */
+	*,
+	*::before,
+	*::after {
+		animation: none !important;
+		transition: none !important;
+	}
+	[data-reveal],
+	[data-reveal] > *,
+	.rise,
+	.rise-fade {
+		opacity: 1 !important;
+		translate: none !important;
+	}
+
+	/* screen-only: chrome, islands, media, popovers */
+	.nav,
+	.skip,
+	.codecard,
+	.spark,
+	.boat-lane,
+	.theme-toggle,
+	.footer,
+	.billy,
+	[popover],
+	.qi,
+	.twoslash-popup-container,
+	details,
+	iframe,
+	video,
+	button:not(.tok),
+	.w-extra,
+	#arc,
+	figure.merge,
+	figure.payoffs,
+	figure.trace,
+	.dumbbells,
+	.replay-block,
+	.talk-media,
+	#said,
+	.contact-ctas .copy,
+	/* pull quotes, Prisma's included: with them the page runs to a third sheet */
+	.case-quote,
+	.case-foot,
+	.trace-foot,
+	.talk-cap,
+	.mic,
+	.nf-actions,
+	.nf-card,
+	/* "(That's it up top.)" points at the code card, which paper doesn't have */
+	.w-pitch a[href="#top"] {
+		display: none !important;
+	}
+
+	/* claim tokens read as plain numbers */
+	.tok {
+		text-decoration: none !important;
+		background: none !important;
+		color: inherit;
+	}
+
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+	.link {
+		color: var(--sky);
+	}
+	.ext::after {
+		content: none;
+	}
+	/* the URLs a reader of paper needs: the social links print theirs; the
+	   hero's buttons become one contact line */
+	.socials a[href^="https://github.com/ssalbdivad"]::after,
+	.socials a[href^="https://www.linkedin.com/in/ssalbdivad"]::after
+	{
+		font: 400 0.85em / 1 var(--mono);
+		color: var(--ink-3);
+		margin-left: 0.4em;
+	}
+	.socials a[href^="https://github.com/ssalbdivad"]::after
+	{
+		content: "github.com/ssalbdivad";
+	}
+	.socials a[href^="https://www.linkedin.com/in/ssalbdivad"]::after
+	{
+		content: "linkedin.com/in/ssalbdivad";
+	}
+	.ctas {
+		display: none !important;
+	}
+	.hero-text::after {
+		/* also where the paper came from: the sourced version is a URL away */
+		content: "david@arktype.io · github.com/ssalbdivad · linkedin.com/in/ssalbdivad · every number with its source: ssalbdivad.com/resume.md";
+		font: 400 8.5pt / 1.4 var(--mono);
+		color: var(--ink-2);
+	}
+	/* hero buttons print as text */
+	.btn {
+		all: unset;
+		font-weight: 700;
+		color: var(--ink);
+	}
+	.btn svg,
+	.ctas svg,
+	.socials svg {
+		display: none;
+	}
+
+	/* one body size and one annotation size, whatever each section uses on screen */
+	main p,
+	main li,
+	main dd,
+	main blockquote,
+	.sec-deck,
+	.perf-epigraph,
+	.perf-lede,
+	.agents-intro,
+	.case-text p,
+	.w-pitch,
+	.pull blockquote,
+	.quote blockquote {
+		font-size: 9pt !important;
+		line-height: 1.32 !important;
+		max-width: none !important;
+	}
+	main .mono,
+	.sec-label,
+	.w-role,
+	.w-links,
+	.case-meta,
+	.stat .src,
+	.badges,
+	.roles dt {
+		font-size: 7.5pt !important;
+		line-height: 1.4 !important;
+	}
+
+	/* layout: one column, tight rhythm */
+	.wrap {
+		padding-inline: 0 !important;
+	}
+	.block {
+		padding-top: 9pt !important;
+	}
+	/* label and title on one line */
+	.sec-head {
+		display: flex !important;
+		flex-wrap: wrap;
+		align-items: baseline;
+		margin-bottom: 6pt !important;
+		gap: 2pt 8pt !important;
+	}
+	.sec-head > .sec-deck,
+	.sec-head > div {
+		flex-basis: 100%;
+	}
+	.sec-label {
+		font-size: 7.5pt;
+	}
+	.sec-deck {
+		font-size: 9.5pt;
+		max-width: none;
+	}
+	.h2 {
+		font-size: 13.5pt !important;
+		letter-spacing: -0.02em;
+	}
+	.h3 {
+		font-size: 10.5pt !important;
+		max-width: none !important;
+	}
+	h2,
+	h3,
+	.sec-head {
+		break-after: avoid;
+		break-inside: avoid;
+	}
+	.w-row,
+	li,
+	figure,
+	blockquote,
+	.stats,
+	.case-text h3 {
+		break-inside: avoid;
+	}
+	p {
+		orphans: 3;
+		widows: 3;
+	}
+
+	/* hero */
+	.hero {
+		display: block !important;
+		padding-top: 0 !important;
+		min-height: 0 !important;
+	}
+	.hero-text {
+		display: grid;
+		gap: 6pt;
+	}
+	.display {
+		font-size: 30pt !important;
+		margin: 0;
+	}
+	.lede {
+		font-size: 12pt !important;
+		max-width: none;
+	}
+	.avatar {
+		width: 24px;
+		height: 24px;
+	}
+	.roles {
+		gap: 0 8pt !important;
+		margin: 2pt 0 0 !important;
+		font-size: 9pt !important;
+	}
+	.roles dt,
+	.roles dd {
+		line-height: 1.45 !important;
+	}
+	.roles dd,
+	.roles dd * {
+		font-size: 9pt !important;
+	}
+	.ctas {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4pt 16pt;
+		margin: 0;
+	}
+	.stats {
+		display: grid !important;
+		grid-template-columns: repeat(4, 1fr) !important;
+		gap: 0 12pt;
+		margin-top: 12pt;
+		padding-top: 8pt;
+	}
+	.stat {
+		padding: 0 !important;
+		border: 0 !important;
+		min-height: 0 !important;
+	}
+	.stat .num,
+	.stat .val {
+		font-size: 20pt !important;
+	}
+	.stat .lbl {
+		font-size: 8.5pt;
+		margin: 2pt 0;
+	}
+	.stat .src {
+		font-size: 7pt;
+	}
+
+	/* work rows: a name column (name, role, link, metrics) beside the pitch */
+	.w-list,
+	.w-family {
+		gap: 0 !important;
+	}
+	.w-family::before {
+		display: none !important;
+	}
+	.w-row {
+		display: block !important;
+	}
+	.w-main,
+	.w-row[data-child] .w-main {
+		display: grid !important;
+		grid-template-columns: 1.9in minmax(0, 1fr) !important;
+		grid-template-areas: "head pitch" "metrics pitch";
+		align-content: start;
+		column-gap: 14pt !important;
+		row-gap: 3pt !important;
+		padding: 6pt 0 !important;
+	}
+	.w-main::before,
+	.w-idx {
+		display: none !important;
+	}
+	.w-row[data-child] .w-main {
+		padding-left: 10pt !important;
+	}
+	.w-head {
+		grid-area: head;
+		grid-column: auto !important;
+	}
+	.w-pitch {
+		grid-area: pitch;
+		grid-column: auto !important;
+		margin: 0 !important;
+	}
+	.w-metrics {
+		grid-area: metrics;
+		grid-column: auto !important;
+		display: grid !important;
+		grid-template-columns: 1fr 1fr !important;
+		gap: 6pt !important;
+		margin: 0 !important;
+		padding: 0 !important;
+	}
+	.w-name,
+	.w-row[data-child] .w-name {
+		font-size: 13pt !important;
+		line-height: 1.15 !important;
+	}
+	.w-role,
+	.w-links {
+		margin: 1pt 0 0 !important;
+	}
+	/* a child row's links (launch post, docs, videos) mean nothing on paper */
+	.w-row[data-child] .w-links {
+		display: none !important;
+	}
+	.w-metric {
+		margin: 0 !important;
+	}
+	.w-mv,
+	.w-row[data-child] .w-mv {
+		font-size: 11pt !important;
+		line-height: 1.2 !important;
+	}
+	.w-metric .w-ml {
+		font-size: 6.5pt !important;
+		white-space: nowrap !important;
+	}
+	.w-used {
+		margin-top: 2pt !important;
+		font-size: 8.5pt !important;
+	}
+
+	/* perf: the words of each case, not the charts */
+	.perf-epigraph,
+	.badges {
+		display: none !important;
+	}
+	.case {
+		padding: 4pt 0 !important;
+		margin: 0 !important;
+		border: 0 !important;
+		border-top: 1px solid var(--rule) !important;
+		border-radius: 0 !important;
+		background: none !important;
+		box-shadow: none !important;
+	}
+	.case-text {
+		gap: 4pt !important;
+		break-inside: avoid;
+	}
+	.case-text p,
+	.case-cols p {
+		margin: 0 0 4pt !important;
+	}
+	.case-cols,
+	.case-split {
+		columns: 1 !important;
+		display: block !important;
+	}
+	.credit {
+		margin: 2pt 0 0 !important;
+		padding: 0 !important;
+		border: 0 !important;
+		font-size: 8pt !important;
+	}
+	.pull {
+		margin: 6pt 0 !important;
+		padding: 0 !important;
+	}
+	.pull {
+		text-align: left !important;
+		max-width: none !important;
+	}
+	.pull blockquote {
+		font-size: 10pt !important;
+	}
+	.pull figcaption {
+		margin: 1pt 0 0 !important;
+		font-size: 7.5pt !important;
+	}
+
+	/* agents: number, title and rule on one line each, full width */
+	.agents-intro {
+		margin-bottom: 4pt !important;
+	}
+	.principles {
+		display: grid !important;
+		grid-template-columns: 1fr 1fr;
+		column-gap: 14pt;
+	}
+	.principles li {
+		grid-template-columns: 16pt minmax(0, 1fr) !important;
+		gap: 0 4pt !important;
+		padding: 3pt 0 !important;
+	}
+	.principles li p {
+		display: none;
+	}
+	.principles .pr-t {
+		grid-column: 2 / -1 !important;
+		font-size: 9.5pt !important;
+	}
+
+	/* talks: title and venue, two columns */
+	.talks {
+		gap: 0 14pt !important;
+		grid-template-columns: 1fr 1fr !important;
+	}
+	.talk {
+		padding: 0 !important;
+		border: 0 !important;
+		background: none !important;
+	}
+	.talk-title {
+		font-size: 10pt !important;
+		line-height: 1.25 !important;
+		margin: 0 !important;
+	}
+	.talk-meta {
+		margin: 1pt 0 0 !important;
+	}
+
+	/* before: one tight row each */
+	.bf-list li {
+		padding-block: 3pt !important;
+	}
+
+	/* the hero's contact line already carries all of contact */
+	#contact {
+		display: none !important;
+	}
+
+	/* code that survives (inline twoslash) stays on light colors */
+	.code .shiki span {
+		color: var(--shiki-light) !important;
+	}
+}

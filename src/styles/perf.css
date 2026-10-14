@@ -1,0 +1,1902 @@
+/* ---------- 02 // perf ---------- */
+
+/* Phones: body's overflow-x clip doesn't stop the layout viewport growing to fit
+   wide content, so a hidden twoslash popup hanging past the edge (the cN types in
+   "show the bench") let the whole page pan sideways. Clip here instead; a shown
+   popup is shifted inside the viewport by reveal.ts, so nothing visible is cut. */
+.perf {
+	overflow-x: clip;
+}
+
+/* the deck: a verbatim post, typeset as a string literal */
+.perf-epigraph {
+	margin: 0;
+	color: var(--gold);
+	font-size: 19px;
+	font-weight: 500;
+	line-height: 1.45;
+	letter-spacing: -0.01em;
+	text-wrap: pretty;
+}
+.perf .qm {
+	color: var(--blue);
+	font-family: var(--mono);
+	font-weight: 400;
+}
+.perf-epigraph .by {
+	font-size: 12.5px;
+	font-weight: 400;
+	white-space: nowrap;
+}
+.perf-lede {
+	margin: 14px 0 0;
+	color: var(--ink-2);
+}
+
+/* ---------- case cards ---------- */
+.case {
+	position: relative;
+	margin-top: 40px;
+	padding: 40px;
+	border: 1px solid var(--rule);
+	border-radius: 20px;
+	background: linear-gradient(
+		180deg,
+		var(--surface),
+		color-mix(in oklab, var(--surface) 55%, var(--bg))
+	);
+	min-width: 0;
+}
+.case:first-of-type {
+	margin-top: 0;
+}
+.case-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	font-size: 12.5px;
+	line-height: 1.4;
+	color: var(--ink-3);
+}
+.case-meta b {
+	font-weight: 400;
+	color: var(--copper);
+}
+.case .h3 {
+	margin-top: 16px;
+	max-width: 30ch;
+}
+.case .decl.fn {
+	color: var(--sky);
+	font-size: 0.95em;
+}
+.case p {
+	margin: 16px 0 0;
+	color: var(--ink-2);
+	font-size: 16.5px;
+	line-height: 1.6;
+	max-width: 64ch;
+}
+/* plain body copy: ≈64 characters a line (64ch is ~86 of Atkinson's narrower letters) */
+.case p:not([class]) {
+	max-width: 34em;
+}
+.case p b {
+	color: var(--ink);
+	font-weight: 650;
+}
+.case sup {
+	font-size: 0.68em;
+	line-height: 0;
+}
+.case code,
+.perf code.kw {
+	font-family: var(--mono);
+	font-size: 0.88em;
+	color: var(--teal);
+}
+.case .code code {
+	color: inherit;
+	font-size: inherit;
+}
+.case-cols {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0 40px;
+	max-width: 1040px;
+}
+.case-cols p {
+	max-width: none;
+}
+.inline-quote {
+	color: var(--ink);
+	text-decoration: underline;
+	text-decoration-color: color-mix(in oklab, var(--sky) 35%, transparent);
+	text-underline-offset: 3px;
+	transition: text-decoration-color 0.2s;
+}
+.inline-quote:hover {
+	text-decoration-color: var(--sky);
+}
+
+/* the "what was wrong" phrase: a real squiggle, hovering to the real error */
+.tok.squiggle {
+	text-decoration: none;
+	padding-bottom: 3px;
+	border-radius: 0;
+}
+.tok.squiggle:hover,
+.tok.squiggle[aria-expanded="true"] {
+	background-color: color-mix(in oklab, var(--violet) 14%, transparent);
+}
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: view()) {
+		.tok.squiggle {
+			animation: squiggle-type steps(12) both;
+			animation-timeline: view();
+			animation-range: entry 40% entry 90%;
+		}
+	}
+}
+@keyframes squiggle-type {
+	from {
+		background-size:
+			0 3px,
+			6px 3px;
+		background-position: left bottom;
+	}
+}
+.qi-error {
+	border-bottom: 1px solid color-mix(in oklab, var(--violet) 30%, transparent);
+}
+.qi-body .err {
+	color: var(--violet-text);
+}
+.qi-doc code {
+	color: var(--ink);
+}
+
+/* credit + footnotes */
+.credit {
+	margin-top: 32px !important;
+	padding-top: 18px;
+	border-top: 1px solid var(--rule-soft);
+	color: var(--ink) !important;
+	font-size: var(--fs-body) !important;
+	max-width: none !important;
+}
+.credit .link {
+	white-space: nowrap;
+}
+.case-foot,
+.case p.case-foot {
+	margin: 10px 0 0;
+	font-size: 12.5px;
+	line-height: 1.55;
+	color: var(--ink-3);
+	max-width: 72ch;
+}
+.case-foot .link {
+	color: var(--ink-2);
+}
+
+/* ---------- shared chart bits ---------- */
+.perf figure {
+	margin: 0;
+	min-width: 0;
+}
+.perf .legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 18px;
+	font-size: 12.5px;
+	color: var(--ink-2);
+}
+.perf .key {
+	display: inline-block;
+	width: 14px;
+	height: 3px;
+	border-radius: 2px;
+	margin-right: 6px;
+	vertical-align: 0.24em;
+}
+.perf .key.v-before,
+.perf .dot-key.v-before {
+	background: var(--before);
+}
+.perf .key.v-after,
+.perf .dot-key.v-after {
+	background: var(--after);
+}
+.perf .dot-key {
+	display: inline-block;
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
+	margin-right: 6px;
+	vertical-align: -0.02em;
+}
+.viz-title {
+	display: block;
+	font-size: 15px;
+	font-weight: 700;
+	color: var(--ink);
+}
+.viz-title code {
+	font-size: 0.9em;
+}
+.viz-sub {
+	display: block;
+	margin-top: 4px;
+	font-size: 12.5px;
+	color: var(--ink-3);
+}
+.viz-table {
+	margin-top: 12px;
+	font-size: 12px;
+	color: var(--ink-3);
+}
+.viz-table-scroll {
+	overflow-x: auto;
+	max-width: 100%;
+}
+.viz-table table {
+	margin-top: 8px;
+	border-collapse: collapse;
+	font-size: 12px;
+	color: var(--ink-2);
+}
+.viz-table caption {
+	caption-side: top;
+	text-align: left;
+	padding-bottom: 8px;
+	color: var(--ink-3);
+	font-family: var(--sans);
+	max-width: 70ch;
+}
+.viz-table th,
+.viz-table td {
+	padding: 3px 14px 3px 0;
+	text-align: right;
+	font-weight: 400;
+	white-space: nowrap;
+	border-bottom: 1px solid var(--rule-soft);
+}
+.viz-table thead th {
+	white-space: normal;
+	vertical-align: bottom;
+	color: var(--ink-3);
+}
+.viz-table td.text,
+.viz-table tbody th {
+	white-space: normal;
+	text-align: left;
+}
+.viz-table td.text {
+	min-width: 9ch;
+}
+.viz-table td.bailed {
+	color: var(--violet-text);
+}
+.viz-table th[scope="row"],
+.viz-table thead th:first-child {
+	text-align: left;
+	color: var(--ink-3);
+}
+
+/* ---------- signature #3: + .merge() ---------- */
+.merge {
+	margin-top: 40px !important;
+	padding-top: 32px;
+	border-top: 1px solid var(--rule-soft);
+}
+.merge-kicker a {
+	font-size: 13px;
+	color: var(--ink-3);
+	text-decoration-color: color-mix(in oklab, var(--ink-3) 40%, transparent);
+}
+.merge-kicker a:hover {
+	color: var(--sky);
+}
+.merge-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+	gap: 40px;
+	margin-top: 20px;
+}
+.merge-left,
+.merge-right {
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+/* code panel */
+.merge-left > .attest {
+	margin-top: auto;
+}
+.merge-code {
+	border: 1px solid var(--rule-soft);
+	border-radius: 12px;
+	background: color-mix(in oklab, var(--sunk) 70%, transparent);
+}
+.merge-code > summary {
+	display: none;
+}
+.merge-code-head {
+	display: flex;
+	justify-content: space-between;
+	padding: 10px 16px;
+	border-bottom: 1px solid var(--rule-soft);
+	font-size: 12px;
+	color: var(--ink-3);
+}
+.merge-code-head b {
+	font-weight: 400;
+	color: var(--copper);
+}
+.chain-code {
+	padding: 12px 16px 14px;
+}
+.chain-code > pre.shiki {
+	font-size: 12.5px;
+	line-height: 1.7;
+}
+.chain-code > pre.shiki > code {
+	display: flex;
+	flex-direction: column;
+}
+/* `> pre > code`: the hover popups nest their own pre > code > .line, which must not match */
+.chain-code > pre > code > .line {
+	display: block;
+	height: 1lh;
+	margin-left: -16px;
+	padding-left: 14px;
+	border-left: 2px solid transparent;
+	/* future links are ghosted, not collapsed: the panel never changes height */
+	transition: opacity 0.3s var(--ease-out);
+}
+/* c3 onward: the cN types grow a line per link, so their popups open upward, over the
+   type definitions, rather than down past the panel and the fold */
+.chain-code > pre > code > .line:nth-child(n + 13) .twoslash-popup-container {
+	top: auto;
+	bottom: calc(100% + 10px);
+}
+.chain-code
+	> pre
+	> code
+	> .line:nth-child(n + 13)
+	.twoslash-popup-container::before {
+	top: auto;
+	bottom: -6px;
+	border: 0;
+	border-right: 1px solid var(--popover-border);
+	border-bottom: 1px solid var(--popover-border);
+}
+@keyframes chain-new {
+	0%,
+	75% {
+		border-left-color: var(--gold);
+		background: color-mix(in oklab, var(--gold) 6%, transparent);
+	}
+}
+
+/* attest output */
+.attest {
+	padding: 12px 16px;
+	border: 1px solid var(--rule-soft);
+	border-radius: 10px;
+	background: var(--sunk);
+	font-size: 13px;
+	line-height: 1.7;
+	color: var(--ink-2);
+}
+.attest-row {
+	display: grid;
+	grid-template-columns: 12px max-content minmax(0, 1fr);
+	align-items: baseline;
+	gap: 10px;
+}
+.attest .key {
+	width: 12px;
+	height: 2px;
+	margin: 0;
+	vertical-align: 0.3em;
+}
+.attest .v {
+	color: var(--ink-3);
+}
+.attest b {
+	font-weight: 600;
+	color: var(--ink);
+	white-space: pre;
+}
+.attest .err {
+	color: var(--ink);
+}
+.attest .err .squiggle {
+	color: var(--ink);
+}
+@media (prefers-reduced-motion: no-preference) {
+	.attest .swap,
+	.fig-value {
+		animation: swap-in 0.15s ease-out;
+	}
+}
+@keyframes swap-in {
+	from {
+		opacity: 0;
+	}
+}
+
+/* header: legend + linear|log */
+.merge-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+.seg {
+	display: inline-flex;
+	padding: 2px;
+	border: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
+	border-radius: 999px;
+}
+.seg button {
+	all: unset;
+	min-height: 36px;
+	padding: 0 14px;
+	display: inline-flex;
+	align-items: center;
+	border-radius: 999px;
+	font: 400 12.5px / 1 var(--mono);
+	color: var(--ink-3);
+	cursor: pointer;
+	transition:
+		background-color 0.16s,
+		color 0.16s;
+}
+.seg button:hover {
+	color: var(--ink);
+}
+.seg button[aria-checked="true"] {
+	background: var(--raised);
+	color: var(--ink);
+	box-shadow: 0 0 0 1px var(--rule-soft);
+}
+.seg button:focus-visible {
+	outline: 2px solid var(--blue);
+	outline-offset: 2px;
+}
+
+/* the plot frame: margins as variables so marks, ticks and the scrubber agree */
+.merge-chart {
+	--ml: 56px;
+	--mr: 104px;
+	--mt: 28px;
+	--ph: 360px;
+	--mb: 64px;
+	--thumb: 18px;
+	position: relative;
+	height: calc(var(--mt) + var(--ph) + var(--mb));
+	container-type: inline-size;
+	font-family: var(--mono);
+}
+.merge-chart .y-title {
+	position: absolute;
+	left: 0;
+	top: 0;
+	font-size: 11.5px;
+	color: var(--ink-3);
+}
+.merge-chart .ticks {
+	container-type: size;
+	position: absolute;
+	left: 0;
+	right: var(--mr);
+	top: var(--mt);
+	height: var(--ph);
+	pointer-events: none;
+}
+.merge-chart .tick {
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 0;
+}
+.merge-chart .tick::after {
+	content: "";
+	position: absolute;
+	left: var(--ml);
+	right: 0;
+	top: 0;
+	border-top: 1px solid var(--grid);
+}
+.merge-chart .tick > span {
+	position: absolute;
+	right: calc(100% - var(--ml) + 10px);
+	top: 0;
+	translate: 0 -50%;
+	font-size: 11px;
+	line-height: 1;
+	color: var(--ink-3);
+	white-space: nowrap;
+}
+.merge-chart .tick[data-fading] {
+	animation: tick-out 0.3s ease-out forwards;
+}
+@keyframes tick-out {
+	to {
+		opacity: 0;
+	}
+}
+.merge-chart .plot {
+	container-type: size;
+	position: absolute;
+	left: var(--ml);
+	right: var(--mr);
+	top: var(--mt);
+	height: var(--ph);
+	touch-action: pan-y;
+}
+.merge-chart .plot::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	border-top: 1px solid var(--axis);
+	pointer-events: none;
+}
+.merge-chart svg.lines {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+}
+.merge-chart .line {
+	fill: none;
+	stroke-width: 2;
+	stroke-linejoin: round;
+	stroke-linecap: round;
+}
+.merge-chart .line.v-before {
+	stroke: var(--before);
+}
+.merge-chart .line.v-after {
+	stroke: var(--after);
+}
+.merge-chart .area.v-before {
+	fill: color-mix(in oklab, var(--before) 10%, transparent);
+}
+/* a zero-size anchor at the plot's top-left, moved by transform in cq units */
+.merge-chart .mark {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 0;
+	height: 0;
+	pointer-events: none;
+}
+.merge-chart .dot {
+	left: 0;
+	top: 0;
+	position: absolute;
+	z-index: 2;
+	width: 8px;
+	height: 8px;
+	margin: -4px 0 0 -4px;
+	border-radius: 50%;
+	box-shadow: 0 0 0 2px var(--surface);
+}
+.merge-chart .dot.v-before {
+	background: var(--before);
+}
+.merge-chart .dot.v-after {
+	background: var(--after);
+}
+.merge-chart .end-label {
+	left: 0;
+	top: 0;
+	position: absolute;
+	z-index: 2;
+	display: grid;
+	translate: 10px -50%;
+	line-height: 1.25;
+	white-space: nowrap;
+	pointer-events: none;
+}
+.merge-chart .end-label b {
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--ink);
+}
+.merge-chart .end-label span {
+	font-size: 11px;
+	color: var(--ink-3);
+}
+.merge-chart .leader {
+	left: 0;
+	top: 0;
+	position: absolute;
+	width: 1px;
+	margin-left: -0.5px;
+	background: color-mix(in oklab, var(--ink-3) 70%, transparent);
+	pointer-events: none;
+}
+.merge-chart .per-link {
+	left: 0;
+	top: 0;
+	position: absolute;
+	translate: calc(-100% - 10px) -50%;
+	font-size: 11.5px;
+	color: var(--ink-3);
+	white-space: nowrap;
+	pointer-events: none;
+	padding: 1px 4px;
+	border-radius: 4px;
+	background: color-mix(in oklab, var(--surface) 80%, transparent);
+}
+.merge-chart .ring {
+	left: 0;
+	position: absolute;
+	top: 0;
+	z-index: 2;
+	width: 11px;
+	height: 11px;
+	margin: -5.5px 0 0 -5.5px;
+	border: 2px solid var(--before);
+	border-radius: 50%;
+	background: var(--surface);
+	box-sizing: border-box;
+}
+.merge-chart .ring-label {
+	position: absolute;
+	left: 16px;
+	top: 50%;
+	translate: 0 -50%;
+	font-size: 12px;
+	color: var(--ink);
+	white-space: nowrap;
+}
+.merge-chart .squiggle-path {
+	position: absolute;
+	inset: 0;
+	overflow: visible;
+	pointer-events: none;
+}
+.merge-chart .squiggle-path path {
+	fill: none;
+	stroke: var(--before);
+	stroke-width: 1.5;
+	stroke-linejoin: round;
+}
+.merge-chart .crosshair {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 1px;
+	background: color-mix(in oklab, var(--ink-3) 55%, transparent);
+	pointer-events: none;
+}
+.merge-chart .ghost {
+	left: 0;
+	top: 0;
+	position: absolute;
+	width: 7px;
+	height: 7px;
+	margin: -3.5px 0 0 -3.5px;
+	border: 1px solid var(--ink-3);
+	border-radius: 50%;
+	pointer-events: none;
+}
+.chart-tip {
+	position: absolute;
+	top: 6px;
+	z-index: 4;
+	display: grid;
+	grid-template-columns: auto auto;
+	gap: 2px 10px;
+	translate: 12px 0;
+	padding: 8px 10px;
+	border-radius: 8px;
+	background: var(--popover-bg);
+	backdrop-filter: blur(14px);
+	border: 1px solid var(--popover-border);
+	box-shadow: var(--shadow-pop);
+	font-size: 12px;
+	line-height: 1.5;
+	white-space: nowrap;
+	pointer-events: none;
+}
+.chart-tip[data-flip] {
+	translate: calc(-100% - 12px) 0;
+}
+.chart-tip .tip-row {
+	display: contents;
+	color: var(--ink-3);
+}
+.chart-tip .tip-row b {
+	text-align: right;
+	font-weight: 600;
+	color: var(--ink);
+}
+.chart-tip .key {
+	width: 10px;
+	height: 2px;
+	margin-right: 4px;
+}
+.chart-tip .tip-foot {
+	grid-column: 1 / -1;
+	margin-top: 2px;
+	padding-top: 4px;
+	border-top: 1px solid var(--rule-soft);
+	color: var(--ink-2);
+}
+
+/* x-axis + scrubber */
+.merge-chart .x-axis {
+	container-type: inline-size;
+	position: absolute;
+	left: var(--ml);
+	right: var(--mr);
+	top: calc(var(--mt) + var(--ph) + 8px);
+	height: 14px;
+	font-size: 11px;
+	line-height: 14px;
+	color: var(--ink-3);
+	pointer-events: none;
+}
+.merge-chart .x-axis span {
+	position: absolute;
+	translate: -50% 0;
+	transition: opacity 0.15s;
+}
+.merge-chart .x-axis [data-hidden] {
+	opacity: 0;
+}
+.merge-chart .x-axis .x-now {
+	left: 0;
+	color: var(--ink);
+	font-weight: 600;
+	transition: transform 0.3s var(--ease-out);
+}
+.merge-chart .x-axis .x-now::before {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: -14px;
+	width: 1px;
+	height: 6px;
+	background: var(--gold);
+}
+.merge-chart .x-axis .x-title {
+	left: calc(100% + 16px);
+	translate: 0 0;
+}
+@container (max-width: 560px) {
+	.merge-chart .x-axis [data-near] {
+		opacity: 0;
+	}
+	.merge-chart .per-link {
+		display: none;
+	}
+}
+.merge-chart .scrub {
+	position: absolute;
+	left: calc(var(--ml) - var(--thumb) / 2);
+	top: calc(var(--mt) + var(--ph) + 26px);
+	width: calc(100% - var(--ml) - var(--mr) + var(--thumb));
+	height: 32px;
+	margin: 0;
+	background: transparent;
+	appearance: none;
+	-webkit-appearance: none;
+	cursor: pointer;
+	border-radius: 999px;
+}
+.scrub::-webkit-slider-runnable-track {
+	height: 1px;
+	background: var(--axis);
+}
+.scrub::-moz-range-track {
+	height: 1px;
+	background: var(--axis);
+}
+.scrub::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: var(--thumb);
+	height: var(--thumb);
+	margin-top: calc(var(--thumb) / -2);
+	border-radius: 50%;
+	border: 2px solid var(--gold);
+	background: var(--surface);
+	box-shadow: 0 0 0 4px color-mix(in oklab, var(--gold) 0%, transparent);
+	transition: box-shadow 0.16s;
+}
+.scrub::-moz-range-thumb {
+	width: var(--thumb);
+	height: var(--thumb);
+	box-sizing: border-box;
+	border-radius: 50%;
+	border: 2px solid var(--gold);
+	background: var(--surface);
+}
+.scrub:hover::-webkit-slider-thumb {
+	box-shadow: 0 0 0 5px color-mix(in oklab, var(--gold) 16%, transparent);
+}
+.scrub:focus-visible {
+	outline-offset: 0;
+}
+
+/* controls */
+.merge-controls {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+.merge-controls .btn {
+	height: 44px;
+	font-family: var(--mono);
+	font-size: 14px;
+	font-weight: 600;
+}
+.merge-controls .plus {
+	box-shadow:
+		0 0 10px color-mix(in oklab, var(--cta-bg) 55%, transparent),
+		0 6px 20px -8px color-mix(in oklab, var(--cta-bg) 55%, transparent);
+}
+.merge-controls .reset {
+	width: 44px;
+	padding: 0;
+	justify-content: center;
+	font-size: 18px;
+}
+.merge-controls .reset {
+	margin-left: auto;
+}
+.merge-controls .btn[aria-disabled="true"] {
+	opacity: 0.38;
+	cursor: not-allowed;
+	box-shadow: none;
+}
+.merge-controls .btn[aria-disabled="true"]:active {
+	scale: 1;
+}
+/* at 15 the gold pill steps back to a dashed outline: on-palette in both themes */
+.merge-controls .btn-gold[aria-disabled="true"],
+.merge-controls .btn-gold[aria-disabled="true"]:hover {
+	opacity: 1;
+	background: transparent;
+	color: var(--ink-3);
+	border: 1px dashed color-mix(in oklab, var(--ink) 25%, transparent);
+	box-shadow: none;
+}
+.merge-controls .btn-ghost[aria-disabled="true"]:hover {
+	border-color: color-mix(in oklab, var(--ink) 20%, transparent);
+	color: var(--ink);
+}
+.keep-going {
+	font-size: 13px;
+	color: var(--gold);
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+.keep-going[data-on] {
+	opacity: 1;
+}
+.keep-going .kg-arrow {
+	display: inline-block;
+}
+.keep-going[id] {
+	color: var(--ink-2);
+	max-width: 22ch;
+	line-height: 1.35;
+}
+/* without JS the controls would do nothing: the prerendered state is the whole story */
+html:not(.js) :is(.merge-controls, .seg, .merge-chart .scrub) {
+	display: none;
+}
+
+/* the hero figure: the only ≥48px number in the section */
+.merge-figure {
+	display: grid;
+	gap: 6px;
+	min-height: 92px;
+	align-content: start;
+}
+.fig-value {
+	font-size: clamp(3rem, 2.4rem + 1.6vw, 4rem);
+	font-weight: 800;
+	line-height: 1;
+	letter-spacing: -0.035em;
+	color: var(--gold);
+}
+.merge[data-failed] .fig-value {
+	color: var(--violet-text);
+}
+.fig-sub {
+	font-size: 14px;
+	color: var(--ink-2);
+}
+.merge-chart .log-note {
+	position: absolute;
+	left: 12px;
+	top: 6px;
+	margin: 0;
+	max-width: 23ch;
+	font-size: 11.5px;
+	line-height: 1.45;
+	color: var(--ink-3);
+	opacity: 0;
+	transition: opacity 0.3s 0.3s;
+	pointer-events: none;
+}
+.merge-chart[data-log] .log-note {
+	opacity: 1;
+}
+/* the phone copy of the note, under the controls (≤760px only) */
+.log-note-m {
+	display: none;
+}
+.merge-foot {
+	margin: 20px 0 0 !important;
+	font-size: 12.5px !important;
+	color: var(--ink-3) !important;
+	max-width: 80ch !important;
+}
+.merge-foot code {
+	color: var(--ink-2);
+}
+.merge-foot .link {
+	color: var(--ink-2);
+}
+
+/* ---------- payoff strip ---------- */
+.payoffs {
+	margin-top: 40px !important;
+	padding-top: 32px;
+	border-top: 1px solid var(--rule-soft);
+}
+.payoffs figcaption {
+	display: grid;
+}
+.payoffs .legend {
+	margin-top: 12px;
+}
+.pay-rows {
+	position: relative;
+	margin-top: 18px;
+	display: grid;
+	gap: 20px;
+}
+.pay-grid {
+	position: absolute;
+	inset: 0 0 22px;
+	pointer-events: none;
+}
+.pay-grid span {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 1px;
+	background: var(--grid);
+}
+.pay-row {
+	position: relative;
+}
+.pay-top {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 2px 14px;
+}
+.pay-top .who {
+	color: var(--ink);
+	font-weight: 650;
+	font-size: 15px;
+}
+.pay-top .nums {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 10px;
+	font-size: 13.5px;
+	color: var(--ink-2);
+}
+.pay-top .nums b {
+	color: var(--ink);
+	font-weight: 600;
+}
+.pay-top .mean {
+	color: var(--ink-3);
+}
+.pay-top .x {
+	padding: 1px 7px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--ink);
+	background: color-mix(in oklab, var(--after) 18%, transparent);
+}
+.pay-top .tag {
+	margin-left: auto;
+	font-size: 12px;
+	color: var(--ink-3);
+	text-decoration: underline;
+	text-decoration-color: color-mix(in oklab, var(--ink-3) 35%, transparent);
+	text-underline-offset: 3px;
+}
+.pay-top .tag:hover {
+	color: var(--sky);
+}
+.pay-track {
+	position: relative;
+	height: 22px;
+	margin-top: 8px;
+}
+.pay-track .bar {
+	position: absolute;
+	left: 0;
+	height: 10px;
+	border-radius: 0 4px 4px 0;
+	transform-origin: left center;
+}
+.pay-track .bar.v-before {
+	top: 0;
+	width: calc(100% / 1.1);
+	background: var(--before);
+}
+.pay-track .bar.v-after {
+	top: 12px;
+	background: var(--after);
+}
+.pay-track .pct {
+	position: absolute;
+	top: 17px;
+	translate: 8px -50%;
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--ink);
+}
+.pay-track .runs {
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 10px;
+}
+.pay-track .runs.b {
+	top: 0;
+}
+.pay-track .runs.a {
+	top: 12px;
+}
+.pay-track .whisker {
+	position: absolute;
+	top: 50%;
+	height: 1px;
+	background: var(--ink-3);
+}
+.pay-track .whisker::before,
+.pay-track .whisker::after {
+	content: "";
+	position: absolute;
+	top: -3px;
+	width: 1px;
+	height: 7px;
+	background: var(--ink-3);
+}
+.pay-track .whisker::before {
+	left: 0;
+}
+.pay-track .whisker::after {
+	right: 0;
+}
+.pay-track .run {
+	position: absolute;
+	top: -2px;
+	width: 1px;
+	height: 14px;
+	margin-left: -0.5px;
+	opacity: 0.6;
+}
+.pay-track .runs.b .run {
+	background: var(--before);
+}
+.pay-track .runs.a .run {
+	background: var(--after);
+}
+.pay-axis {
+	position: relative;
+	height: 22px;
+	margin-top: -6px;
+	border-top: 1px solid var(--axis);
+	font-size: 11px;
+	color: var(--ink-3);
+}
+.pay-axis span {
+	position: absolute;
+	top: 6px;
+	translate: -50% 0;
+}
+.pay-axis span:first-child {
+	translate: 0 0;
+}
+.payoffs[data-phase="armed"] .bar.v-before {
+	clip-path: inset(0 100% 0 0);
+}
+.payoffs[data-phase="armed"] .bar.v-after {
+	scale: 0 1;
+}
+.payoffs[data-phase="armed"] :is(.pct, .x, .runs) {
+	opacity: 0;
+}
+.payoffs[data-phase="play"] .bar.v-before {
+	transition: clip-path 0.3s var(--ease-out) calc(var(--i) * 120ms);
+}
+.payoffs[data-phase="play"] .bar.v-after {
+	transition: scale 0.6s var(--ease-out) calc(0.3s + var(--i) * 120ms);
+}
+.payoffs[data-phase="play"] :is(.pct, .x, .runs) {
+	transition: opacity 0.15s ease-out calc(0.9s + var(--i) * 120ms);
+}
+
+/* ---------- pull quote: a string literal ---------- */
+.pull {
+	margin: 96px auto 0 !important;
+	max-width: 52rem;
+	text-align: center;
+}
+.pull blockquote {
+	margin: 0;
+	font-size: clamp(1.375rem, 1.1rem + 1.1vw, 2.125rem);
+	font-weight: 500;
+	line-height: 1.3;
+	letter-spacing: -0.018em;
+	color: var(--gold);
+	text-wrap: balance;
+}
+.pull figcaption {
+	margin-top: 16px;
+	font-size: 13px;
+	line-height: 1.5;
+	color: var(--ink-3);
+}
+.pull + .case {
+	margin-top: 96px;
+}
+
+/* ---------- case 02: viem ---------- */
+.case-split {
+	display: grid;
+	grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+	gap: 48px;
+	align-items: end;
+}
+.case-quote blockquote {
+	margin: 0;
+	font-size: 17px;
+	font-weight: 500;
+	line-height: 1.45;
+	color: var(--gold);
+}
+.case-quote figcaption {
+	margin-top: 10px;
+	font-size: 12.5px;
+}
+.trace {
+	margin-top: 36px !important;
+	padding-top: 28px;
+	border-top: 1px solid var(--rule-soft);
+}
+.trace-body {
+	--gutter: 64px;
+	--right: 132px;
+	--ruler: 22px;
+	position: relative;
+	padding: 0 var(--right) 30px var(--gutter);
+}
+.trace-ruler {
+	position: relative;
+	height: var(--ruler);
+	font-size: 11px;
+	color: var(--ink-3);
+}
+.trace-ruler span {
+	position: absolute;
+	top: 0;
+	translate: -50% 0;
+}
+.trace-ruler span:first-child {
+	translate: 0 0;
+}
+.trace-grid {
+	position: absolute;
+	left: var(--gutter);
+	right: var(--right);
+	top: var(--ruler);
+	bottom: 18px;
+	pointer-events: none;
+}
+.trace-grid span {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 1px;
+	background: var(--grid);
+}
+.track {
+	position: relative;
+	margin-top: 12px;
+}
+.track + .track {
+	margin-top: 18px;
+}
+.track-label {
+	position: absolute;
+	right: calc(100% + 14px);
+	top: 3px;
+	font-size: 12px;
+	color: var(--ink-3);
+}
+.lane {
+	position: relative;
+	display: grid;
+	gap: 2px;
+}
+.slice {
+	position: relative;
+	height: 22px;
+}
+.slice-bar {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	border-radius: 3px;
+	overflow: hidden;
+}
+.slice-name {
+	position: absolute;
+	left: 8px;
+	top: 0;
+	z-index: 1;
+	font-size: 12px;
+	line-height: 22px;
+	white-space: nowrap;
+	color: var(--ink-2);
+	pointer-events: none;
+}
+.slice.parent .slice-bar {
+	right: -18px;
+	background: color-mix(in oklab, var(--ink) 9%, transparent);
+	mask-image: linear-gradient(to right, #000 calc(100% - 72px), transparent);
+}
+.slice.parent .unpublished {
+	position: absolute;
+	left: calc(100% + 24px);
+	top: 0;
+	font-size: 11px;
+	line-height: 22px;
+	color: var(--ink-3);
+	white-space: nowrap;
+}
+.slice:is(.violet, .teal) .slice-bar {
+	width: var(--w);
+}
+.slice.violet .slice-bar {
+	background: var(--before);
+}
+.slice.teal .slice-bar {
+	background: var(--after);
+}
+/* the name inside the fill is revealed as the fill grows */
+.slice-bar .slice-name {
+	z-index: 2;
+}
+/* desktop: the outer grey name and the clipped bar paint in DOM order, so the bar
+   and its dark/white name cover the grey one wherever the fill has reached (a
+   z-index on the outer name painted it over the fill: ghosted double text).
+   Phones keep their own rule: names ride above the marker, on the surface. */
+@media (min-width: 761px) {
+	.slice:is(.violet, .teal) > .slice-name {
+		z-index: auto;
+	}
+}
+.slice.violet .slice-bar .slice-name {
+	color: #05080f; /* 4.8:1 on #9558f8 */
+}
+:root[data-theme="light"] .slice.violet .slice-bar .slice-name {
+	color: #fff; /* 5.5:1 on #7d45e0 */
+}
+.slice.teal .slice-bar .slice-name {
+	color: #05080f;
+}
+.slice .dur {
+	position: absolute;
+	top: 0;
+	translate: 8px 0;
+	font-size: 13px;
+	line-height: 22px;
+	font-weight: 600;
+	color: var(--ink);
+	white-space: nowrap;
+	transition: opacity 0.15s;
+}
+.trace-body[data-playing] .dur {
+	opacity: 0;
+}
+.trace-overlay {
+	container-type: size;
+	position: absolute;
+	left: var(--gutter);
+	right: var(--right);
+	top: 0;
+	bottom: 0;
+	pointer-events: none;
+}
+.trace-overlay .marker {
+	position: absolute;
+	top: var(--ruler);
+	bottom: 16px;
+	width: 1px;
+	background: var(--gold);
+}
+.marker-label {
+	position: absolute;
+	top: calc(100% + 2px);
+	left: 0;
+	translate: -50% 0;
+	font-size: 11px;
+	color: var(--ink-3);
+	white-space: nowrap;
+}
+.playhead {
+	position: absolute;
+	left: 0;
+	top: calc(var(--ruler) - 4px);
+	bottom: 16px;
+	width: 1px;
+	background: var(--gold);
+}
+.playhead::before {
+	content: "";
+	position: absolute;
+	top: -3px;
+	left: -3px;
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: var(--gold);
+}
+.elapsed {
+	position: absolute;
+	top: -24px;
+	left: 0;
+	translate: -50% 0;
+	padding: 0 6px;
+	border-radius: 4px;
+	background: var(--surface);
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--ink);
+	white-space: nowrap;
+}
+.trace-foot {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	flex-wrap: wrap;
+	gap: 8px 16px;
+	min-height: 44px;
+	font-size: 12px;
+	color: var(--ink-3);
+}
+/* the same shape as the agents replay button (.replay-play): btn-sm type, 44px */
+.trace-foot .btn {
+	height: 44px;
+}
+.trace-foot .btn[aria-disabled="true"] {
+	opacity: 0.4;
+	cursor: default;
+}
+.trace-foot .btn[aria-disabled="true"]:is(:hover, :active) {
+	border-color: color-mix(in oklab, var(--ink) 20%, transparent);
+	color: var(--ink);
+	scale: 1;
+}
+
+/* ---------- case 03: dumbbells ---------- */
+.badges {
+	margin: 18px 0 0 !important;
+	font-size: 15px !important;
+	color: var(--ink-2) !important;
+}
+.badges b {
+	color: var(--gold);
+	font-size: 1.3em;
+	font-weight: 700;
+	font-family: var(--sans);
+	letter-spacing: -0.01em;
+}
+/* case 03: Prisma's own words get case 02's string-literal pull quote, spanning
+   under the badges (the header is one column here, so no split) */
+.case-03 .case-quote {
+	margin: 22px 0 0;
+	max-width: 40em;
+}
+.dumbbells {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 56px;
+	margin-top: 32px;
+	padding-top: 28px;
+	border-top: 1px solid var(--rule-soft);
+}
+.dumbbell .legend {
+	margin-top: 10px;
+}
+.db-rows {
+	margin-top: 10px;
+}
+.db-row,
+.db-axis {
+	display: grid;
+	grid-template-columns: 8.5rem minmax(0, 1fr) 3.25rem;
+	grid-template-areas: "label plot delta";
+	align-items: center;
+	column-gap: 12px;
+}
+.db-row {
+	min-height: 36px;
+}
+.db-label {
+	grid-area: label;
+	font-size: 13px;
+	line-height: 1.3;
+	color: var(--ink-2);
+	min-width: 0;
+}
+.db-label.mono {
+	font-size: 12px;
+}
+.db-plot {
+	grid-area: plot;
+	position: relative;
+	container-type: inline-size;
+	height: 36px;
+	margin: 0 58px 0 44px;
+}
+.db-grid {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 1px;
+	background: var(--grid);
+}
+.db-bar {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	height: 2px;
+	margin-top: -1px;
+	transform: translateX(var(--a));
+	width: calc(var(--b) - var(--a));
+	transform-origin: right center;
+	background: var(--axis);
+}
+.db-dot {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	z-index: 1;
+	width: 10px;
+	height: 10px;
+	margin: -5px 0 0 -5px;
+	border-radius: 50%;
+	box-shadow: 0 0 0 2px var(--surface);
+}
+.db-dot.v-before {
+	transform: translateX(var(--b));
+	background: var(--before);
+}
+.db-dot.v-after {
+	transform: translateX(var(--a));
+	background: var(--after);
+}
+.db-val {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	font-size: 11.5px;
+	white-space: nowrap;
+}
+.db-val.v-before {
+	transform: translateX(var(--b));
+	translate: 10px -50%;
+	color: var(--ink-3);
+}
+.db-val.v-after {
+	transform: translateX(var(--a));
+	translate: calc(-100% - 10px) -50%;
+	color: var(--ink);
+	font-weight: 600;
+}
+.db-delta {
+	grid-area: delta;
+	text-align: right;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--ink);
+}
+.db-axis {
+	min-height: 24px;
+	border-top: 1px solid var(--axis);
+	font-size: 11px;
+	color: var(--ink-3);
+}
+.db-axis .db-label {
+	font-size: 11px;
+	color: var(--ink-3);
+}
+.db-axis .db-plot {
+	height: 24px;
+}
+.db-axis .db-plot span {
+	position: absolute;
+	top: 5px;
+	translate: -50% 0;
+	white-space: nowrap;
+}
+.dumbbell[data-phase="armed"] .db-dot.v-after {
+	transform: translateX(var(--b));
+}
+.dumbbell[data-phase="armed"] .db-bar {
+	scale: 0 1;
+}
+.dumbbell[data-phase="armed"] :is(.db-val.v-after, .db-delta) {
+	opacity: 0;
+}
+.dumbbell[data-phase="play"] :is(.db-dot.v-after, .db-bar) {
+	transition:
+		transform 0.7s var(--ease-out) calc(var(--i) * 120ms),
+		scale 0.7s var(--ease-out) calc(var(--i) * 120ms);
+}
+.dumbbell[data-phase="play"] :is(.db-val.v-after, .db-delta) {
+	transition: opacity 0.15s ease-out calc(0.7s + var(--i) * 120ms);
+}
+.dumbbell .case-foot {
+	margin-top: 14px;
+}
+
+/* ---------- forced colors: identity never rides on hue alone ---------- */
+@media (forced-colors: active) {
+	.seg button[aria-checked="true"] {
+		outline: 2px solid Highlight;
+		outline-offset: -2px;
+	}
+	.merge-chart .line.v-before,
+	.merge-chart .squiggle-path path {
+		stroke: CanvasText;
+	}
+	.merge-chart .line.v-after {
+		stroke: Highlight;
+	}
+	.merge-chart .dot.v-before,
+	.perf .key.v-before,
+	.perf .dot-key.v-before,
+	.db-dot.v-before,
+	.slice.violet .slice-bar,
+	.pay-track .bar.v-before {
+		background: CanvasText;
+		border-radius: 0;
+	}
+	.merge-chart .dot.v-after,
+	.perf .key.v-after,
+	.perf .dot-key.v-after,
+	.db-dot.v-after,
+	.slice.teal .slice-bar,
+	.pay-track .bar.v-after {
+		background: Highlight;
+	}
+	/* the stem between a dumbbell's dots */
+	.db-bar {
+		background: GrayText;
+	}
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+	.chain-code > pre > code > .line,
+	.merge-chart .x-axis .x-now,
+	.keep-going,
+	.merge-chart .log-note,
+	.merge-code > summary::before {
+		transition: none;
+	}
+}
+
+/* ---------- touch: 48px chart controls ---------- */
+@media (pointer: coarse) {
+	.seg button {
+		min-height: 48px;
+	}
+	.merge-controls .btn {
+		height: 48px;
+	}
+	.merge-controls .reset {
+		width: 48px;
+	}
+	/* taller hit area, same thumb centre (mt + ph + 42px) */
+	.merge-chart .scrub {
+		height: 48px;
+		top: calc(var(--mt) + var(--ph) + 18px);
+	}
+}
+
+/* ---------- layout breakpoints ---------- */
+@media (max-width: 1023px) {
+	.merge-grid {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+	.merge-left,
+	.merge-right {
+		display: contents;
+	}
+	.merge-head {
+		order: 1;
+	}
+	.merge-chart {
+		order: 2;
+	}
+	.merge-controls {
+		order: 3;
+	}
+	.merge-figure {
+		order: 4;
+	}
+	.attest {
+		order: 6;
+	}
+	.merge-code {
+		order: 7;
+	}
+	.merge-code > summary {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		min-height: 44px;
+		padding: 0 16px;
+		font-size: 13px;
+		color: var(--ink-2);
+		cursor: pointer;
+		list-style: none;
+	}
+	.merge-code > summary::-webkit-details-marker {
+		display: none;
+	}
+	.merge-code > summary::before {
+		content: "▸";
+		color: var(--copper);
+		transition: rotate 0.16s;
+	}
+	.merge-code[open] > summary::before {
+		rotate: 90deg;
+	}
+	.merge-code[open] > summary {
+		border-bottom: 1px solid var(--rule-soft);
+	}
+	.case-split {
+		grid-template-columns: 1fr;
+		gap: 24px;
+	}
+	.dumbbells {
+		grid-template-columns: 1fr;
+		gap: 40px;
+	}
+}
+
+@media (max-width: 760px) {
+	.case {
+		padding: 26px 20px;
+		border-radius: 16px;
+		margin-inline: -4px;
+	}
+	.case-cols {
+		grid-template-columns: 1fr;
+	}
+	.case p {
+		font-size: 16px;
+	}
+	.perf-epigraph {
+		font-size: 17px;
+	}
+	.merge-chart {
+		--ml: 40px;
+		--mr: 80px;
+		--ph: 280px;
+	}
+	.merge-chart .end-label b {
+		font-size: 12px;
+	}
+	.merge-chart .log-note {
+		display: none;
+	}
+	/* .merge for specificity: .case p would otherwise set it as body copy */
+	.merge .log-note-m {
+		display: block;
+		order: 3;
+		margin: 0;
+		font-size: 12px;
+		line-height: 1.45;
+		color: var(--ink-3);
+	}
+	.merge-figure {
+		min-height: 84px;
+	}
+	/* two equal pills and ↺ share the first row at any phone width (320 included);
+	   "keep going" gets the row below, centred under + with its arrow turned up */
+	.merge-controls {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+		column-gap: 8px;
+		row-gap: 6px;
+	}
+	.merge-controls .btn:not(.reset) {
+		padding-inline: 4px;
+		justify-content: center;
+	}
+	.merge-controls .reset {
+		grid-column: 3;
+		grid-row: 1;
+		margin-left: 0;
+	}
+	.merge-controls .keep-going {
+		grid-column: 2;
+		grid-row: 2;
+		justify-self: center;
+		white-space: nowrap;
+	}
+	.merge-controls .keep-going[id] {
+		grid-column: 1 / -1;
+		justify-self: start;
+		max-width: none;
+		white-space: normal;
+	}
+	.merge-controls .kg-arrow {
+		rotate: 90deg;
+	}
+	.attest {
+		font-size: 12px;
+		padding: 10px 12px;
+	}
+	.attest-row {
+		gap: 8px;
+	}
+	.attest .unit {
+		display: none;
+	}
+	.chain-code {
+		padding: 10px 10px 12px;
+	}
+	.chain-code > pre.shiki {
+		font-size: 12px;
+	}
+	.chain-code > pre > code > .line {
+		margin-left: -10px;
+		padding-left: 8px;
+	}
+	.viz-table th,
+	.viz-table td {
+		padding-right: 8px;
+		font-size: 11px;
+	}
+	.pay-top .tag {
+		margin-left: 0;
+		margin-top: 4px;
+		flex-basis: 100%;
+	}
+	.pull {
+		margin-top: 72px !important;
+		text-align: left;
+	}
+	.pull + .case {
+		margin-top: 72px;
+	}
+	.trace-body {
+		--gutter: 44px;
+		--right: 58px;
+	}
+	.slice,
+	.slice.parent {
+		height: auto;
+		display: grid;
+	}
+	/* names ride above the gold marker, on the card's surface */
+	.slice > .slice-name {
+		position: relative;
+		left: 0;
+		z-index: 2;
+		justify-self: start;
+		max-width: 100%;
+		padding-inline: 2px;
+		margin-left: -2px;
+		font-size: 11px;
+		line-height: 1.4;
+		white-space: normal;
+		margin-bottom: 3px;
+		background: var(--surface);
+	}
+	.slice-bar {
+		position: relative;
+		height: 12px;
+	}
+	.slice.parent .slice-bar {
+		margin-right: -18px;
+	}
+	.slice-bar .slice-name {
+		display: none;
+	}
+	.slice .dur,
+	.slice.parent .unpublished {
+		top: auto;
+		bottom: -4px;
+		line-height: 20px;
+		font-size: 12px;
+	}
+	.slice.parent .unpublished {
+		position: static;
+		margin-top: 3px;
+		font-size: 11px;
+		line-height: 1.3;
+	}
+	.track-label {
+		top: auto;
+		bottom: -3px;
+		font-size: 11px;
+		right: calc(100% + 8px);
+	}
+	.trace-ruler span[data-minor] {
+		display: none;
+	}
+	.db-row,
+	.db-axis {
+		grid-template-columns: 6.5rem minmax(0, 1fr);
+		grid-template-areas: "label plot" "delta plot";
+		column-gap: 8px;
+	}
+	.db-row {
+		min-height: 44px;
+	}
+	.db-delta {
+		text-align: left;
+		align-self: start;
+		font-size: 12px;
+	}
+	.db-label {
+		align-self: end;
+	}
+	.db-plot {
+		grid-row: 1 / span 2;
+		margin: 0 52px 0 40px;
+	}
+	.db-axis .db-plot {
+		grid-row: 1;
+	}
+	.db-grid:not([data-mobile]),
+	.db-axis .db-plot span:not([data-mobile]) {
+		display: none;
+	}
+}
+
+/* hydration resets the chart offscreen: no transitions for that jump */
+.merge[data-instant] *,
+.merge[data-instant] *::before {
+	transition: none !important;
+}

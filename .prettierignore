@@ -1,0 +1,10 @@
+# generated
+dist/
+src/routeTree.gen.ts
+src/data/*.json
+src/data/snippets/
+pnpm-lock.yaml
+# shown on the page exactly as written, with twoslash directives
+src/snippets/
+bench/merge-chain/.versions/
+.ntwine/

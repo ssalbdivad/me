@@ -1,0 +1,211 @@
+/* ---------- contact ---------- */
+.contact-inner {
+	display: grid;
+	gap: 14px;
+	justify-items: start;
+}
+.contact-ctas {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-top: 16px;
+}
+.contact-ctas .btn-gold {
+	height: 52px;
+	padding: 0 24px;
+	font-size: 18px;
+}
+/* the address in Cascadia, weighted and sized like the hero's mobile pill */
+.contact-ctas .btn-gold .mono {
+	font-size: 16px;
+	font-weight: 600;
+	letter-spacing: -0.01em;
+}
+.contact-ctas .copy {
+	height: 52px;
+	min-width: 112px;
+	justify-content: center;
+}
+.socials {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px 28px;
+	margin: 18px 0 0;
+	padding: 0;
+	list-style: none;
+	font: 400 14px / 1 var(--mono);
+	color: var(--ink-2);
+}
+.socials a {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	transition: color 0.16s;
+}
+.socials a:hover {
+	color: var(--sky);
+}
+.socials svg {
+	width: 16px;
+	height: 16px;
+}
+
+/* ---------- footer ---------- */
+.footer {
+	margin-top: 136px;
+	position: relative;
+	border-top: 1px solid var(--rule-soft);
+	background: var(--sunk);
+}
+.footer-inner {
+	padding-block: 40px 48px;
+	display: flex;
+	justify-content: space-between;
+	gap: 24px;
+	flex-wrap: wrap;
+	font-size: 15px;
+	color: var(--ink-2);
+}
+.footer-left {
+	display: grid;
+	gap: 16px;
+	align-content: start;
+}
+.footer-left p {
+	margin: 0;
+}
+.fine {
+	font-size: 12.5px;
+	line-height: 1.6;
+	color: var(--ink-3);
+	max-width: 82ch;
+}
+/* comment lines wrap under their text, not under the // */
+.fine p {
+	margin: 0;
+	padding-left: 3ch;
+	text-indent: -3ch;
+}
+.fine .stamp {
+	white-space: nowrap;
+}
+.fine .link {
+	color: inherit;
+	text-decoration-color: color-mix(in oklab, var(--ink-3) 40%, transparent);
+}
+.theme-toggle {
+	display: inline-flex;
+	padding: 3px;
+	border-radius: 999px;
+	border: 1px solid var(--rule);
+	font: 400 12.5px / 1 var(--mono);
+	width: max-content;
+}
+.theme-toggle button {
+	all: unset;
+	cursor: pointer;
+	padding: 7px 12px;
+	border-radius: 999px;
+	color: var(--ink-3);
+	transition:
+		background-color 0.16s,
+		color 0.16s;
+}
+.theme-toggle button[aria-checked="true"] {
+	background: color-mix(in oklab, var(--ink) 9%, transparent);
+	color: var(--ink);
+}
+.theme-toggle button:focus-visible {
+	outline: 2px solid var(--blue);
+	outline-offset: 1px;
+}
+/* forced colors drop the selected tint: ring the selected theme instead.
+   Focus sits on the selected one (a radio group), so focus moves the ring
+   outside the pill rather than losing either cue. */
+@media (forced-colors: active) {
+	.theme-toggle button[aria-checked="true"] {
+		outline: 2px solid Highlight;
+		outline-offset: -2px;
+	}
+	.theme-toggle button[aria-checked="true"]:focus-visible {
+		outline-offset: 2px;
+	}
+}
+
+/*
+ * the boat: arktype.io's FloatYourBoat timing. It sails by transform in
+ * container units (cqw = the lane's width), so the compositor moves it with
+ * no style or layout work per frame, and it pauses while the footer is
+ * offscreen (Footer.tsx sets data-on). Without JS it simply always sails.
+ */
+.boat-lane {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: -22px;
+	height: 24px;
+	pointer-events: none;
+	container-type: inline-size;
+}
+.boat {
+	position: absolute;
+	left: 0;
+	font-size: 20px;
+	line-height: 1;
+	pointer-events: auto;
+	animation:
+		float 150s linear -62s infinite,
+		bob 2s ease-in-out infinite;
+}
+.boat .tok {
+	text-decoration: none;
+	cursor: pointer;
+}
+.boat:hover,
+.boat:focus-within,
+html.js .boat-lane:not([data-on]) .boat {
+	animation-play-state: paused;
+}
+@keyframes float {
+	0% {
+		transform: translateX(-3cqw);
+		opacity: 0;
+	}
+	2% {
+		opacity: 1;
+	}
+	98% {
+		opacity: 1;
+	}
+	100% {
+		transform: translateX(100cqw);
+		opacity: 0;
+	}
+}
+@keyframes bob {
+	50% {
+		translate: 0 -2px;
+		rotate: -2deg;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.boat-lane {
+		display: none;
+	}
+}
+
+/* ---------- touch: 44px targets ---------- */
+@media (pointer: coarse) {
+	.socials a {
+		min-height: 44px;
+	}
+	.socials {
+		row-gap: 0;
+	}
+	.theme-toggle button {
+		min-height: 44px;
+		display: inline-flex;
+		align-items: center;
+		box-sizing: border-box;
+	}
+}

@@ -1,0 +1,904 @@
+/* ---------- nav ---------- */
+.nav {
+	position: sticky;
+	top: 0;
+	z-index: 30;
+	height: 72px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	border-bottom: 1px solid transparent;
+}
+@supports (animation-timeline: scroll()) {
+	.nav {
+		animation: nav-solid linear both;
+		animation-timeline: scroll();
+		animation-range: 0 24px;
+	}
+}
+@supports not (animation-timeline: scroll()) {
+	.nav {
+		background: color-mix(in oklab, var(--bg) 72%, transparent);
+		backdrop-filter: blur(12px);
+		border-bottom-color: var(--rule-soft);
+	}
+}
+@keyframes nav-solid {
+	to {
+		background: color-mix(in oklab, var(--bg) 72%, transparent);
+		backdrop-filter: blur(12px);
+		border-bottom-color: var(--rule-soft);
+	}
+}
+.nav .brand {
+	font-weight: 700;
+	font-size: 17px;
+	letter-spacing: -0.01em;
+}
+.navlinks {
+	display: flex;
+	align-items: center;
+	gap: 28px;
+	font-size: 15px;
+	color: var(--ink-2);
+}
+.navlinks a:not(.btn) {
+	position: relative;
+	padding-block: 6px;
+	transition: color 0.16s;
+}
+.navlinks a:not(.btn):hover,
+.navlinks a[aria-current="true"] {
+	color: var(--ink);
+}
+.navlinks a:not(.btn)::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 2px;
+	border-radius: 2px;
+	background: var(--copper);
+	scale: 0 1;
+	transform-origin: left;
+	transition: scale 0.22s var(--ease-out);
+}
+.navlinks a[aria-current="true"]::after {
+	scale: 1 1;
+}
+@media (prefers-reduced-motion: reduce) {
+	.navlinks a:not(.btn)::after {
+		transition: none;
+	}
+}
+
+/* ---------- hero ---------- */
+.hero {
+	/* the code card's hidden twoslash popups reach past the edge at 1081–1160 */
+	overflow-x: clip;
+	padding-top: 36px;
+	row-gap: 44px;
+	align-items: center;
+}
+.hero-text {
+	grid-column: 1 / span 6;
+}
+.eyebrow {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 6px 12px;
+	font: 400 14px / 1 var(--mono);
+	color: var(--ink-3);
+	margin-bottom: 24px;
+}
+.avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	object-fit: cover;
+	box-shadow:
+		0 0 0 1px var(--rule),
+		0 0 0 4px var(--bg),
+		0 0 0 5px var(--rule-soft);
+}
+.eyebrow .slash {
+	color: var(--copper);
+}
+.display {
+	margin: 0;
+	font-weight: 800;
+	font-size: var(--fs-display);
+	line-height: 0.95;
+	letter-spacing: -0.04em;
+}
+.lede {
+	margin: 22px 0 0;
+	/* 30ch of Atkinson at 450 (its "0" is 0.65em), held in em: ch would
+	   track the fallback's "0" until the webfont swaps, and re-wrap the lede */
+	max-width: 19.5em;
+	font-size: var(--fs-lede);
+	font-weight: 450;
+	line-height: 1.32;
+	letter-spacing: -0.012em;
+	color: var(--ink-2);
+}
+.lede .decl {
+	font-size: 1.06em;
+	color: var(--teal);
+}
+.lede .decl.agents {
+	color: var(--sky);
+}
+.roles {
+	margin: 24px 0 0;
+	display: grid;
+	grid-template-columns: auto 1fr;
+	column-gap: 14px;
+	row-gap: 6px;
+	font-size: 16px;
+}
+.roles dt {
+	font: 400 13.5px / 1.75 var(--mono);
+	color: var(--ink-3);
+	text-align: right;
+}
+.roles dd {
+	margin: 0;
+	color: var(--ink);
+	font-weight: 600;
+	line-height: 1.6;
+}
+.roles dd a {
+	background: linear-gradient(currentColor, currentColor) no-repeat left
+		bottom / 0 1px;
+	transition: background-size 0.2s var(--ease-out);
+}
+.roles dd a:hover {
+	background-size: 100% 1px;
+}
+.roles dd span {
+	color: var(--ink-3);
+	font-weight: 400;
+}
+/* glosses for people who have never heard the names; desktop only */
+.roles .gloss {
+	font-size: 15px;
+}
+/* the longest one would wrap the consultant row in the narrow two-column hero */
+@media (min-width: 1081px) and (max-width: 1279px) {
+	.roles .gloss.wide {
+		display: none;
+	}
+}
+.ctas {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-top: 28px;
+	align-items: center;
+}
+.ctas .bt-short {
+	display: none;
+}
+.ctas .mail {
+	font-size: 14px;
+	color: var(--ink-3);
+	margin-left: 6px;
+	user-select: all;
+}
+
+/* ---------- @ssalbdivad: the zipper ---------- */
+.handle-wrap {
+	display: inline-flex;
+}
+.handle-wrap .tok {
+	padding: 2px 3px;
+	margin: -2px -3px;
+}
+.handle {
+	display: inline-flex;
+	align-items: baseline;
+	position: relative;
+	font: italic 400 17px / 1 var(--cursive);
+	font-feature-settings: "ss01", "calt";
+	color: var(--sky);
+}
+.handle .word {
+	display: inline-flex;
+}
+/*
+ * --zip is the letter's progress, 0 → 1. Registered, so it interpolates and
+ * one transition drives both the slide and the lift: x = zip·dx, and with
+ * q = 4·zip·(1 − zip) (0 at both ends, 1 mid-flight) the lift is
+ * 15px·(1 − (1 − q)³), which rises fast and holds flat, so a flying letter
+ * clears the resting ones instead of grazing through them. Browsers without
+ * @property just snap to the reversed spelling.
+ */
+@property --zip {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
+}
+.handle .ch {
+	--zip: 0;
+	--q: calc(1 - 4 * var(--zip) * (1 - var(--zip)));
+	display: inline-block;
+	width: 1ch;
+	text-align: center;
+	translate: calc(var(--zip) * var(--dx) * 1ch)
+		calc(15px * var(--lane) * (1 - var(--q) * var(--q) * var(--q)));
+}
+.handle .flip {
+	position: absolute;
+	left: 1ch;
+	opacity: 0;
+	pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+	.handle .ch {
+		/* 0.24s is Hero.tsx's zipFly; --d comes from its zipStagger */
+		transition: --zip 0.24s cubic-bezier(0.45, 0, 0.55, 1) var(--d);
+	}
+	.tok:focus-visible .handle .ch,
+	.tok[aria-expanded="true"] .handle .ch,
+	.handle[data-reversed] .ch {
+		--zip: 1;
+	}
+	/* hover only where it's a real pointer state: a tap leaves :hover stuck
+	   on touch, so the second tap would close the popover and leave the
+	   handle reversed. Touch follows aria-expanded alone. */
+	@media (hover: hover) {
+		.tok:hover .handle .ch {
+			--zip: 1;
+		}
+	}
+}
+/* reduced motion: a crossfade between the two spellings */
+@media (prefers-reduced-motion: reduce) {
+	.handle .word,
+	.handle .flip {
+		transition: opacity 0.15s;
+	}
+	.tok:focus-visible .handle .word,
+	.tok[aria-expanded="true"] .handle .word,
+	.handle[data-reversed] .word {
+		opacity: 0;
+	}
+	.tok:focus-visible .handle .flip,
+	.tok[aria-expanded="true"] .handle .flip,
+	.handle[data-reversed] .flip {
+		opacity: 1;
+	}
+	@media (hover: hover) {
+		.tok:hover .handle .word {
+			opacity: 0;
+		}
+		.tok:hover .handle .flip {
+			opacity: 1;
+		}
+	}
+}
+.handle-qi {
+	font-size: 15px;
+}
+/* the 104px H1 sits right under this one; don't let it ghost through the code */
+.qi:has(.handle-qi) {
+	--popover-bg: color-mix(in oklab, var(--raised) 96%, transparent);
+}
+.handle-qi span {
+	color: var(--shiki-dark);
+}
+:root[data-theme="light"] .handle-qi span {
+	color: var(--shiki-light);
+}
+.handle-doc .pre {
+	display: block;
+	margin: 0 0 10px;
+	padding: 10px 12px;
+	border-radius: 8px;
+	background: color-mix(in oklab, var(--sunk) 70%, transparent);
+	border: 1px solid var(--rule-soft);
+	font-size: 12.5px;
+	line-height: 1.6;
+	color: var(--ink);
+	white-space: pre;
+	overflow-x: auto;
+}
+.handle-doc .pre .k {
+	color: var(--copper);
+}
+.handle-doc .pre .n {
+	color: var(--sky);
+	font-family: var(--cursive);
+	font-style: italic;
+	font-feature-settings: "ss01";
+}
+.handle-doc .pre .v {
+	color: var(--gold);
+}
+.handle-doc .pre .c {
+	color: var(--blue);
+}
+.handle-doc .intersect {
+	all: unset;
+	cursor: pointer;
+	font-size: 13px;
+	color: var(--sky);
+	text-decoration: underline;
+	text-decoration-color: color-mix(in oklab, var(--sky) 35%, transparent);
+	text-underline-offset: 3px;
+}
+.handle-doc .intersect:focus-visible {
+	outline: 2px solid var(--blue);
+	outline-offset: 2px;
+}
+.handle-doc .intersection {
+	display: block;
+	margin: 0;
+	font: 400 13px / 1.6 var(--mono);
+}
+.handle-doc .intersection .aside {
+	display: block;
+	margin-top: 6px;
+	color: var(--ink-3);
+}
+
+/* ---------- the hero code card ---------- */
+.codecard {
+	grid-column: 7 / span 6;
+	align-self: center;
+	position: relative;
+	margin: 0;
+	border-radius: 16px;
+	isolation: isolate;
+	background: linear-gradient(
+		180deg,
+		color-mix(in oklab, var(--surface) 92%, var(--blue) 8%),
+		var(--surface)
+	);
+	border: 1px solid var(--rule);
+	box-shadow:
+		0 1px 0 rgb(255 255 255 / 0.04) inset,
+		0 30px 60px -30px rgb(0 0 0 / 0.7),
+		0 0 80px -30px rgb(64 143 222 / 0.35);
+}
+/* It follows the stat strip in the source; on desktop it goes back up beside
+   the text. Never on the base rule: below 1081 it stacks after the strip. */
+@media (min-width: 1081px) {
+	.codecard {
+		grid-row: 1;
+	}
+}
+/* Until the card's last child has parsed, hold its space unpainted, and its
+   entrance with it: a half-parsed card would paint and then grow. Browsers
+   without :has() drop the rule and show the card as it streams. */
+.codecard:not(:has(> .codecard-foot)) {
+	visibility: hidden;
+	animation: none;
+}
+:root[data-theme="light"] .codecard {
+	/* blue mixed into parchment reads grey-green; light stays in the palette */
+	background: linear-gradient(180deg, var(--raised), var(--surface));
+	box-shadow:
+		0 30px 60px -36px rgb(20 33 61 / 0.35),
+		0 0 0 1px rgb(20 33 61 / 0.04);
+}
+.codecard::before {
+	content: "";
+	position: absolute;
+	inset: -1px;
+	border-radius: inherit;
+	padding: 1px;
+	z-index: -1;
+	pointer-events: none;
+	background: linear-gradient(
+		160deg,
+		color-mix(in oklab, var(--gold) 45%, transparent),
+		transparent 35%,
+		transparent 70%,
+		color-mix(in oklab, var(--sky) 30%, transparent)
+	);
+	-webkit-mask:
+		linear-gradient(#000 0 0) content-box,
+		linear-gradient(#000 0 0);
+	-webkit-mask-composite: xor;
+	mask-composite: exclude;
+}
+.codecard figcaption {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	padding: 14px 20px;
+	border-bottom: 1px solid var(--rule-soft);
+	font: 400 12.5px / 1.2 var(--mono);
+	color: var(--ink-3);
+}
+.codecard .hint-tap {
+	display: none;
+}
+@media (hover: none) {
+	.codecard .hint-hover {
+		display: none;
+	}
+	.codecard .hint-tap {
+		display: inline;
+	}
+}
+.codecard figcaption b {
+	font-weight: 400;
+	color: var(--ink-2);
+}
+.codecard .code {
+	padding: 22px 24px 188px;
+}
+.codecard-foot {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	margin: 0;
+	padding: 10px 20px 12px;
+	font-size: 11px;
+	color: var(--ink-3);
+	border-top: 1px solid var(--rule-soft);
+}
+.codecard-foot i {
+	font-style: normal;
+	color: var(--teal);
+}
+
+/* ---------- stat strip ---------- */
+.stats {
+	grid-column: 1 / -1;
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	margin: 0;
+	border-top: 1px solid var(--rule);
+	border-bottom: 1px solid var(--rule-soft);
+}
+.stat {
+	position: relative;
+	padding: 22px 24px 20px;
+	display: grid;
+	grid-template-rows: auto auto 1fr;
+}
+.stat + .stat {
+	border-left: 1px solid var(--rule-soft);
+}
+.stat:first-child {
+	padding-left: 0;
+}
+.stat .num {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 12px;
+}
+.stat .val {
+	margin: 0;
+	font-size: var(--fs-stat);
+	font-weight: 800;
+	line-height: 1;
+	letter-spacing: -0.035em;
+	color: var(--gold);
+}
+.stat .val .tok {
+	text-underline-offset: 0.14em;
+	text-decoration-thickness: 2px;
+}
+.stat .lbl {
+	margin: 10px 0 0;
+	font-size: 15.5px;
+	line-height: 1.4;
+	color: var(--ink);
+	max-width: 24ch;
+}
+.stat .src {
+	margin: 10px 0 0;
+	align-self: end;
+	font: 400 12px / 1.4 var(--mono);
+	color: var(--ink-3);
+}
+.stat .src .nowrap {
+	white-space: nowrap;
+}
+.spark {
+	width: 108px;
+	height: 30px;
+	flex: none;
+	overflow: visible;
+	margin-bottom: 4px;
+}
+.spark .l {
+	fill: none;
+	stroke: color-mix(in oklab, var(--ink-3) 85%, transparent);
+	stroke-width: 1.5;
+	stroke-linejoin: round;
+	stroke-linecap: round;
+	vector-effect: non-scaling-stroke;
+}
+.spark .tip {
+	fill: none;
+	stroke: var(--gold);
+	stroke-width: 1.5;
+	stroke-linecap: round;
+}
+.spark circle {
+	fill: var(--gold);
+	stroke: var(--bg);
+	stroke-width: 2;
+}
+/* drawn once the tiles are mostly in, and still (tip landed, ~1.2s after
+   first style) before the handle demo starts at 1.7s: two motions never
+   compete. Reduced motion: drawn from the start. */
+@media (prefers-reduced-motion: no-preference) {
+	.spark .l {
+		stroke-dasharray: 1;
+		animation: spark-draw 0.7s var(--ease-draw) 0.3s both;
+	}
+	.spark .tip,
+	.spark circle {
+		animation: rise-fade 0.3s ease-out 0.9s both;
+	}
+}
+@keyframes spark-draw {
+	from {
+		stroke-dashoffset: 1;
+	}
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+/* ---------- tablet ---------- */
+@media (max-width: 1080px) and (min-width: 761px) {
+	.hero-text {
+		grid-column: 1 / -1;
+	}
+	.codecard {
+		grid-column: 1 / -1;
+	}
+	.lede {
+		max-width: 23.4em; /* 36ch */
+	}
+	.stats {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+	.stat:nth-child(3) {
+		border-left: 0;
+		padding-left: 0;
+	}
+	.stat:nth-child(n + 3) {
+		border-top: 1px solid var(--rule-soft);
+	}
+}
+/* wide tablets (1024×768): one row of four, so all four numbers make the fold */
+@media (min-width: 900px) and (max-width: 1080px) {
+	.stats {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+	.stat {
+		padding-inline: 16px;
+	}
+	.stat:nth-child(n + 3) {
+		border-top: 0;
+	}
+	.stat:nth-child(3) {
+		border-left: 1px solid var(--rule-soft);
+		padding-left: 16px;
+	}
+	.stat .val {
+		font-size: 44px;
+	}
+	.spark {
+		display: none;
+	}
+}
+
+/* ---------- mobile ---------- */
+@media (max-width: 760px) {
+	.nav {
+		height: 60px;
+	}
+	.navlinks a:not(.btn) {
+		display: none;
+	}
+	.hero {
+		padding-top: 20px;
+		row-gap: 32px;
+	}
+	.hero-text,
+	.codecard {
+		grid-column: 1 / -1;
+	}
+	.eyebrow {
+		margin-bottom: 20px;
+		font-size: 13px;
+	}
+	.eyebrow .where {
+		flex-basis: 100%;
+	}
+	.lede {
+		margin-top: 18px;
+		font-size: 20px;
+	}
+	.roles {
+		margin-top: 22px;
+		font-size: 15px;
+		row-gap: 2px;
+	}
+	.roles dt {
+		font-size: 12.5px;
+	}
+	.roles .gloss {
+		display: none;
+	}
+	.ctas {
+		margin-top: 24px;
+		gap: 10px;
+	}
+	.ctas .mail,
+	.ctas .bt-long {
+		display: none;
+	}
+	.ctas .bt-short {
+		display: inline;
+		font-size: 14.5px;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+	}
+	.ctas .btn-gold {
+		flex: 1;
+		justify-content: center;
+		min-width: 0;
+	}
+	.ctas .btn-ghost {
+		width: 44px;
+		padding: 0;
+		justify-content: center;
+	}
+	.ctas .btn-ghost .bt {
+		display: none;
+	}
+	.codecard figcaption .what {
+		display: none;
+	}
+	.codecard .code {
+		padding: 16px 16px 204px;
+	}
+	.codecard .twoslash-hover {
+		position: static;
+	}
+	.codecard .twoslash-popup-container {
+		left: 12px;
+		right: 12px;
+		top: auto;
+		bottom: 48px;
+		width: auto;
+		max-width: none;
+		font-size: 12.5px;
+	}
+	.codecard .twoslash-popup-container::before {
+		display: none;
+	}
+	.codecard-foot span:first-child {
+		display: none;
+	}
+	.stats {
+		grid-template-columns: 1fr 1fr;
+	}
+	.stat {
+		padding: 18px 14px 16px;
+	}
+	.stat:nth-child(odd) {
+		padding-left: 0;
+		border-left: 0;
+	}
+	.stat:nth-child(n + 3) {
+		border-top: 1px solid var(--rule-soft);
+	}
+	.stat .lbl {
+		font-size: 14px;
+	}
+	.stat .src {
+		font-size: 11px;
+	}
+	.stat .src .long {
+		display: none;
+	}
+	.spark {
+		display: none;
+	}
+}
+
+/*
+ * ---------- phones with their browser chrome showing ----------
+ * A 390×844 phone shows about 390×664 of page under Safari's toolbars, and
+ * 412×783 under Chrome's. Tighten the hero so all four numbers, with their
+ * labels, are on the first screen. The two download tiles drop their source
+ * line (npm, @standard-schema/spec); their popovers still carry it. The 2×
+ * keeps its own: its runs and role aren't anywhere else on the tile.
+ */
+@media (max-width: 760px) and (max-height: 820px) {
+	.hero {
+		padding-top: 8px;
+		row-gap: 12px;
+	}
+	.eyebrow {
+		margin-bottom: 10px;
+	}
+	.eyebrow .avatar {
+		width: 32px;
+		height: 32px;
+	}
+	.display {
+		font-size: 52px;
+	}
+	.lede {
+		margin-top: 10px;
+		font-size: 17px;
+		line-height: 1.4;
+	}
+	.roles {
+		margin-top: 12px;
+		font-size: 14px;
+	}
+	.ctas {
+		margin-top: 14px;
+	}
+	.stat {
+		padding: 8px 12px 6px;
+	}
+	.stat .val {
+		font-size: 32px;
+	}
+	.stat .lbl {
+		margin-top: 4px;
+		font-size: 13px;
+		line-height: 1.3;
+	}
+	.stat .src {
+		margin-top: 6px;
+	}
+	.stat:nth-child(-n + 2) .src {
+		display: none;
+	}
+}
+/* 360×640 (small Androids): the Pullfrog row wraps here, so take the rest
+   out of the type and the gaps */
+@media (max-width: 370px) and (max-height: 820px) {
+	.hero {
+		row-gap: 8px;
+	}
+	.eyebrow .avatar {
+		width: 28px;
+		height: 28px;
+	}
+	.display {
+		font-size: 46px;
+	}
+	.lede {
+		line-height: 1.3;
+	}
+	.roles {
+		margin-top: 10px;
+	}
+	.roles dt {
+		line-height: 1.6;
+	}
+	.roles dd {
+		line-height: 1.45;
+	}
+	.ctas {
+		margin-top: 12px;
+	}
+	.stat .val {
+		font-size: 30px;
+	}
+}
+
+/* ---------- 320px: the 40-column snippet must fit without panning ---------- */
+@media (max-width: 380px) {
+	.codecard .code {
+		padding-inline: 12px;
+	}
+	.codecard pre.shiki {
+		font-size: 11px;
+	}
+	/* the address pill shares the row with two 44px icon circles */
+	.ctas .btn-gold {
+		padding-inline: 14px;
+		gap: 6px;
+	}
+	.ctas .bt-short {
+		font-size: 13px;
+	}
+}
+
+/*
+ * ---------- short laptop viewports (1366×657, 1440×789, 1536×730) ----------
+ * The fold promise was proven at 1440×900. Shorter desktops scale the
+ * display type with the viewport height and tighten the rhythm so the stat
+ * strip, numbers and sources, still lands above the fold.
+ */
+@media (min-width: 1081px) and (max-height: 860px) {
+	.hero {
+		padding-top: 8px;
+		row-gap: 24px;
+	}
+	.eyebrow {
+		margin-bottom: 12px;
+	}
+	.display {
+		font-size: clamp(3.5rem, 10.5vh, 6.5rem);
+	}
+	.lede {
+		margin-top: 12px;
+		font-size: clamp(1.25rem, 3.2vh, 1.75rem);
+		max-width: 22.1em; /* 34ch */
+	}
+	.roles {
+		margin-top: 14px;
+		row-gap: 0;
+	}
+	.ctas {
+		margin-top: 18px;
+	}
+	.codecard figcaption {
+		padding-block: 10px;
+	}
+	/* 164px, not less: the pinned popover must clear the footer rule */
+	.codecard .code {
+		padding-top: 14px;
+		padding-bottom: 164px;
+	}
+	.codecard-foot span:first-child {
+		display: none;
+	}
+	.stat {
+		padding-block: 14px 12px;
+	}
+	.stat .lbl,
+	.stat .src {
+		margin-top: 6px;
+	}
+}
+
+/* shorter still (1366×657 and below): smaller numbers, tighter rows */
+@media (min-width: 1081px) and (max-height: 700px) {
+	.hero {
+		row-gap: 16px;
+	}
+	.display {
+		font-size: clamp(3.5rem, 9.5vh, 6.5rem);
+	}
+	.stat .val {
+		font-size: clamp(2.25rem, 6.4vh, 3.5rem);
+	}
+	.stat {
+		padding-top: 12px;
+	}
+}
+
+/* ---------- touch: 44px targets without moving layout ---------- */
+@media (pointer: coarse) {
+	.roles dd a {
+		display: inline-block;
+		padding-block: 10px;
+		margin-block: -10px;
+	}
+	.handle-wrap .tok {
+		padding-block: 13px;
+		margin-block: -13px;
+	}
+	.nav .btn-sm {
+		height: 44px;
+	}
+}
