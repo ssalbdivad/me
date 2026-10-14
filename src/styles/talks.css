@@ -267,8 +267,9 @@
 	text-decoration: underline;
 	text-underline-offset: 3px;
 }
+/* four quotes fill the grid two by two; the last word closes it, full width */
 .said-self {
-	align-self: end;
+	grid-column: 1 / -1;
 }
 .quote-self {
 	padding-top: 20px;

@@ -120,6 +120,41 @@ const mic = [
 	}
 ]
 
+// after the ArkType lists; the unattributed row is David's
+const standardSchema = [
+	{
+		show: "TypeScript.fm 35B",
+		length: "1:09:53",
+		chapter: "“Compatibility with Standard Schema Spec” @ 51:55",
+		href: "https://www.youtube.com/watch?v=z4Jv7QPh8qE&t=3115s"
+	},
+	{
+		show: "Syntax #873",
+		length: "13:30",
+		chapter:
+			"Wes Bos & Scott Tolinski: “The Universal JavaScript Data Interface”",
+		href: "https://www.youtube.com/watch?v=P_etHPMftyY"
+	}
+]
+
+type Episode = (typeof mic)[number]
+
+const Episodes = ({ items }: { items: Episode[] }) => (
+	<ul className="mic-list">
+		{items.map(m => (
+			<li key={m.show}>
+				<a href={m.href} target="_blank" rel="noreferrer">
+					<span className="mic-show">{m.show}</span>
+					<span className="mic-len tnum">{m.length}</span>
+					<span className="mic-ch">
+						<Ext>{m.chapter}</Ext>
+					</span>
+				</a>
+			</li>
+		))}
+	</ul>
+)
+
 const about = [
 	{
 		text: "Theo: “(Actually) Benchmarking TypeScript”",
@@ -166,19 +201,7 @@ export const Talks = () => (
 			<h3 className="mic-label mono">
 				<span aria-hidden="true">// </span>on mic
 			</h3>
-			<ul className="mic-list">
-				{mic.map(m => (
-					<li key={m.show}>
-						<a href={m.href} target="_blank" rel="noreferrer">
-							<span className="mic-show">{m.show}</span>
-							<span className="mic-len tnum">{m.length}</span>
-							<span className="mic-ch">
-								<Ext>{m.chapter}</Ext>
-							</span>
-						</a>
-					</li>
-				))}
-			</ul>
+			<Episodes items={mic} />
 			<h3 className="mic-label mono about-label">
 				<span aria-hidden="true">// </span>about it
 			</h3>
@@ -191,6 +214,10 @@ export const Talks = () => (
 					</li>
 				))}
 			</ul>
+			<h3 className="mic-label mono about-label">
+				<span aria-hidden="true">// </span>standard schema
+			</h3>
+			<Episodes items={standardSchema} />
 		</div>
 	</Section>
 )

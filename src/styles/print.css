@@ -89,7 +89,6 @@
 	video,
 	button:not(.tok),
 	.w-extra,
-	#arc,
 	figure.merge,
 	figure.payoffs,
 	figure.trace,
@@ -97,7 +96,6 @@
 	.replay-block,
 	.talk-media,
 	#said,
-	.contact-ctas .copy,
 	/* pull quotes, Prisma's included: with them the page runs to a third sheet */
 	.case-quote,
 	.case-foot,

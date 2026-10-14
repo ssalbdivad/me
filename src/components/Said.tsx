@@ -28,12 +28,6 @@ const quotes: Quote[] = [
 		who: "Theo, “(Actually) Benchmarking TypeScript”",
 		href: "https://www.youtube.com/watch?v=AEA0K77qhS4",
 		source: "YouTube"
-	},
-	{
-		text: "these guys never shut up... ...they have too many good ideas 🫶",
-		who: "Colin McDonnell (Zod), on Fabian Hiller and me",
-		href: "https://x.com/colinhacks/status/1851741867668574224",
-		source: "X"
 	}
 ]
 

@@ -10,21 +10,21 @@
 	gap: 12px;
 	margin-top: 16px;
 }
+/* over the socials, whose reveal can leave them a stacking context */
+.contact-ctas:has(.ce-pop) {
+	position: relative;
+	z-index: 2;
+}
 .contact-ctas .btn-gold {
 	height: 52px;
 	padding: 0 24px;
 	font-size: 18px;
 }
-/* the address in Cascadia, weighted and sized like the hero's mobile pill */
-.contact-ctas .btn-gold .mono {
+.contact-ctas .ce-addr {
 	font-size: 16px;
-	font-weight: 600;
-	letter-spacing: -0.01em;
 }
-.contact-ctas .copy {
-	height: 52px;
-	min-width: 112px;
-	justify-content: center;
+.contact-ctas .ce-text {
+	font-size: 18px;
 }
 .socials {
 	display: flex;

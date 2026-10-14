@@ -1,5 +1,5 @@
 {
-	"fetchedAt": "2026-10-14T07:32:34.352Z",
+	"fetchedAt": "2026-10-14T18:53:53.001Z",
 	"window": {
 		"start": "2026-09-13",
 		"end": "2026-10-12"
@@ -161,7 +161,7 @@
 	"stars": {
 		"arktypeio/arktype": 7874,
 		"standard-schema/standard-schema": 3650,
-		"pullfrog/pullfrog": 1309
+		"pullfrog/pullfrog": 1310
 	},
 	"followers": 404
 }

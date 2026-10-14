@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import handleQueries from "~/data/snippets/handle.queries.json"
 import regexHtml from "~/data/snippets/regex.html?raw"
-import { email } from "~/data/site"
 import stats from "~/data/stats.json"
 import * as ark from "~/lib/ark"
 import { dependencies } from "../../package.json"
@@ -9,8 +8,9 @@ import { formatCompact, formatDay } from "~/lib/format"
 import { useLive } from "~/lib/live"
 import { prefersReducedMotion } from "~/lib/motion"
 import { session } from "~/lib/storage"
+import { CopyEmail } from "./CopyEmail"
 import { Claim, Quickinfo } from "./Quickinfo"
-import { GitHubIcon, LinkedInIcon, ArrowIcon } from "./icons"
+import { GitHubIcon, LinkedInIcon } from "./icons"
 
 export const Hero = () => (
 	<header className="hero wrap grid12" id="top">
@@ -60,10 +60,7 @@ export const Hero = () => (
 				</dd>
 			</dl>
 			<div className="ctas rise" style={{ "--i": 4 } as React.CSSProperties}>
-				<a className="btn btn-gold" href={`mailto:${email}`}>
-					<span className="bt-long">Email me</span>
-					<span className="bt-short mono">{email}</span> <ArrowIcon />
-				</a>
+				<CopyEmail />
 				<a
 					className="btn btn-ghost"
 					href="https://github.com/ssalbdivad"
@@ -80,7 +77,6 @@ export const Hero = () => (
 					<LinkedInIcon />
 					<span className="bt">LinkedIn</span>
 				</a>
-				<span className="mail mono">{email}</span>
 			</div>
 		</div>
 		{/* stats before the card in source order: a slow connection paints the

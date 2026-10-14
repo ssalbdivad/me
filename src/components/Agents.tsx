@@ -48,10 +48,10 @@ export const Agents = () => (
 	<Section id="agents" index="03" label="agents" title="How I work with agents">
 		<p className="agents-intro" data-reveal>
 			I build Pullfrog by running many coding agents in parallel, every day,
-			through Ntwine- a local tool I maintain that puts every agent thread on
-			one board and queues the ones that need me. It continues Colin McDonnell's
-			Frizz; the queue, the board and the principles behind them are his design.
-			These are the rules I've added on top, for the agents and for me.
+			through Ntwine- a local tool I maintain. It grew out of Frizz, an earlier
+			open-source tool, and keeps its design: every agent thread on one board,
+			and a queue of the ones that need me. These are the rules I've added on
+			top, for the agents and for me.
 		</p>
 		<ol className="principles" data-reveal="stagger">
 			{principles.map(pr => (

@@ -23,7 +23,7 @@ Numbers: a snapshot of 2026-10-13; npm figures cover 2026-09-13 to 2026-10-12; e
 
 ### Co-founder, Pullfrog · 2025–present
 
-- Co-founded [Pullfrog](https://pullfrog.com) with Colin McDonnell (Zod): an open-source platform running AI coding agents in GitHub Actions ([1.3K stars](https://github.com/pullfrog/pullfrog)). Agents review PRs, triage issues, fix CI, resolve merge conflicts and test UIs in a headless browser.
+- Co-founded [Pullfrog](https://pullfrog.com): an open-source platform running AI coding agents in GitHub Actions ([1.3K stars](https://github.com/pullfrog/pullfrog)). Agents review PRs, triage issues, fix CI, resolve merge conflicts and test UIs in a headless browser.
 - Built the model-agnostic agent runtime: OpenCode, BYOK, MCP tools, GitHub App/OIDC auth, sandboxed CI.
 - Built tooling to run and coordinate many parallel coding agents, used daily to develop Pullfrog.
 
@@ -45,7 +45,7 @@ Numbers: a snapshot of 2026-10-13; npm figures cover 2026-09-13 to 2026-10-12; e
 
 ## How I work with agents
 
-I build Pullfrog by running many coding agents in parallel, every day, through Ntwine- a local tool I maintain that puts every agent thread on one board and queues the ones that need me. It continues Colin McDonnell's Frizz; the queue, the board and the principles behind them are his design. The rules I've added on top, for the agents and for me: size work by scope, never in days; report honest effect sizes; lead with what changed; preserve evidence.
+I build Pullfrog by running many coding agents in parallel, every day, through Ntwine- a local tool I maintain. It grew out of Frizz, an earlier open-source tool, and keeps its design: every agent thread on one board, and a queue of the ones that need me. The rules I've added on top, for the agents and for me: size work by scope, never in days; report honest effect sizes; lead with what changed; preserve evidence.
 
 ## Talks
 

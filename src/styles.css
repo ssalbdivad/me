@@ -405,6 +405,109 @@
 		flex: none;
 	}
 
+	/* ---------- CopyEmail: the address, copied, never a mail-client link ---------- */
+	.ce {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+	}
+	/* both labels share one cell: the button is as wide as the wider, so the
+	   swap can't resize it */
+	.ce-face {
+		display: inline-grid;
+		place-items: center;
+	}
+	.ce-face > * {
+		grid-area: 1 / 1;
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		transition:
+			opacity 0.14s,
+			translate 0.2s var(--ease-out);
+	}
+	.ce-done {
+		gap: 5px;
+		opacity: 0;
+		translate: 0 4px;
+	}
+	.ce-btn[data-state="copied"] .ce-idle {
+		opacity: 0;
+		translate: 0 -4px;
+	}
+	.ce-btn[data-state="copied"] .ce-done {
+		opacity: 1;
+		translate: none;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.ce-face > * {
+			transition: none;
+		}
+	}
+	/* the address in Cascadia, weighted to sit with the sans labels */
+	.ce-addr {
+		font-family: var(--mono);
+		font-weight: 600;
+		/* the local fallbacks match Cascadia's advance in their regular cut
+		   only; a synthesized bold is wider */
+		font-synthesis-weight: none;
+		letter-spacing: -0.01em;
+	}
+	/* the address is 9.215em in Cascadia (measured in Firefox): the box is
+	   that wide whatever font is drawing, so the webfont swapping in can't
+	   push the hero's GitHub and LinkedIn buttons (Chromium on Linux drew the
+	   DejaVu fallback 16px wider). Flex centres an overflow both ways, where
+	   text-align wouldn't. */
+	.ce-at {
+		display: inline-flex;
+		justify-content: center;
+		width: 9.25em;
+	}
+	.btn-sm .ce-face svg {
+		width: 15px;
+		height: 15px;
+	}
+	/* no JS, so no button: the address as plain text in its place */
+	.ce-text {
+		font: 600 15px / 1.3 var(--mono);
+		letter-spacing: -0.01em;
+		color: var(--ink);
+		user-select: all;
+	}
+	html.js .ce-text {
+		display: none;
+	}
+	/* the clipboard refused: the address, selected, for a manual copy */
+	.ce-pop {
+		position: absolute;
+		top: calc(100% + 10px);
+		left: 0;
+		z-index: 5;
+		display: grid;
+		gap: 8px;
+		width: max-content;
+		max-width: min(280px, calc(100vw - 24px));
+		padding: 12px 14px;
+		border-radius: 10px;
+		/* opaque, not the hovers' frosted glass: the hint is read, not glanced at */
+		background: var(--raised);
+		border: 1px solid var(--popover-border);
+		box-shadow: var(--shadow-pop);
+		font: 400 13.5px / 1.45 var(--sans);
+		color: var(--ink-2);
+		white-space: normal;
+		text-align: left;
+	}
+	.ce-pop input {
+		padding: 8px 10px;
+		border: 1px solid var(--rule);
+		border-radius: 6px;
+		background: var(--bg);
+		color: var(--ink);
+		font: 600 15px / 1.2 var(--mono);
+		letter-spacing: -0.01em;
+	}
+
 	/* ---------- the hoverable token: "this has a type" ---------- */
 	.tok {
 		all: unset;
@@ -746,7 +849,7 @@
 	}
 	/* A jump to a section (nav, role links) would put the block's top under the
    nav and its label a full padding below that. Land the label ~32px under
-   the nav instead; in-row targets (#arc, #pullfrog) keep scroll-padding. */
+   the nav instead; in-row targets (#pullfrog) keep scroll-padding. */
 	.block[id] {
 		scroll-margin-top: -112px;
 	}

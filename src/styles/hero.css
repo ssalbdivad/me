@@ -73,6 +73,16 @@
 		transition: none;
 	}
 }
+/* the button is the nav's last item: its copy bubble opens leftward */
+.navlinks .ce-pop {
+	left: auto;
+	right: 0;
+}
+/* no JS: the address, set like the links beside it */
+.navlinks .ce-text {
+	font: 400 14.5px / 1 var(--mono);
+	color: var(--ink-2);
+}
 
 /* ---------- hero ---------- */
 .hero {
@@ -180,14 +190,11 @@
 	margin-top: 28px;
 	align-items: center;
 }
-.ctas .bt-short {
-	display: none;
-}
-.ctas .mail {
-	font-size: 14px;
-	color: var(--ink-3);
-	margin-left: 6px;
-	user-select: all;
+/* the rise animation makes the row a stacking context, and the stat strip
+   after it would paint over the copy bubble */
+.ctas:has(.ce-pop) {
+	position: relative;
+	z-index: 2;
 }
 
 /* ---------- @ssalbdivad: the zipper ---------- */
@@ -644,20 +651,17 @@
 		margin-top: 24px;
 		gap: 10px;
 	}
-	.ctas .mail,
-	.ctas .bt-long {
-		display: none;
-	}
-	.ctas .bt-short {
-		display: inline;
+	.ctas .ce-addr {
 		font-size: 14.5px;
-		font-weight: 600;
-		letter-spacing: -0.01em;
+	}
+	/* the address pill takes the row the two icon circles leave */
+	.ctas .ce {
+		flex: 1;
+		min-width: 0;
 	}
 	.ctas .btn-gold {
-		flex: 1;
+		width: 100%;
 		justify-content: center;
-		min-width: 0;
 	}
 	.ctas .btn-ghost {
 		width: 44px;
@@ -815,10 +819,18 @@
 	/* the address pill shares the row with two 44px icon circles */
 	.ctas .btn-gold {
 		padding-inline: 14px;
-		gap: 6px;
 	}
-	.ctas .bt-short {
+	.ctas .ce-addr {
 		font-size: 13px;
+	}
+	/* at 320 the pill's inside is 142px: the address and an 18px icon ran
+	   into its padding, a 15px one fits */
+	.ctas .ce-idle {
+		gap: 5px;
+	}
+	.ctas .ce-idle svg {
+		width: 15px;
+		height: 15px;
 	}
 }
 

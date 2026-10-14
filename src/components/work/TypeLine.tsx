@@ -32,7 +32,7 @@ const chips = [
 type Status = { kind: "ok" | "err"; text: string } | { kind: "none" }
 type Note =
 	| { kind: "extends"; holds: boolean; reduced: boolean }
-	| { kind: "quip"; item: Completion; typed: number }
+	| { kind: "quip"; item: Completion }
 	| null
 
 type Phase = "static" | "waiting" | "ghost" | "live"
@@ -82,11 +82,6 @@ const completions: Completion[] = [
 		name: "shark",
 		quip: `"RIP z.shark() / long live sharktype"`,
 		href: "https://x.com/arktypeio/status/1993015076706828624"
-	},
-	{
-		name: "cofounder",
-		quip: `"sounds fake but I'm starting a company with my nemesis Colin P. Zod"`,
-		href: "https://bsky.app/profile/ssalbdivad.dev/post/3m7nm3dbfhs2v"
 	}
 ]
 
@@ -150,7 +145,6 @@ export const TypeLine = () => {
 	const input = useRef<HTMLInputElement>(null)
 	const ghost = useRef({ cancelled: false })
 	const latest = useRef(0)
-	const quipTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 	const listId = useId()
 	const list = useRef<HTMLSpanElement>(null)
 
@@ -352,7 +346,6 @@ export const TypeLine = () => {
 
 	const edit = (src: string, caret: number) => {
 		stopGhost()
-		clearTimeout(quipTimer.current)
 		setValue(src)
 		setNote(null)
 		void parse(src)
@@ -367,36 +360,11 @@ export const TypeLine = () => {
 		void parse(src)
 		const caret = menu.start + item.name.length + 2
 		requestAnimationFrame(() => input.current?.setSelectionRange(caret, caret))
-		clearTimeout(quipTimer.current)
-		if (item.name !== "cofounder" || prefersReducedMotion()) {
-			setNote({ kind: "quip", item, typed: item.quip.length })
-			if (item.name === "cofounder") quipTimer.current = setTimeout(toArc, 700)
-			return
-		}
-		// the punchline types itself, then lands on the arc
-		let typed = 0
-		const tick = () => {
-			typed += 2
-			setNote({ kind: "quip", item, typed: Math.min(typed, item.quip.length) })
-			quipTimer.current =
-				typed < item.quip.length ? setTimeout(tick, 28) : setTimeout(toArc, 900)
-		}
-		tick()
-	}
-
-	const toArc = () => {
-		const arc = document.getElementById("arc")
-		if (!arc) return
-		arc.scrollIntoView({
-			behavior: prefersReducedMotion() ? "auto" : "smooth",
-			block: "center"
-		})
-		window.dispatchEvent(new CustomEvent("arc:replay"))
+		setNote({ kind: "quip", item })
 	}
 
 	const runChip = (chip: string, focus: boolean) => {
 		stopGhost()
-		clearTimeout(quipTimer.current)
 		setValue(chip)
 		setNote(null)
 		void parse(chip)
@@ -624,14 +592,11 @@ const NoteLine = ({ note }: { note: Note }) => {
 				{note.reduced && <span className="tl-dim"> · union reduced</span>}
 			</p>
 		)
-	const done = note.typed >= note.item.quip.length
 	return (
 		<p className="tl-note tl-quip">
 			<a href={note.item.href} target="_blank" rel="noreferrer">
-				// {note.item.quip.slice(0, note.typed)}
-				{done ?
-					<span className="tl-ext"> ↗</span>
-				:	<span className="tl-caret" aria-hidden />}
+				// {note.item.quip}
+				<span className="tl-ext"> ↗</span>
 			</a>
 		</p>
 	)

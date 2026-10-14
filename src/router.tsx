@@ -11,10 +11,7 @@ const ErrorPage = () => (
 		<h1 className="h2">David Blass</h1>
 		<p className="sec-deck">
 			Something on this page broke. Reload to try again, or write to{" "}
-			<a className="link" href={`mailto:${email}`}>
-				{email}
-			</a>
-			.
+			<span className="mono">{email}</span>.
 		</p>
 	</main>
 )

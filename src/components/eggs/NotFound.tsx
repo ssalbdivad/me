@@ -5,7 +5,7 @@ import * as ark from "~/lib/ark"
 import { formatLongDay } from "~/lib/format"
 import { Eggs } from "../Eggs"
 import { Footer } from "../Footer"
-import { email } from "~/data/site"
+import { CopyEmail } from "../CopyEmail"
 import css from "./notfound.css?url"
 
 /**
@@ -127,9 +127,7 @@ export const NotFoundPage = () => {
 					David Blass
 				</a>
 				<div className="navlinks">
-					<a className="btn btn-gold btn-sm" href={`mailto:${email}`}>
-						Email me
-					</a>
+					<CopyEmail label="Copy email" small />
 				</div>
 			</nav>
 			<main className="nf wrap">

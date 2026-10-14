@@ -33,8 +33,8 @@ const captionMs = 2400
  * his Ntwine AGENTS.md (commit 35f616c6). Rules that trace to Colin
  * McDonnell's Frizz design (the queue, the board, the worker contract, the
  * agent completion invariant) are deliberately left out: the intro credits
- * them to him instead. Array order matters: the replay's captions play them
- * in this order, cued by the session itself (see `cues`).
+ * that design to Frizz instead. Array order matters: the replay's captions
+ * play them in this order, cued by the session itself (see `cues`).
  */
 export const principles = [
 	{

@@ -2,7 +2,7 @@ import { Fragment, type ReactNode } from "react"
 import md from "../../../public/resume.md?raw"
 import { Eggs } from "../Eggs"
 import { Footer } from "../Footer"
-import { email } from "~/data/site"
+import { CopyEmail } from "../CopyEmail"
 import css from "./resume.css?url"
 
 /**
@@ -118,9 +118,7 @@ export const ResumePage = () => (
 				David Blass
 			</a>
 			<div className="navlinks">
-				<a className="btn btn-gold btn-sm" href={`mailto:${email}`}>
-					Email me
-				</a>
+				<CopyEmail label="Copy email" small />
 			</div>
 		</nav>
 		<main className="rs wrap" id="main">

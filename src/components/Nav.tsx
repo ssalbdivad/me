@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { email } from "~/data/site"
+import { CopyEmail } from "./CopyEmail"
 
 const links = [
 	{ id: "work", label: "Work" },
@@ -49,9 +49,7 @@ export const Nav = () => {
 						{l.label}
 					</a>
 				))}
-				<a className="btn btn-gold btn-sm" href={`mailto:${email}`}>
-					Email me
-				</a>
+				<CopyEmail label="Copy email" small />
 			</div>
 		</nav>
 	)

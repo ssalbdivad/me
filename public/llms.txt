@@ -12,8 +12,8 @@ Numbers below are a snapshot as of 2026-10-13 (npm: the 30 days 2026-09-13 to 20
   - **ArkRegex**: the first library to validate and infer regex from TypeScript's type system. The launch post had 733,569 views on X ([post](https://x.com/arktypeio/status/1983210635266498649), read via the fxtwitter mirror).
   - **Attest**: type-level benchmarks and assertions for TypeScript (deterministic instantiation counts, so CI can fail a PR that makes types slower). `@ark/attest`: 427,538 npm downloads in 30 days ([npm](https://api.npmjs.org/downloads/point/2026-09-13:2026-10-12/@ark/attest)).
   - **ArkSchema**: the set-theoretic type system underneath (intersections, subtyping, union discrimination at runtime).
-- **Co-creator, Standard Schema (2024–)**: [standardschema.dev](https://standardschema.dev). One interface so any TypeScript validator plugs into any framework (tRPC, TanStack, Hono, React Hook Form and more). Colin McDonnell (Zod) came up with the idea; Fabian Hiller (Valibot) and David designed it with him. They then co-authored Standard JSON Schema, so any validator can define tool inputs for AI agents and MCP. The `@standard-schema/spec` package: 551,490,697 npm downloads in 30 days, mostly transitive installs ([npm](https://api.npmjs.org/downloads/point/2026-09-13:2026-10-12/@standard-schema/spec)); 3,650 GitHub stars.
-- **Co-founder, Pullfrog (2025–)**: [pullfrog.com](https://pullfrog.com), co-founded with Colin McDonnell (Zod). AI coding agents that run in your GitHub Actions: they review PRs, triage issues, fix CI, resolve merge conflicts and test UIs in a headless browser, on your infrastructure and your keys. David built the model-agnostic agent runtime (BYOK, MCP tools, GitHub App/OIDC auth, sandboxed CI). 1,307 GitHub stars ([repo](https://github.com/pullfrog/pullfrog)); `pullfrog`: 211,712 npm downloads in 30 days.
+- **Co-creator, Standard Schema (2024–)**: [standardschema.dev](https://standardschema.dev). One interface so any TypeScript validator plugs into any framework (tRPC, TanStack, Hono, React Hook Form and more). David co-designed it with the creators of Zod and Valibot. They then co-authored Standard JSON Schema, so any validator can define tool inputs for AI agents and MCP. The `@standard-schema/spec` package: 551,490,697 npm downloads in 30 days, mostly transitive installs ([npm](https://api.npmjs.org/downloads/point/2026-09-13:2026-10-12/@standard-schema/spec)); 3,650 GitHub stars.
+- **Co-founder, Pullfrog (2025–)**: [pullfrog.com](https://pullfrog.com). AI coding agents that run in your GitHub Actions: they review PRs, triage issues, fix CI, resolve merge conflicts and test UIs in a headless browser, on your infrastructure and your keys. David built the model-agnostic agent runtime (BYOK, MCP tools, GitHub App/OIDC auth, sandboxed CI). 1,307 GitHub stars ([repo](https://github.com/pullfrog/pullfrog)); `pullfrog`: 211,712 npm downloads in 30 days.
 - **TypeScript performance consultant (2023–2025)**: clients included tRPC, Drizzle, Prisma, Convex, AWS Amplify, Speakeasy, Stately, wevm, Vanta and Cloudinary.
 
 ## TypeScript performance, with sources
@@ -29,7 +29,7 @@ Numbers below are a snapshot as of 2026-10-13 (npm: the 30 days 2026-09-13 to 20
 
 ## How David works with agents
 
-He builds Pullfrog by running many coding agents in parallel, every day, through Ntwine, a local tool he maintains that puts every agent thread on one board and queues the ones that need him. It continues Colin McDonnell's Frizz; the queue, the board and the principles behind them are Colin's design. The rules David has added on top, for the agents and for himself:
+He builds Pullfrog by running many coding agents in parallel, every day, through Ntwine, a local tool he maintains. It grew out of Frizz, an earlier open-source tool, and keeps its design: every agent thread on one board, and a queue of the ones that need him. The rules David has added on top, for the agents and for himself:
 
 - **Size work by scope, never in days.** Agents do the building, so hours are the wrong unit. Scope is the code paths a change touches, its risk, and what needs a human decision.
 - **Report honest effect sizes.** Say how strong a claim is right next to it, and treat pushback as a bug report on the measurement before defending the result.
@@ -41,7 +41,7 @@ He builds Pullfrog by running many coding agents in parallel, every day, through
 - [Effect Days 2024 (Vienna): Discriminated Unions in TypeScript, Effect, and ArkType](https://www.youtube.com/watch?v=AaUKLH8N6go)
 - [TypeScript Congress 2023: ArkType, Bringing TypeScript to Runtime](https://gitnation.com/contents/arktype-bringing-typescript-to-runtime)
 - [devtools.fm #132: ArkType, better runtime type validation](https://www.devtools.fm/episode/132) (TypeScript performance from 08:35)
-- [TypeScript.fm 35B: ArkType is TypeScript's 1:1 Validator](https://typescript.fm/bonus35) (JIT-optimized codegen, optimizing types)
+- [TypeScript.fm 35B: ArkType is TypeScript's 1:1 Validator](https://typescript.fm/bonus35) (JIT-optimized codegen, optimizing types; Standard Schema from 51:55)
 
 ## Before
 

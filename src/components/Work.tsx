@@ -3,7 +3,6 @@ import stats from "~/data/stats.json"
 import { formatCompact, formatNumber } from "~/lib/format"
 import { Claim } from "./Quickinfo"
 import { Section } from "./Section"
-import { Arc } from "./work/Arc"
 import { Collapse } from "./work/Collapse"
 import { TypeLine } from "./work/TypeLine"
 
@@ -266,10 +265,9 @@ export const Work = () => (
 							One interface, so any TypeScript validator plugs into any
 							framework.
 						</strong>{" "}
-						Colin McDonnell (Zod) came up with the idea; Fabian Hiller (Valibot)
-						and I designed it with him. Then we co-authored Standard JSON
-						Schema, so any validator can define tool inputs for AI agents and
-						MCP.
+						I co-designed it with the creators of Zod and Valibot. Then we
+						co-authored Standard JSON Schema, so any validator can define tool
+						inputs for AI agents and MCP.
 					</>
 				}
 				metrics={
@@ -297,7 +295,6 @@ export const Work = () => (
 			>
 				<Collapse />
 			</Row>
-			<Arc />
 			<Row
 				id="pullfrog"
 				index="03"
@@ -311,9 +308,8 @@ export const Work = () => (
 						Pullfrog wraps vanilla Claude Code, Codex and OpenCode to review
 						PRs, triage issues, fix CI, resolve merge conflicts and test UIs in
 						a headless browser. Your infrastructure, your keys, your costs. I
-						co-founded it with Colin McDonnell (Zod) and built the
-						model-agnostic agent runtime: BYOK, MCP tools, GitHub App/OIDC auth,
-						sandboxed CI.
+						co-founded it and built the model-agnostic agent runtime: BYOK, MCP
+						tools, GitHub App/OIDC auth, sandboxed CI.
 						<span className="w-used">
 							Used by Sanity, Trigger.dev, Zed, Unkey, Remotion and Inkeep.
 						</span>
