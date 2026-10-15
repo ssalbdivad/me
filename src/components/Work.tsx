@@ -137,7 +137,21 @@ export const Work = () => (
 				index="01"
 				name="ArkType"
 				role="author · 2022–"
-				links={[{ href: "https://arktype.io", label: "arktype.io" }]}
+				links={[
+					{ href: "https://arktype.io", label: "arktype.io" },
+					{
+						href: "https://github.com/arktypeio/arktype",
+						label: "GitHub",
+						ext: true
+					},
+					{ href: "https://arktype.io/discord", label: "Discord", ext: true },
+					{ href: "https://x.com/arktypeio", label: "X", ext: true },
+					{
+						href: "https://bsky.app/profile/arktype.io",
+						label: "Bluesky",
+						ext: true
+					}
+				]}
 				lead="It started as a question I didn't think had a good answer: how close can you get to TypeScript at runtime?"
 				body={
 					<>
