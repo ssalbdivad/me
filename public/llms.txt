@@ -6,12 +6,12 @@ He's looking for his next team.
 
 Contact: david@arktype.io. The full résumé, with every number sourced: [/resume.md](https://ssalbdivad.com/resume.md).
 
-Numbers below are a snapshot as of 2026-10-13 (npm: the 30 days 2026-09-13 to 2026-10-12). Each one links to where it was read.
+Numbers below are a snapshot as of 2026-10-13 (npm: the 30 days 2026-09-13 to 2026-10-12).
 
 ## Roles
 
 - **Author, ArkType ecosystem (2022–)**: [ArkType](https://arktype.io), TypeScript's 1:1 validator, optimized from editor to runtime. A parser written in TypeScript's type system infers types from TS syntax in strings as you type, and at runtime the same definitions compile to JIT-friendly validation code. 9,055,997 npm downloads in 30 days ([npm](https://api.npmjs.org/downloads/point/2026-09-13:2026-10-12/arktype)), 7,874 GitHub stars ([repo](https://github.com/arktypeio/arktype)).
-  - **ArkRegex**: the first library to validate and infer regex from TypeScript's type system. The launch post had 733,569 views on X ([post](https://x.com/arktypeio/status/1983210635266498649), read via the fxtwitter mirror).
+  - **ArkRegex**: the first library to validate and infer regex from TypeScript's type system. The launch post had 1.5M+ views on X including quote posts; the post itself had 733,569 ([post](https://x.com/arktypeio/status/1983210635266498649)).
   - **Attest**: type-level benchmarks and assertions for TypeScript (deterministic instantiation counts, so CI can fail a PR that makes types slower). `@ark/attest`: 427,538 npm downloads in 30 days ([npm](https://api.npmjs.org/downloads/point/2026-09-13:2026-10-12/@ark/attest)).
   - **ArkSchema**: the set-theoretic type system underneath (canonical reduction, intersections, subtyping, union discrimination at runtime).
 - **Co-creator, Standard Schema (2024–)**: [standardschema.dev](https://standardschema.dev). One interface so any TypeScript validator plugs into any framework (tRPC, TanStack, Hono, React Hook Form and more). David co-designed it with the creators of Zod and Valibot. They then co-authored Standard JSON Schema, so any validator can define tool inputs for AI agents and MCP. The `@standard-schema/spec` package: 551,490,697 npm downloads in 30 days, mostly transitive installs ([npm](https://api.npmjs.org/downloads/point/2026-09-13:2026-10-12/@standard-schema/spec)); 3,650 GitHub stars.
@@ -20,12 +20,12 @@ Numbers below are a snapshot as of 2026-10-13 (npm: the 30 days 2026-09-13 to 20
 
 ## TypeScript performance, with sources
 
-- **TypeScript 5.9.** David found, minimized, benchmarked (with Attest) and drove a fix for chained Zod- and tRPC-style types where each link roughly tripled the compiler's work: O(3^N) instantiations. The compiler patch was written by Mateusz Burzyński (@Andarist) in [microsoft/TypeScript#61505](https://github.com/microsoft/TypeScript/pull/61505); it shipped in TS 5.9 and was ported to the Go compiler ([typescript-go#1358](https://github.com/microsoft/typescript-go/pull/1358)).
+- **TypeScript 5.9.** David found, minimized, benchmarked (with Attest) and drove a fix for O(3^N) instantiations in chained Zod- and tRPC-style types. The compiler patch was written by Mateusz Burzyński (@Andarist) in [microsoft/TypeScript#61505](https://github.com/microsoft/TypeScript/pull/61505); it shipped in TS 5.9 and was ported to the Go compiler ([typescript-go#1358](https://github.com/microsoft/typescript-go/pull/1358)).
   - AnswerOverflow's dashboard: 6.66s → 3.29s check time (2.0×), mean of 5 runs each, ranges don't overlap ([comment](https://github.com/microsoft/TypeScript/pull/61535#issuecomment-2780961089)).
   - A tRPC monorepo David tested: 13.04s → 6.00s (2.1×), a single run ([comment](https://github.com/microsoft/TypeScript/pull/61505#issuecomment-2769065243)).
   - Klarna: 395.48s → 132.09s (2.9×), self-reported by one of their engineers in one comment ([comment](https://github.com/microsoft/TypeScript/pull/61505#issuecomment-3102636519)).
   - 11 chained `.merge()` calls: 1,596,004 instantiations on TS 5.8.2 vs. 976 on 5.9.3 (Attest, re-run 2026-10-13; bench in this site's repo).
-- **viem + MUD.** TypeScript spent 1.86s (1,866ms) computing the variance of one viem type; with variance annotated by hand, the whole file checked in 1,288ms. The annotations now ship in viem ([latticexyz/mud#2956](https://github.com/latticexyz/mud/pull/2956), [wevm/viem#2557](https://github.com/wevm/viem/pull/2557)).
+- **viem + MUD.** TypeScript spent 1,866ms computing the variance of one viem type; with variance annotated by hand, the whole file checked in 1,288ms. The annotations now ship in viem ([latticexyz/mud#2956](https://github.com/latticexyz/mud/pull/2956), [wevm/viem#2557](https://github.com/wevm/viem/pull/2557)).
 - **Prisma.** David built their type benchmarks and helped speed up their generated types; Prisma wrote it up in its 6.16 release notes. 45% less check time on one generated file (commonInputTypes), not the whole client ([prisma/orm#27046](https://github.com/prisma/orm/pull/27046), [6.16.0 release notes](https://github.com/prisma/orm/releases/tag/6.16.0)).
 - **Mongoose 8.19.** `InferRawDocType`: 36–67% fewer instantiations on its benchmarks; the maintainer's whole-repo count was flat ([Automattic/mongoose#15588](https://github.com/Automattic/mongoose/pull/15588)).
 
@@ -35,7 +35,7 @@ Most days he has more coding agents working on Pullfrog at once than he can pay 
 
 - **Size work by scope, never in days.** Agents do the building, so hours are the wrong unit. Scope is the code paths a change touches, its risk, and what needs a human decision.
 - **Report honest effect sizes.** Say how strong a claim is right next to it, and treat pushback as a bug report on the measurement before defending the result.
-- **Lead with what changed.** An agent's report leads with what changed or what is true. The why goes in the commit message and code comments, where the next reader will find it, not in the chat.
+- **Lead with what changed.** The why goes in the commit message and code comments, where the next reader will find it, not in the chat.
 - **Preserve evidence.** Never delete or rewrite a stored measurement. Experiments are temporary: record the conclusion and its numbers, then delete the harness.
 
 ## Talks
@@ -47,7 +47,7 @@ Most days he has more coding agents working on Pullfrog at once than he can pay 
 
 ## Outside work
 
-- A Mets fan in Boston. He built [beanemachine](https://beanemachine.com), which tells him who to start in fantasy baseball; it and its robot mascot, Billy, are both named for Billy Beane.
+- A Mets fan in Boston. He built [beanemachine](https://beanemachine.com), which tells him who to start in fantasy baseball.
 - An amateur bird watcher, building [look4](https://github.com/ssalbdivad/look4), which goes through his backyard camera's footage looking for birds he hasn't seen yet.
 - Spent a day of quarantine arranging a jazz adaptation of "My Shot" from Hamilton ([video](https://www.youtube.com/watch?v=6KKGojDM1Xo)).
 

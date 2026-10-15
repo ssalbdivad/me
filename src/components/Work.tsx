@@ -231,11 +231,10 @@ export const Work = () => (
 					lead="Type-level benchmarks and assertions."
 					body={
 						<>
-							I had to build it to build ArkType: I couldn't make the types
-							faster without measuring them. Attest counts type instantiations
-							instead of timing the compiler, so the result is deterministic and
-							CI can catch a PR that makes types slower. It's how I measured the
-							compiler fix below, and how projects like{" "}
+							I had to build it to build ArkType. Attest counts type
+							instantiations instead of timing the compiler, so the result is
+							deterministic and CI can catch a PR that makes types slower. It's
+							how I measured the compiler fix below, and how projects like{" "}
 							<Claim id="i18next">i18next</Claim> benchmark their own types.
 						</>
 					}
@@ -290,12 +289,11 @@ export const Work = () => (
 				lead="One small interface every validator and framework can agree on."
 				body={
 					<>
-						I co-designed it with the creators of Zod and Valibot, so a
-						framework could accept all of us at once. Now tRPC, TanStack, Hono,
-						React Hook Form and dozens more accept whichever validator you use-
-						no adapters, no meta-adapters. Then we wrote Standard JSON Schema,
-						which lets the same validators double as tool input schemas for AI
-						agents and MCP.
+						I co-designed it with the creators of Zod and Valibot. Now tRPC,
+						TanStack, Hono, React Hook Form and dozens more accept whichever
+						validator you use- no adapters, no meta-adapters. Then we wrote
+						Standard JSON Schema, which lets the same validators double as tool
+						input schemas for AI agents and MCP.
 					</>
 				}
 				margin={[
@@ -320,10 +318,9 @@ export const Work = () => (
 				lead="Coding agents in your GitHub Actions."
 				body={
 					<>
-						It's agent-agnostic: it runs whichever agent you already use (Claude
-						Code, Codex, OpenCode) with your own keys, on your PRs, issues and
-						failing CI, and it just gets better as your agents do. I started it
-						with{" "}
+						It runs whichever agent you already use (Claude Code, Codex,
+						OpenCode) with your own keys, on your PRs, issues and failing CI,
+						and it just gets better as your agents do. I started it with{" "}
 						<a className="link ext" href="https://github.com/colinhacks">
 							Colin McDonnell
 						</a>

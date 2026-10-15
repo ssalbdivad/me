@@ -343,8 +343,7 @@ export const Collapse = () => {
 				</>
 		: !collapsed ?
 			<>
-				<b className="v">{adapters} adapters</b>, one for every validator ×
-				every tool
+				<b className="v">{adapters} adapters</b>
 			</>
 		:	<>
 				{/* each equation stays on one line, so a wrap never splits the sum; on a

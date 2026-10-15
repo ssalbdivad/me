@@ -39,8 +39,7 @@ const EASE = [0.22, 1, 0.36, 1] as const
 const LOG_FLOOR = 1 // 10^1
 const LOG_CEIL = 7 // 10^7
 
-const logNote =
-	"straight line on a log axis = exponential · 5.9 still grows: each link adds 10 more than the last (quadratic), just not 3× per link"
+const logNote = "5.9 still grows quadratically, just not 3× per link"
 
 /** runs during parsing, right after the bench's </details>; must match the effect's query */
 const closeOnNarrow = `matchMedia("(max-width: 1023px)").matches&&document.currentScript.previousElementSibling.removeAttribute("open")`
@@ -761,7 +760,7 @@ export const MergeChart = () => {
 			</p>
 			<p className="merge-foot">
 				Instantiation counts from <code>@ark/attest</code> {MERGE.attest}:
-				deterministic, the same on every machine. Bench from{" "}
+				deterministic. Bench from{" "}
 				<a
 					className="link ext"
 					href="https://github.com/microsoft/TypeScript/pull/61505#issuecomment-2768089049"

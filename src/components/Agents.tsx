@@ -39,8 +39,8 @@ const prompts =
 	: `one brief and ${direction - 1} follow-ups`
 const colophon =
 	totals.running > 0 ?
-		`This page is being ${list(totals.phases.map(p => verbs[p]))} by one agent thread. So far: ${totals.subAgents} sub-agents, ${calls} and ${duration(totals.agentSeconds)} of agent time. I set the bar in ${prompts}; they do the legwork. Every strand and timestamp above is from the session.`
-	:	`${capitalize(list(totals.phases.map(p => verbs[p])))} by one agent thread that fanned out to ${totals.subAgents} sub-agents: ${calls} and ${duration(totals.agentSeconds)} of agent time, folded into ${duration(totals.wallSeconds)} of wall clock. I set the bar in ${prompts}; they did the legwork. Every strand and timestamp above is from the session.`
+		`This page is being ${list(totals.phases.map(p => verbs[p]))} by one agent thread. So far: ${totals.subAgents} sub-agents, ${calls} and ${duration(totals.agentSeconds)} of agent time. I set the bar in ${prompts}; they do the legwork.`
+	:	`${capitalize(list(totals.phases.map(p => verbs[p])))} by one agent thread that fanned out to ${totals.subAgents} sub-agents: ${calls} and ${duration(totals.agentSeconds)} of agent time, folded into ${duration(totals.wallSeconds)} of wall clock. I set the bar in ${prompts}; they did the legwork.`
 
 const span = (iso: string, s1: number) => `${iso.slice(11, 19)}–${clock(s1)}`
 

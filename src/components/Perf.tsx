@@ -51,7 +51,7 @@ const Ts2589 = () => (
 			<span className="qi-line">
 				What TypeScript 5.8.2 says about 13 chained{" "}
 				<code className="mono">.merge()</code> calls: the bench below,
-				reproduced {measuredDay}. 5.9 checks the same chain without a word.
+				reproduced {measuredDay}.
 			</span>
 		</span>
 		<span className="qi-foot">
@@ -115,8 +115,7 @@ const CaseTs59 = () => (
 			<Beat label="the fix">
 				<p>
 					I worked on it with Andarist (Mateusz Burzyński), who wrote the
-					compiler patch: cache instantiations on type mappers, so a chain
-					reuses work it has already done. His PR opens:{" "}
+					compiler patch: cache instantiations on type mappers. His PR opens:{" "}
 					<a className="inline-quote" href={TS59_CREDIT.pr}>
 						"@ssalbdivad found out that a chain of somewhat trivial operations
 						can easily end up with dreaded 'Type instantiation is excessively
@@ -209,7 +208,7 @@ const More = () => (
 					<a className="link ext" href="https://github.com/wevm/viem/pull/2557">
 						viem itself
 					</a>
-					, so apps that use it don't pay that cost.
+					.
 				</p>
 			</li>
 			<li>
@@ -229,8 +228,7 @@ const More = () => (
 			<li>
 				<b className="mono">Mongoose</b>
 				<p>
-					I reworked how <code className="kw">InferRawDocType</code> infers
-					types from schemas; it shipped in{" "}
+					I reworked <code className="kw">InferRawDocType</code>; it shipped in{" "}
 					<a
 						className="link ext"
 						href="https://github.com/Automattic/mongoose/pull/15588"
@@ -242,11 +240,10 @@ const More = () => (
 			</li>
 		</ul>
 		<p className="more-clients">
-			Clients have included tRPC, Prisma, Convex, AWS Amplify,
-			Speakeasy, Stately, wevm, Vanta and Cloudinary. Some stuff that looks
-			super expensive is actually irrelevant; some stuff that looks innocuous is
-			actually a massive problem. All you can do is learn heuristics, iterate
-			and pray.
+			Clients have included tRPC, Prisma, Convex, AWS Amplify, Speakeasy,
+			Stately, wevm, Vanta and Cloudinary. Some stuff that looks super expensive
+			is actually irrelevant; some stuff that looks innocuous is actually a
+			massive problem. All you can do is learn heuristics, iterate and pray.
 		</p>
 	</div>
 )

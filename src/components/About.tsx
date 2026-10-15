@@ -72,9 +72,7 @@ export const About = () => (
 				<a className="link ext nowrap" href="https://beanemachine.com">
 					beanemachine
 				</a>
-				, which tells me who to start tonight in fantasy baseball. It's named
-				for Billy Beane, and so is its robot mascot, Billy. Its motto: "How can
-				you not be robotic about baseball?"{" "}
+				, which tells me who to start tonight in fantasy baseball.{" "}
 				{/* hidden without JS: the egg it summons needs it */}
 				<button
 					type="button"

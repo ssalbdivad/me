@@ -12,7 +12,7 @@ Numbers: a snapshot of 2026-10-13; npm figures cover 2026-09-13 to 2026-10-12; e
 ### Author, ArkType ecosystem · 2022–present
 
 - **[ArkType](https://arktype.io)**: TypeScript's 1:1 validator, optimized from editor to runtime. Its type-level parser infers types from TS syntax in strings; at runtime, the same definitions compile to JIT-optimized validation code. [9.05M npm downloads a month](https://api.npmjs.org/downloads/point/2026-09-13:2026-10-12/arktype), [7.87K GitHub stars](https://github.com/arktypeio/arktype).
-- **ArkRegex**: the first library to validate and infer regex from TypeScript's type system. [733K views on the launch post](https://x.com/arktypeio/status/1983210635266498649).
+- **ArkRegex**: the first library to validate and infer regex from TypeScript's type system. [1.5M+ views on the launch post, including quote posts](https://x.com/arktypeio/status/1983210635266498649).
 - **Attest**: type-level benchmarks and assertions for TypeScript; deterministic instantiation counts let CI catch slow types. [427K npm downloads a month](https://api.npmjs.org/downloads/point/2026-09-13:2026-10-12/@ark/attest).
 - **ArkSchema**: a set-theoretic type system with canonical reduction, intersections, subtyping and union discrimination.
 
@@ -45,7 +45,7 @@ Numbers: a snapshot of 2026-10-13; npm figures cover 2026-09-13 to 2026-10-12; e
 
 ## How I work with agents
 
-Most days I have more coding agents working on Pullfrog at once than I can pay attention to. I run them from [ntwine](https://github.com/ssalbdivad/ntwine), the agent orchestrator I'm building: it runs them in parallel and queues up the ones that need me. The rules I've ended up with, for them and for me: size work by scope, never in days; report honest effect sizes; lead with what changed; preserve evidence.
+Most days I have more coding agents working on Pullfrog at once than I can pay attention to. I run them from [ntwine](https://github.com/ssalbdivad/ntwine). The rules I've ended up with, for them and for me: size work by scope, never in days; report honest effect sizes; lead with what changed; preserve evidence.
 
 ## Talks
 

@@ -143,8 +143,7 @@ export const NotFoundPage = () => {
 						className="nf-deck rise"
 						style={{ "--i": 1 } as React.CSSProperties}
 					>
-						Worse: your URL isn’t even a valid type. ArkType reads a leading{" "}
-						<code className="mono">/</code> as the start of a regex literal.
+						Worse: your URL isn’t even a valid type.
 					</p>
 
 					<figure
@@ -278,9 +277,8 @@ export const NotFoundPage = () => {
 						<span className="nf-comment">
 							//{" "}
 							{followers === 404 ?
-								"please don't follow him. it would ruin this page."
-							:	`it's ${followers} now (${statsDay}). the bit is ruined. thanks.`
-							}
+								"please don't follow him."
+							:	`it's ${followers} now (${statsDay}). thanks.`}
 						</span>
 					</p>
 				</div>

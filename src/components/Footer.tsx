@@ -231,13 +231,7 @@ const Boat = () => {
 						<span className="k">const</span> <span className="n">boat</span>
 						<span className="k">:</span> <span className="v">"⛵"</span>
 					</span>
-					<span className="qi-doc">
-						A literal boat. The original floats across{" "}
-						<a href="https://arktype.io" className="ext">
-							arktype.io
-						</a>
-						.
-					</span>
+					<span className="qi-doc">A literal boat.</span>
 				</Quickinfo>
 			</span>
 		</div>

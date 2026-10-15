@@ -132,7 +132,7 @@ export const ResumePage = () => (
 				<a className="link" href="/resume.md">
 					/resume.md
 				</a>{" "}
-				<span className="rs-note">(plain text, for agents)</span>
+				<span className="rs-note">(for agents)</span>
 				<button
 					type="button"
 					className="btn btn-ghost btn-sm rs-print js-only"

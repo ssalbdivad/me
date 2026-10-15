@@ -1,9 +1,4 @@
-import {
-	formatLiteral,
-	formatLongDay,
-	formatStamp,
-	truncFixed
-} from "~/lib/format"
+import { formatLiteral, formatLongDay, formatStamp } from "~/lib/format"
 import stats from "./stats.json"
 
 /**
@@ -87,7 +82,7 @@ export const claims = {
 	ts59Klarna: {
 		name: "klarna",
 		type: '{ before: "395.48s"; after: "132.09s" }',
-		doc: 'Klarna\'s app, reported by one of their engineers: "This was a game-changer PR for us."',
+		doc: "Klarna's app.",
 		see: [
 			{
 				href: "https://github.com/microsoft/TypeScript/pull/61505#issuecomment-3102636519",
@@ -103,7 +98,7 @@ export const claims = {
 	viemVariance: {
 		name: "getVariancesWorker",
 		type: `{ ms: ${formatLiteral(viemVarianceMs)}; typeParams: 9 }`,
-		doc: `Time TypeScript spent computing the variance of viem's SimulateContractReturnType, in a trace of MUD's build: ${truncFixed(viemVarianceMs / 1000, 2)}s, truncated.`,
+		doc: `Time TypeScript spent computing the variance of viem's SimulateContractReturnType, in a trace of MUD's build.`,
 		see: [
 			{
 				href: "https://github.com/latticexyz/mud/pull/2956",
