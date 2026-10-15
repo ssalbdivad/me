@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import { BoatIcon } from "./icons"
 import { Claim } from "./Quickinfo"
 import { Section } from "./Section"
 import { Collapse } from "./work/Collapse"
@@ -24,7 +25,7 @@ const Row = ({
 	id: string
 	index?: string
 	name: string
-	emoji?: string
+	emoji?: ReactNode
 	role?: string
 	links: Link[]
 	lead: ReactNode
@@ -136,7 +137,7 @@ export const Work = () => (
 				id="arktype"
 				index="01"
 				name="ArkType"
-				emoji="⛵"
+				emoji={<BoatIcon />}
 				role="author · 2022–"
 				links={[{ href: "https://arktype.io", label: "arktype.io" }]}
 				lead="It started as a question I didn't think had a good answer: how close can you get to TypeScript at runtime?"

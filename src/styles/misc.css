@@ -157,6 +157,13 @@
 		float 150s linear -62s infinite,
 		bob 2s ease-in-out infinite;
 }
+.boat-icon {
+	display: block;
+	height: 24px;
+	width: auto;
+	/* sit the hull on the footer rule */
+	margin-top: 4px;
+}
 .boat .tok {
 	text-decoration: none;
 	cursor: pointer;

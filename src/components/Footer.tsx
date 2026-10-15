@@ -6,7 +6,7 @@ import { formatNumber } from "~/lib/format"
 import { prefersReducedMotion } from "~/lib/motion"
 import { local } from "~/lib/storage"
 import { CopyEmail } from "./CopyEmail"
-import { BlueskyIcon, GitHubIcon, LinkedInIcon, XIcon } from "./icons"
+import { BlueskyIcon, BoatIcon, GitHubIcon, LinkedInIcon, XIcon } from "./icons"
 import { Quickinfo } from "./Quickinfo"
 
 export const Contact = () => (
@@ -185,15 +185,6 @@ export const Footer = ({ numbers = true }: { numbers?: boolean }) => (
 				)}
 				<p>
 					//{" "}
-					<a
-						className="link"
-						href="https://archiveprogram.github.com/arctic-vault/"
-					>
-						some of my code is buried under Svalbard permafrost
-					</a>
-				</p>
-				<p>
-					//{" "}
 					<a className="link" href="/resume.md">
 						/resume.md
 					</a>{" "}
@@ -226,10 +217,10 @@ const Boat = () => {
 		<div className="boat-lane" aria-hidden={false} ref={lane}>
 			<span className="boat">
 				{/* measured: Firefox can't anchor to the moving, transformed boat */}
-				<Quickinfo trigger="⛵" label="a boat" measure>
+				<Quickinfo trigger={<BoatIcon />} label="a boat" measure>
 					<span className="qi-body">
 						<span className="k">const</span> <span className="n">boat</span>
-						<span className="k">:</span> <span className="v">"⛵"</span>
+						<span className="k">:</span> <span className="n">Boat</span>
 					</span>
 					<span className="qi-doc">A literal boat.</span>
 				</Quickinfo>

@@ -3,6 +3,7 @@ import hubHtml from "~/data/snippets/work-standard.html?raw"
 import { isOnscreen, prefersReducedMotion } from "~/lib/motion"
 import { pct } from "~/viz/scale"
 import { loadAnimate, warmAnimate } from "~/viz/animate"
+import { BoatIcon } from "../icons"
 import { Claim } from "../Quickinfo"
 
 type Lib = { name: string; href: string; boat?: true }
@@ -392,7 +393,7 @@ export const Collapse = () => {
 						{...hoverProps("v", i)}
 					>
 						{lib.name}
-						{lib.boat && <span className="ss-boat">⛵</span>}
+						{lib.boat && <BoatIcon />}
 					</a>
 				))}
 				{consumers.map((lib, j) => (
