@@ -1,11 +1,12 @@
 /**
  * Renders public/og.png (1200×630): ArkDark navy with arktype.io's top glow,
- * the name, "from editor to runtime to agent" in the cursive with its three
- * nouns in sky/gold/teal, and ArkType's violet error squiggle as a waterline
- * with a ⛵ sailing on it- the type error is the sea his boat sails on.
+ * the hero's eyebrow, name and lede (its "types" and "agents" in the teal and
+ * sky cursive), and ArkType's violet error squiggle as a waterline with
+ * arktype.io's boat sailing on it- the type error is the sea his boat sails on.
  *
  * Fonts come from node_modules and public/, so the card uses exactly the
- * site's faces (including Cascadia's ss01 cursive).
+ * site's faces (including Cascadia's ss01 cursive). The boat is lifted from
+ * BoatIcon in src/components/icons.tsx, so the two can't drift.
  *
  * Run: node scripts/og.ts
  */
@@ -27,6 +28,11 @@ const cascadia = file(
 )
 const cursive = file("public/fonts/cascadia-code-italic.woff2")
 const avatar = file("public/avatar.jpg")
+
+// BoatIcon's JSX is plain SVG apart from these two attributes
+const boat = readFileSync(new URL("src/components/icons.tsx", root), "utf8")
+	.match(/<svg viewBox="0 236 320 90"[\s\S]*?<\/svg>/)![0]
+	.replace(/ aria-hidden className="boat-icon"/, ' class="boat"')
 
 // ArkType's errorSquiggle.svg (ark/docs), as a repeating tile
 const squiggle = `data:image/svg+xml,${encodeURIComponent(
@@ -64,17 +70,20 @@ h1 {
 	letter-spacing: -0.045em;
 	line-height: 0.92;
 }
-.tag {
-	margin-top: 22px;
-	font: italic 400 40px/1.15 "Cascadia Cursive";
-	font-feature-settings: "ss01", "calt";
-	letter-spacing: -0.01em;
+.lede {
+	margin-top: 24px;
+	font: 450 34px/1.3 Atkinson;
+	letter-spacing: -0.012em;
 	color: #b6bacb;
 }
-.tag .sky { color: #80cff8; }
-.tag .gold { color: #f5cf8f; }
-.tag .teal { color: #40decc; }
-.projects { margin-top: 24px; font: 400 40px/1 Atkinson; color: #888899; letter-spacing: 0.005em; }
+.decl {
+	font: italic 400 1.06em/1 "Cascadia Cursive";
+	font-feature-settings: "ss01", "calt";
+	letter-spacing: -0.01em;
+	color: #40decc;
+}
+.decl.agents { color: #80cff8; }
+.projects { margin-top: 22px; font: 400 40px/1 Atkinson; color: #888899; letter-spacing: 0.005em; }
 .projects b { font-weight: 600; color: #b6bacb; }
 .sea {
 	position: absolute;
@@ -89,14 +98,14 @@ h1 {
 }
 .boat {
 	position: absolute;
-	left: 900px; top: -100px;
-	font-size: 94px; line-height: 1;
-	transform: rotate(-4deg);
-	filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.5));
+	left: 900px; top: -38px;
+	width: 170px; height: auto;
+	transform: rotate(-3deg);
+	filter: drop-shadow(0 0 1px rgba(238, 238, 238, 0.35)) drop-shadow(0 10px 16px rgba(0, 0, 0, 0.5));
 }
 .wake {
 	position: absolute;
-	left: 850px; top: 14px; width: 200px; height: 26px;
+	left: 885px; top: 14px; width: 200px; height: 26px;
 	background: radial-gradient(closest-side, rgba(128, 207, 248, 0.16), transparent);
 }
 .site { position: absolute; right: 84px; bottom: 26px; font: 400 26px/1 Cascadia; color: #888899; }
@@ -105,13 +114,13 @@ h1 {
 	<div class="eyebrow">
 		<img src="${avatar}" alt="">
 		<span class="handle">@ssalbdivad</span>
-		<span class="where"><b>//</b> TypeScript engineer</span>
+		<span class="where"><b>//</b> types for a living · Boston, MA</span>
 	</div>
 	<h1>David Blass</h1>
-	<p class="tag">from <span class="sky">editor</span> to <span class="gold">runtime</span> to <span class="teal">agent</span></p>
+	<p class="lede">I make TypeScript's <span class="decl">types</span> do things they probably shouldn't-<br>then make them fast. Lately: <span class="decl agents">agents</span> × DX.</p>
 	<p class="projects"><b>ArkType</b> · <b>Standard Schema</b> · <b>Pullfrog</b></p>
 </main>
-<div class="sea"><div class="waterline"></div><div class="wake"></div><span class="boat">⛵</span></div>
+<div class="sea"><div class="waterline"></div><div class="wake"></div>${boat}</div>
 <span class="site">ssalbdivad.com</span>
 </body></html>`
 
