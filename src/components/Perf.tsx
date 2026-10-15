@@ -132,7 +132,7 @@ const CaseTs59 = () => (
 						href="https://bsky.app/profile/ssalbdivad.dev/post/3laetuvq4ac2u"
 					>
 						<span aria-hidden="true">// </span>"How has this man not been hired
-						by the TypeScript team yet?" — me, about Andarist, 2024
+						by the TypeScript team yet?" —&nbsp;me, about Andarist, 2024
 					</a>
 				</p>
 			</Beat>

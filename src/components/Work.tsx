@@ -29,8 +29,8 @@ const Row = ({
 	links: Link[]
 	lead: ReactNode
 	body: ReactNode
-	/** at most two notes: other people's reactions, or a fact said small */
-	margin: ReactNode[]
+	/** other people's reactions, one quote per person, then any fact said small */
+	margin?: ReactNode[]
 	child?: true
 	children?: ReactNode
 }) => (
@@ -77,11 +77,13 @@ const Row = ({
 			<p className="w-pitch">
 				<strong>{lead}</strong> {body}
 			</p>
-			<ul className="w-margin mono">
-				{margin.map((note, i) => (
-					<li key={i}>{note}</li>
-				))}
-			</ul>
+			{margin && (
+				<ul className="w-margin mono">
+					{margin.map((note, i) => (
+						<li key={i}>{note}</li>
+					))}
+				</ul>
+			)}
 		</div>
 		{children && <div className="w-extra">{children}</div>}
 	</article>
@@ -100,8 +102,9 @@ const Ext = () => (
 )
 
 /**
- * Someone's words, verbatim, linked to where they said them. The dash is
- * glued to the name it introduces, so it never ends a line on its own.
+ * Someone's words, verbatim, linked to where they said them. The dash, the
+ * name and its arrow wrap as one, so a name never splits across lines and
+ * the dash never ends one.
  */
 const Quote = ({
 	href,
@@ -113,8 +116,11 @@ const Quote = ({
 	children: string
 }) => (
 	<a className="w-note w-quote" href={href} {...out}>
-		{`"${children}" —\u00a0${who}`}
-		<Ext />
+		{`"${children}" `}
+		<span className="w-who">
+			{`—\u00a0${who}`}
+			<Ext />
+		</span>
 	</a>
 )
 
@@ -213,13 +219,6 @@ export const Work = () => (
 					}
 					margin={[
 						<Quote
-							href="https://x.com/mattpocockuk/status/1983583863776346556"
-							who="Matt Pocock"
-						>
-							I stop talking about TS for 10 minutes and the barbarians take
-							over
-						</Quote>,
-						<Quote
 							href="https://x.com/colinhacks/status/1983219486195884489"
 							who="Colin McDonnell"
 						>
@@ -240,14 +239,6 @@ export const Work = () => (
 								{...out}
 							>
 								TkDodo
-								<Ext />
-							</a>
-							,{" "}
-							<a
-								href="https://x.com/heyImMapleLeaf/status/1983327330060902898"
-								{...out}
-							>
-								MapleLeaf
 								<Ext />
 							</a>
 							)
@@ -274,11 +265,10 @@ export const Work = () => (
 					}
 					margin={[
 						<Quote
-							href="https://www.youtube.com/watch?v=AEA0K77qhS4"
+							href="https://www.youtube.com/watch?v=eoqpXbe8dyA&t=701s"
 							who="Theo"
 						>
-							ArkType's been up to some cool stuff for awhile, but attest takes
-							it to a whole new level.
+							…his understanding of TypeScript server performance is unmatched
 						</Quote>
 					]}
 				/>
@@ -301,15 +291,6 @@ export const Work = () => (
 							</a>
 						</>
 					}
-					margin={[
-						<Quote
-							href="https://x.com/ssalbdivad/status/1829920056773382616"
-							who="me"
-						>
-							Set-based types derived from atomic constraints confirmed to turn
-							the legs to jelly 🪼
-						</Quote>
-					]}
 				/>
 			</div>
 			<Row
@@ -374,15 +355,15 @@ export const Work = () => (
 					>
 						sounds fake but I'm starting a company with my nemesis Colin P. Zod
 					</Quote>,
-					<Comment>
-						used by Sanity, Trigger.dev, Zed, Unkey, Remotion and Inkeep
-					</Comment>,
 					<Quote
 						href="https://x.com/zeddotdev/status/2054288085165223986"
 						who="Zed"
 					>
 						Good frog
-					</Quote>
+					</Quote>,
+					<Comment>
+						used by Sanity, Trigger.dev, Zed, Unkey, Remotion and Inkeep
+					</Comment>
 				]}
 			/>
 		</div>

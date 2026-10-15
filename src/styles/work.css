@@ -155,6 +155,10 @@
 		padding-left: 1ch;
 		text-indent: -1ch;
 	}
+	/* "— name ↗" wraps as one */
+	.w-who {
+		white-space: nowrap;
+	}
 	.w-comment {
 		padding-left: 3ch;
 		text-indent: -3ch;
@@ -1197,9 +1201,9 @@
 		font-size: 7.5pt !important;
 		line-height: 1.4 !important;
 	}
-	/* paper keeps a row's first two notes: four ArkType reactions ran the
-	   home page to a third sheet */
-	.w-margin li:nth-child(n + 3) {
+	/* paper keeps a row's first two quotes and every fact: a third ArkType
+	   reaction ran the home page to a third sheet */
+	.w-margin li:nth-child(n + 3):has(> .w-quote) {
 		display: none !important;
 	}
 	/* a child row prints as its pitch alone, like its links (print.css): with
