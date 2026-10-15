@@ -67,11 +67,6 @@
 		font-size: 0.62em;
 		vertical-align: 4px;
 	}
-	.w-emoji .boat-icon {
-		display: inline-block;
-		height: 1.1em;
-		vertical-align: -0.1em;
-	}
 	.w-role {
 		margin: 8px 0 0;
 		font-size: 13px;
@@ -779,12 +774,6 @@
 	.ss-chip:focus-visible {
 		outline: 2px solid var(--blue);
 		outline-offset: 2px;
-	}
-	.ss-chip .boat-icon {
-		display: inline-block;
-		height: 1em;
-		margin-left: 0.35em;
-		vertical-align: -0.15em;
 	}
 	.ss-more {
 		color: var(--ink-3);
