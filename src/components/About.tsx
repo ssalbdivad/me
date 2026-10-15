@@ -68,7 +68,7 @@ export const About = () => (
 		<Loves />
 		<div className="ab-copy" data-reveal>
 			<p>
-				I live in Boston, and I'm a Mets fan anyway. On the side I built{" "}
+				Diehard Mets fan living in Boston. On the side I built{" "}
 				<a className="link ext nowrap" href="https://beanemachine.com">
 					beanemachine
 				</a>
