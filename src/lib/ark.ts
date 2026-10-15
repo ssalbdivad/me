@@ -102,11 +102,8 @@ export const warm = () => start()
 /** `type(src)`: its description and expression, or ArkType's error message. */
 export const parse = (src: string) => call("parse", src)
 
-/** Whether `type(a)` extends `type(b)`. */
-export const extendsType = (a: string, b: string) => call("extends", a, b)
-
 /** Whether `type(def)` accepts `data`; on failure, ArkType's summary. */
-export const allows = (def: string, data: string) => call("allows", def, data)
+export const allows = (def: string, data: unknown) => call("allows", def, data)
 
 /** `type(`${a} & ${b}`)`, so an unsatisfiable intersection returns its message. */
 export const intersect = (a: string, b: string) => call("intersect", a, b)

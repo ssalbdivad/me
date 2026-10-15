@@ -454,8 +454,8 @@
 		}
 	}
 
-	/* room for the finished line's three (verdict, extends, email), so the
-	   card doesn't grow when the ghost-typing lands on them */
+	/* room for the finished line's three (the verdict, then the sample check,
+	   which wraps to two), so the card doesn't grow when the ghost lands */
 	.tl-status {
 		padding: 4px 18px 16px;
 		font-size: 13.5px;
@@ -504,11 +504,8 @@
 	.tl-note {
 		color: var(--ink-3);
 	}
-	.tl-mail {
-		display: block;
-	}
-	.tl-dim {
-		color: var(--ink-3);
+	.tl-verdict {
+		color: var(--violet-text);
 	}
 	.tl-quip a {
 		color: var(--ink-3);

@@ -33,7 +33,7 @@ Numbers: a snapshot of 2026-10-13; npm figures cover 2026-09-13 to 2026-10-12; e
 - viem: traced 1.86s of MUD's build to computing a single type's variance; explicit variance annotations now ship in viem ([mud#2956](https://github.com/latticexyz/mud/pull/2956), [viem#2557](https://github.com/wevm/viem/pull/2557)).
 - Prisma: built their type benchmarks and helped speed up their generated types, including 45% less check time on one generated file ([prisma/orm#27046](https://github.com/prisma/orm/pull/27046)); Prisma wrote it up in its [6.16 release notes](https://github.com/prisma/orm/releases/tag/6.16.0). Mongoose 8.19: 36–67% fewer instantiations on its `InferRawDocType` benchmarks ([mongoose#15588](https://github.com/Automattic/mongoose/pull/15588)).
 - Also optimized runtime code for V8's JIT, including code generation for high-throughput validation.
-- Clients included tRPC, Drizzle, Prisma, Convex, AWS Amplify, Speakeasy, Stately, wevm, Vanta and Cloudinary.
+- Clients included tRPC, Prisma, Convex, AWS Amplify, Speakeasy, Stately, wevm, Vanta and Cloudinary.
 
 ### Founder, Redo Inc. · 2019–2021
 

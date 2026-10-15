@@ -16,7 +16,7 @@ Numbers below are a snapshot as of 2026-10-13 (npm: the 30 days 2026-09-13 to 20
   - **ArkSchema**: the set-theoretic type system underneath (canonical reduction, intersections, subtyping, union discrimination at runtime).
 - **Co-creator, Standard Schema (2024–)**: [standardschema.dev](https://standardschema.dev). One interface so any TypeScript validator plugs into any framework (tRPC, TanStack, Hono, React Hook Form and more). David co-designed it with the creators of Zod and Valibot. They then co-authored Standard JSON Schema, so any validator can define tool inputs for AI agents and MCP. The `@standard-schema/spec` package: 551,490,697 npm downloads in 30 days, mostly transitive installs ([npm](https://api.npmjs.org/downloads/point/2026-09-13:2026-10-12/@standard-schema/spec)); 3,650 GitHub stars.
 - **Co-founder, Pullfrog (2025–)**: [pullfrog.com](https://pullfrog.com), started with Colin McDonnell (creator of Zod). AI coding agents that run in your GitHub Actions: they review PRs, triage issues, fix CI, resolve merge conflicts and test UIs in a headless browser, on your infrastructure and your keys. David built the model-agnostic agent runtime (BYOK, MCP tools, GitHub App/OIDC auth, sandboxed CI). 1,307 GitHub stars ([repo](https://github.com/pullfrog/pullfrog)); `pullfrog`: 211,712 npm downloads in 30 days.
-- **TypeScript performance consultant (2023–2025)**: clients included tRPC, Drizzle, Prisma, Convex, AWS Amplify, Speakeasy, Stately, wevm, Vanta and Cloudinary.
+- **TypeScript performance consultant (2023–2025)**: clients included tRPC, Prisma, Convex, AWS Amplify, Speakeasy, Stately, wevm, Vanta and Cloudinary.
 
 ## TypeScript performance, with sources
 

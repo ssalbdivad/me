@@ -17,7 +17,6 @@ const define = type as unknown as (def: string) => {
 	(data: unknown): unknown
 	description: string
 	expression: string
-	extends: (other: string) => boolean
 }
 
 const parse = (src: string): Parsed => {
@@ -31,10 +30,8 @@ const parse = (src: string): Parsed => {
 
 const ops = {
 	parse: (src: string) => parse(src),
-	/** whether type(a) is a subtype of type(b) */
-	extends: (a: string, b: string) => define(a).extends(b),
 	/** whether type(def) accepts data, with ArkType's summary when it doesn't (def must parse) */
-	allows: (def: string, data: string) => {
+	allows: (def: string, data: unknown) => {
 		const out = define(def)(data)
 		return out instanceof type.errors ?
 				{ ok: false as const, summary: out.summary }

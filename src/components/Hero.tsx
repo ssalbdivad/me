@@ -52,7 +52,7 @@ export const Hero = () => (
 				<dd>
 					<a href="#perf">TypeScript performance</a> <span>· 2023–25</span>{" "}
 					<span className="gloss wide">
-						· for tRPC, Prisma, Drizzle &amp; more
+						· for tRPC, Prisma, AWS &amp; more
 					</span>
 				</dd>
 			</dl>

@@ -242,7 +242,7 @@ const More = () => (
 			</li>
 		</ul>
 		<p className="more-clients">
-			Clients have included tRPC, Drizzle, Prisma, Convex, AWS Amplify,
+			Clients have included tRPC, Prisma, Convex, AWS Amplify,
 			Speakeasy, Stately, wevm, Vanta and Cloudinary. Some stuff that looks
 			super expensive is actually irrelevant; some stuff that looks innocuous is
 			actually a massive problem. All you can do is learn heuristics, iterate

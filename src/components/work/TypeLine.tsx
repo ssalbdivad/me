@@ -18,20 +18,28 @@ import { isOnscreen, prefersReducedMotion } from "~/lib/motion"
  * (~/lib/ark), so its ~2s evaluation never blocks the page.
  */
 
-const FINAL = "string.email | 'david@arktype.io'"
-const FINAL_STATUS: Status = { kind: "ok", text: "an email address" }
-const FINAL_NOTE: Note = { kind: "extends", holds: true, reduced: true }
+// plain TypeScript first, in the order ArkType prints a union (so the verdict
+// echoes it rather than reordering it), and the order the docs open with
+const FINAL = "(number | string)[]"
+const FINAL_STATUS: Status = { kind: "ok", text: "(number | string)[]" }
+/** the same definition, checking data at runtime */
+const SAMPLE = [1, "2", null]
+const FINAL_NOTE: Note = {
+	kind: "check",
+	summary: "value at [2] must be a number or a string (was null)"
+}
 
 const chips = [
 	"string > 3 | null",
 	"5 < number < 3",
-	"(string | number)[]",
+	"string.email",
 	"z.string()"
 ]
 
 type Status = { kind: "ok" | "err"; text: string } | { kind: "none" }
 type Note =
-	| { kind: "extends"; holds: boolean; reduced: boolean }
+	// null: SAMPLE passed
+	| { kind: "check"; summary: string | null }
 	| { kind: "quip"; item: Completion }
 	| null
 
@@ -52,17 +60,9 @@ const toStatus = (parsed: ark.Parsed): Status =>
 	:	{ kind: "err", text: parsed.message }
 
 /** The final state's second line, computed by the real runtime. */
-const extendsNote = async (): Promise<Note> => {
-	const [holds, union, email] = await Promise.all([
-		ark.extendsType("'david@arktype.io'", "string.email"),
-		ark.parse(FINAL),
-		ark.parse("string.email")
-	])
-	return {
-		kind: "extends",
-		holds,
-		reduced: union.ok && email.ok && union.expression === email.expression
-	}
+const checkNote = async (): Promise<Note> => {
+	const out = await ark.allows(FINAL, SAMPLE)
+	return { kind: "check", summary: out.ok ? null : out.summary }
 }
 
 /** Zod method puns, each one David's own post. */
@@ -428,7 +428,7 @@ export const TypeLine = () => {
 		try {
 			;[parsed, final] = await Promise.all([
 				ark.parse(src),
-				src === FINAL ? extendsNote() : undefined
+				src === FINAL ? checkNote() : undefined
 			])
 		} catch {
 			if (id === latest.current) {
@@ -521,7 +521,7 @@ export const TypeLine = () => {
 		try {
 			;[states, final] = await Promise.all([
 				Promise.all(prefixes.map(src => ark.parse(src).then(toStatus))),
-				extendsNote()
+				checkNote()
 			])
 		} catch {
 			// ArkType couldn't load: show the finished line, as the prerender does
@@ -1038,17 +1038,16 @@ export const TypeLine = () => {
 
 const NoteLine = ({ note }: { note: Note }) => {
 	if (!note) return <p className="tl-note" />
-	if (note.kind === "extends")
+	if (note.kind === "check")
 		return (
-			<p className="tl-note tl-extends">
-				<span className="hl-str">'david@arktype.io'</span>{" "}
-				<span className="hl-op">extends</span>{" "}
-				<span className="hl-kw">string</span>
-				<span className="hl-op">.</span>
-				<span className="hl-id">email</span> <span className="hl-op">→</span>{" "}
-				<span className="hl-kw">{String(note.holds)}</span>
-				{note.reduced && <span className="tl-dim"> · union reduced</span>}
-				<span className="tl-mail">// that's my email, by the way</span>
+			<p className="tl-note tl-data">
+				{/* SAMPLE, highlighted */}
+				<span className="hl-op">[</span>
+				<span className="hl-kw">1</span>
+				<span className="hl-op">,</span> <span className="hl-str">"2"</span>
+				<span className="hl-op">,</span> <span className="hl-kw">null</span>
+				<span className="hl-op">]</span> <span className="hl-op">→</span>{" "}
+				<span className="tl-verdict">{note.summary ?? "valid"}</span>
 			</p>
 		)
 	return (
