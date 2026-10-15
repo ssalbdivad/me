@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   # rebuild every 3h so the prerendered numbers pick up npm's daily rollup
-  # within hours of it landing (until then, the client's live refresh covers it)
+  # within hours of it landing (nothing refreshes them on the client)
   schedule:
     - cron: "17 */3 * * *"
   workflow_dispatch:

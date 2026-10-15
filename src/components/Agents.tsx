@@ -8,7 +8,7 @@ import {
 	totals,
 	type Phase
 } from "./agents/model"
-import { principles, Replay } from "./agents/Replay"
+import { Replay } from "./agents/Replay"
 import { Section } from "./Section"
 
 const verbs: Record<Phase, string> = {
@@ -39,35 +39,34 @@ const prompts =
 	: `one brief and ${direction - 1} follow-ups`
 const colophon =
 	totals.running > 0 ?
-		`This page is being ${list(totals.phases.map(p => verbs[p]))} by one agent thread. So far: ${totals.subAgents} sub-agents, ${calls}, ${duration(totals.agentSeconds)} of agent time. I set the bar in ${prompts}; they do the legwork. Every strand, tick and timestamp above is from the session.`
-	:	`${capitalize(list(totals.phases.map(p => verbs[p])))} by one agent thread that fanned out to ${totals.subAgents} sub-agents: ${calls}, ${duration(totals.agentSeconds)} of agent time in ${duration(totals.wallSeconds)} of wall clock. I set the bar in ${prompts}; they did the legwork. Every strand, tick and timestamp above is from the session.`
+		`This page is being ${list(totals.phases.map(p => verbs[p]))} by one agent thread. So far: ${totals.subAgents} sub-agents, ${calls}, ${duration(totals.agentSeconds)} of agent time. I set the bar in ${prompts}; they do the legwork. Every strand and timestamp above is from the session.`
+	:	`${capitalize(list(totals.phases.map(p => verbs[p])))} by one agent thread that fanned out to ${totals.subAgents} sub-agents: ${calls}, ${duration(totals.agentSeconds)} of agent time in ${duration(totals.wallSeconds)} of wall clock. I set the bar in ${prompts}; they did the legwork. Every strand and timestamp above is from the session.`
 
 const span = (iso: string, s1: number) => `${iso.slice(11, 19)}–${clock(s1)}`
 
 export const Agents = () => (
 	<Section id="agents" index="03" label="agents" title="How I work with agents">
+		{/* the replay's captions play these four rules; this sentence is where
+		    no-JS readers and the prerender get them */}
 		<p className="agents-intro" data-reveal>
-			I build Pullfrog by running many coding agents in parallel, every day,
-			through Ntwine- a local tool I maintain. It grew out of Frizz, an earlier
-			open-source tool, and keeps its design: every agent thread on one board,
-			and a queue of the ones that need me. These are the rules I've added on
-			top, for the agents and for me.
+			Most days I have a lot of coding agents working on Pullfrog at once. I run
+			them from{" "}
+			<a
+				className="link ext nowrap"
+				href="https://github.com/ssalbdivad/ntwine"
+			>
+				Ntwine
+			</a>
+			, a local UI I built on Colin's original design, Frizz. The rules I've
+			ended up with, for them and for me: size work by scope, never in days;
+			report honest effect sizes; lead with what changed; preserve evidence.
 		</p>
-		<ol className="principles" data-reveal="stagger">
-			{principles.map(pr => (
-				<li key={pr.n}>
-					<span className="pr-n mono">{pr.n}</span>
-					<b className="pr-t">{pr.title}</b>
-					{pr.body && <p>{pr.body}</p>}
-				</li>
-			))}
-		</ol>
 
 		<div className="replay-block">
 			<h3 className="h3 replay-title" data-reveal>
 				{totals.running > 0 ?
 					"This page is being built that way."
-				:	"This page was built that way."}
+				:	"The first version of this page was built that way."}
 			</h3>
 			<Replay />
 			<p className="replay-copy">{colophon}</p>

@@ -87,8 +87,15 @@ export const Eggs = () => {
 				setBilly("up")
 			}
 		}
+		// the page can send for him too: About's button dispatches
+		// "billy:summon" on window
+		const summon = () => setBilly("up")
 		addEventListener("keydown", onKey)
-		return () => removeEventListener("keydown", onKey)
+		addEventListener("billy:summon", summon)
+		return () => {
+			removeEventListener("keydown", onKey)
+			removeEventListener("billy:summon", summon)
+		}
 	}, [])
 
 	if (billy === "never") return null

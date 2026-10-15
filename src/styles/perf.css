@@ -30,6 +30,8 @@
 }
 .perf-lede {
 	margin: 14px 0 0;
+	/* two short sentences: one a line where they fit */
+	max-width: 23em;
 	color: var(--ink-2);
 }
 
@@ -81,14 +83,6 @@
 .case p:not([class]) {
 	max-width: 34em;
 }
-.case p b {
-	color: var(--ink);
-	font-weight: 650;
-}
-.case sup {
-	font-size: 0.68em;
-	line-height: 0;
-}
 .case code,
 .perf code.kw {
 	font-family: var(--mono);
@@ -99,15 +93,6 @@
 	color: inherit;
 	font-size: inherit;
 }
-.case-cols {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 0 40px;
-	max-width: 1040px;
-}
-.case-cols p {
-	max-width: none;
-}
 .inline-quote {
 	color: var(--ink);
 	text-decoration: underline;
@@ -117,6 +102,68 @@
 }
 .inline-quote:hover {
 	text-decoration-color: var(--sky);
+}
+
+/* ---------- the story: labelled beats ---------- */
+/* The removed Arc's label column, rebuilt for one story: each beat is a subgrid
+   row, so every label shares the widest one's column ("what repos saw") and
+   sits on its prose's first baseline. The third column is the margin, where an
+   aside sits beside its beat the way Work's reactions sit beside their row. */
+.beats {
+	display: grid;
+	grid-template-columns: max-content minmax(0, 35rem) minmax(0, 1fr);
+	column-gap: 32px;
+	row-gap: 28px;
+	margin: 36px 0 0;
+	padding: 0;
+	list-style: none;
+}
+.beat {
+	grid-column: 1 / -1;
+	display: grid;
+	grid-template-columns: subgrid;
+	align-items: baseline;
+	min-width: 0;
+}
+.beat-label {
+	grid-column: 1;
+	font-size: 13px;
+	color: var(--copper);
+	white-space: nowrap;
+}
+.case .beat > p {
+	grid-column: 2;
+	margin: 0;
+}
+/* the chart spans the whole card, under the beat that introduces it, ruled off
+   above and below so the story picks up again after it */
+.beat > .merge {
+	grid-column: 1 / -1;
+	margin-top: 32px !important;
+	padding-bottom: 32px;
+	border-bottom: 1px solid var(--rule-soft);
+}
+.case .beat > .beat-aside {
+	grid-column: 3;
+	max-width: 44ch;
+	font-size: 13px;
+	line-height: 1.6;
+	color: var(--ink-3);
+	/* the // hangs, so wrapped lines align with the words */
+	padding-left: 3ch;
+	text-indent: -3ch;
+	text-wrap: pretty;
+}
+.beat-aside a {
+	transition: color 0.16s;
+}
+.beat-aside a:hover {
+	color: var(--ink-2);
+}
+/* text-indent inherits into the inline-block ↗, which would hang it 3ch back */
+.beat-aside .ext::after {
+	color: var(--sky);
+	text-indent: 0;
 }
 
 /* the "what was wrong" phrase: a real squiggle, hovering to the real error */
@@ -156,7 +203,7 @@
 	color: var(--ink);
 }
 
-/* credit + footnotes */
+/* credit line */
 .credit {
 	margin-top: 32px !important;
 	padding-top: 18px;
@@ -167,17 +214,6 @@
 }
 .credit .link {
 	white-space: nowrap;
-}
-.case-foot,
-.case p.case-foot {
-	margin: 10px 0 0;
-	font-size: 12.5px;
-	line-height: 1.55;
-	color: var(--ink-3);
-	max-width: 72ch;
-}
-.case-foot .link {
-	color: var(--ink-2);
 }
 
 /* ---------- shared chart bits ---------- */
@@ -200,36 +236,11 @@
 	margin-right: 6px;
 	vertical-align: 0.24em;
 }
-.perf .key.v-before,
-.perf .dot-key.v-before {
+.perf .key.v-before {
 	background: var(--before);
 }
-.perf .key.v-after,
-.perf .dot-key.v-after {
+.perf .key.v-after {
 	background: var(--after);
-}
-.perf .dot-key {
-	display: inline-block;
-	width: 9px;
-	height: 9px;
-	border-radius: 50%;
-	margin-right: 6px;
-	vertical-align: -0.02em;
-}
-.viz-title {
-	display: block;
-	font-size: 15px;
-	font-weight: 700;
-	color: var(--ink);
-}
-.viz-title code {
-	font-size: 0.9em;
-}
-.viz-sub {
-	display: block;
-	margin-top: 4px;
-	font-size: 12.5px;
-	color: var(--ink-3);
 }
 .viz-table {
 	margin-top: 12px;
@@ -267,13 +278,9 @@
 	vertical-align: bottom;
 	color: var(--ink-3);
 }
-.viz-table td.text,
 .viz-table tbody th {
 	white-space: normal;
 	text-align: left;
-}
-.viz-table td.text {
-	min-width: 9ch;
 }
 .viz-table td.bailed {
 	color: var(--violet-text);
@@ -957,620 +964,50 @@ html:not(.js) :is(.merge-controls, .seg, .merge-chart .scrub) {
 	color: var(--ink-2);
 }
 
-/* ---------- payoff strip ---------- */
-.payoffs {
-	margin-top: 40px !important;
-	padding-top: 32px;
-	border-top: 1px solid var(--rule-soft);
+/* ---------- a few more, briefly ---------- */
+.more {
+	margin-top: 56px;
 }
-.payoffs figcaption {
-	display: grid;
-}
-.payoffs .legend {
-	margin-top: 12px;
-}
-.pay-rows {
-	position: relative;
-	margin-top: 18px;
-	display: grid;
-	gap: 20px;
-}
-.pay-grid {
-	position: absolute;
-	inset: 0 0 22px;
-	pointer-events: none;
-}
-.pay-grid span {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	width: 1px;
-	background: var(--grid);
-}
-.pay-row {
-	position: relative;
-}
-.pay-top {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: baseline;
-	gap: 2px 14px;
-}
-.pay-top .who {
-	color: var(--ink);
-	font-weight: 650;
-	font-size: 15px;
-}
-.pay-top .nums {
-	display: inline-flex;
-	align-items: baseline;
-	gap: 10px;
+/* the same comment-label as Talks' "// on mic" */
+.more-label {
+	margin: 0 0 4px;
+	font-weight: 400;
 	font-size: 13.5px;
-	color: var(--ink-2);
-}
-.pay-top .nums b {
-	color: var(--ink);
-	font-weight: 600;
-}
-.pay-top .mean {
 	color: var(--ink-3);
 }
-.pay-top .x {
-	padding: 1px 7px;
-	border-radius: 999px;
-	font-size: 12px;
-	font-weight: 600;
-	color: var(--ink);
-	background: color-mix(in oklab, var(--after) 18%, transparent);
-}
-.pay-top .tag {
-	margin-left: auto;
-	font-size: 12px;
-	color: var(--ink-3);
-	text-decoration: underline;
-	text-decoration-color: color-mix(in oklab, var(--ink-3) 35%, transparent);
-	text-underline-offset: 3px;
-}
-.pay-top .tag:hover {
-	color: var(--sky);
-}
-.pay-track {
-	position: relative;
-	height: 22px;
-	margin-top: 8px;
-}
-.pay-track .bar {
-	position: absolute;
-	left: 0;
-	height: 10px;
-	border-radius: 0 4px 4px 0;
-	transform-origin: left center;
-}
-.pay-track .bar.v-before {
-	top: 0;
-	width: calc(100% / 1.1);
-	background: var(--before);
-}
-.pay-track .bar.v-after {
-	top: 12px;
-	background: var(--after);
-}
-.pay-track .pct {
-	position: absolute;
-	top: 17px;
-	translate: 8px -50%;
-	font-size: 12px;
-	font-weight: 600;
-	color: var(--ink);
-}
-.pay-track .runs {
-	position: absolute;
-	left: 0;
-	right: 0;
-	height: 10px;
-}
-.pay-track .runs.b {
-	top: 0;
-}
-.pay-track .runs.a {
-	top: 12px;
-}
-.pay-track .whisker {
-	position: absolute;
-	top: 50%;
-	height: 1px;
-	background: var(--ink-3);
-}
-.pay-track .whisker::before,
-.pay-track .whisker::after {
-	content: "";
-	position: absolute;
-	top: -3px;
-	width: 1px;
-	height: 7px;
-	background: var(--ink-3);
-}
-.pay-track .whisker::before {
-	left: 0;
-}
-.pay-track .whisker::after {
-	right: 0;
-}
-.pay-track .run {
-	position: absolute;
-	top: -2px;
-	width: 1px;
-	height: 14px;
-	margin-left: -0.5px;
-	opacity: 0.6;
-}
-.pay-track .runs.b .run {
-	background: var(--before);
-}
-.pay-track .runs.a .run {
-	background: var(--after);
-}
-.pay-axis {
-	position: relative;
-	height: 22px;
-	margin-top: -6px;
-	border-top: 1px solid var(--axis);
-	font-size: 11px;
-	color: var(--ink-3);
-}
-.pay-axis span {
-	position: absolute;
-	top: 6px;
-	translate: -50% 0;
-}
-.pay-axis span:first-child {
-	translate: 0 0;
-}
-.payoffs[data-phase="armed"] .bar.v-before {
-	clip-path: inset(0 100% 0 0);
-}
-.payoffs[data-phase="armed"] .bar.v-after {
-	scale: 0 1;
-}
-.payoffs[data-phase="armed"] :is(.pct, .x, .runs) {
-	opacity: 0;
-}
-.payoffs[data-phase="play"] .bar.v-before {
-	transition: clip-path 0.3s var(--ease-out) calc(var(--i) * 120ms);
-}
-.payoffs[data-phase="play"] .bar.v-after {
-	transition: scale 0.6s var(--ease-out) calc(0.3s + var(--i) * 120ms);
-}
-.payoffs[data-phase="play"] :is(.pct, .x, .runs) {
-	transition: opacity 0.15s ease-out calc(0.9s + var(--i) * 120ms);
-}
-
-/* ---------- pull quote: a string literal ---------- */
-.pull {
-	margin: 96px auto 0 !important;
-	max-width: 52rem;
-	text-align: center;
-}
-.pull blockquote {
+.more-list {
 	margin: 0;
-	font-size: clamp(1.375rem, 1.1rem + 1.1vw, 2.125rem);
-	font-weight: 500;
-	line-height: 1.3;
-	letter-spacing: -0.018em;
-	color: var(--gold);
-	text-wrap: balance;
+	padding: 0;
+	list-style: none;
+	border-top: 1px solid var(--rule);
 }
-.pull figcaption {
-	margin-top: 16px;
-	font-size: 13px;
-	line-height: 1.5;
-	color: var(--ink-3);
-}
-.pull + .case {
-	margin-top: 96px;
-}
-
-/* ---------- case 02: viem ---------- */
-.case-split {
+.more-list li {
 	display: grid;
-	grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
-	gap: 48px;
-	align-items: end;
+	grid-template-columns: 9rem minmax(0, 1fr);
+	column-gap: var(--gutter);
+	align-items: baseline;
+	padding: 16px 0;
+	border-bottom: 1px solid var(--rule-soft);
 }
-.case-quote blockquote {
+.more-list b {
+	font-weight: 400;
+	font-size: 14.5px;
+	color: var(--ink);
+}
+.more-list p {
 	margin: 0;
-	font-size: 17px;
-	font-weight: 500;
-	line-height: 1.45;
-	color: var(--gold);
-}
-.case-quote figcaption {
-	margin-top: 10px;
-	font-size: 12.5px;
-}
-.trace {
-	margin-top: 36px !important;
-	padding-top: 28px;
-	border-top: 1px solid var(--rule-soft);
-}
-.trace-body {
-	--gutter: 64px;
-	--right: 132px;
-	--ruler: 22px;
-	position: relative;
-	padding: 0 var(--right) 30px var(--gutter);
-}
-.trace-ruler {
-	position: relative;
-	height: var(--ruler);
-	font-size: 11px;
-	color: var(--ink-3);
-}
-.trace-ruler span {
-	position: absolute;
-	top: 0;
-	translate: -50% 0;
-}
-.trace-ruler span:first-child {
-	translate: 0 0;
-}
-.trace-grid {
-	position: absolute;
-	left: var(--gutter);
-	right: var(--right);
-	top: var(--ruler);
-	bottom: 18px;
-	pointer-events: none;
-}
-.trace-grid span {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	width: 1px;
-	background: var(--grid);
-}
-.track {
-	position: relative;
-	margin-top: 12px;
-}
-.track + .track {
-	margin-top: 18px;
-}
-.track-label {
-	position: absolute;
-	right: calc(100% + 14px);
-	top: 3px;
-	font-size: 12px;
-	color: var(--ink-3);
-}
-.lane {
-	position: relative;
-	display: grid;
-	gap: 2px;
-}
-.slice {
-	position: relative;
-	height: 22px;
-}
-.slice-bar {
-	position: absolute;
-	left: 0;
-	top: 0;
-	bottom: 0;
-	border-radius: 3px;
-	overflow: hidden;
-}
-.slice-name {
-	position: absolute;
-	left: 8px;
-	top: 0;
-	z-index: 1;
-	font-size: 12px;
-	line-height: 22px;
-	white-space: nowrap;
-	color: var(--ink-2);
-	pointer-events: none;
-}
-.slice.parent .slice-bar {
-	right: -18px;
-	background: color-mix(in oklab, var(--ink) 9%, transparent);
-	mask-image: linear-gradient(to right, #000 calc(100% - 72px), transparent);
-}
-.slice.parent .unpublished {
-	position: absolute;
-	left: calc(100% + 24px);
-	top: 0;
-	font-size: 11px;
-	line-height: 22px;
-	color: var(--ink-3);
-	white-space: nowrap;
-}
-.slice:is(.violet, .teal) .slice-bar {
-	width: var(--w);
-}
-.slice.violet .slice-bar {
-	background: var(--before);
-}
-.slice.teal .slice-bar {
-	background: var(--after);
-}
-/* the name inside the fill is revealed as the fill grows */
-.slice-bar .slice-name {
-	z-index: 2;
-}
-/* desktop: the outer grey name and the clipped bar paint in DOM order, so the bar
-   and its dark/white name cover the grey one wherever the fill has reached (a
-   z-index on the outer name painted it over the fill: ghosted double text).
-   Phones keep their own rule: names ride above the marker, on the surface. */
-@media (min-width: 761px) {
-	.slice:is(.violet, .teal) > .slice-name {
-		z-index: auto;
-	}
-}
-.slice.violet .slice-bar .slice-name {
-	color: #05080f; /* 4.8:1 on #9558f8 */
-}
-:root[data-theme="light"] .slice.violet .slice-bar .slice-name {
-	color: #fff; /* 5.5:1 on #7d45e0 */
-}
-.slice.teal .slice-bar .slice-name {
-	color: #05080f;
-}
-.slice .dur {
-	position: absolute;
-	top: 0;
-	translate: 8px 0;
-	font-size: 13px;
-	line-height: 22px;
-	font-weight: 600;
-	color: var(--ink);
-	white-space: nowrap;
-	transition: opacity 0.15s;
-}
-.trace-body[data-playing] .dur {
-	opacity: 0;
-}
-.trace-overlay {
-	container-type: size;
-	position: absolute;
-	left: var(--gutter);
-	right: var(--right);
-	top: 0;
-	bottom: 0;
-	pointer-events: none;
-}
-.trace-overlay .marker {
-	position: absolute;
-	top: var(--ruler);
-	bottom: 16px;
-	width: 1px;
-	background: var(--gold);
-}
-.marker-label {
-	position: absolute;
-	top: calc(100% + 2px);
-	left: 0;
-	translate: -50% 0;
-	font-size: 11px;
-	color: var(--ink-3);
-	white-space: nowrap;
-}
-.playhead {
-	position: absolute;
-	left: 0;
-	top: calc(var(--ruler) - 4px);
-	bottom: 16px;
-	width: 1px;
-	background: var(--gold);
-}
-.playhead::before {
-	content: "";
-	position: absolute;
-	top: -3px;
-	left: -3px;
-	width: 7px;
-	height: 7px;
-	border-radius: 50%;
-	background: var(--gold);
-}
-.elapsed {
-	position: absolute;
-	top: -24px;
-	left: 0;
-	translate: -50% 0;
-	padding: 0 6px;
-	border-radius: 4px;
-	background: var(--surface);
-	font-size: 12px;
-	font-weight: 600;
-	color: var(--ink);
-	white-space: nowrap;
-}
-.trace-foot {
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-	flex-wrap: wrap;
-	gap: 8px 16px;
-	min-height: 44px;
-	font-size: 12px;
-	color: var(--ink-3);
-}
-/* the same shape as the agents replay button (.replay-play): btn-sm type, 44px */
-.trace-foot .btn {
-	height: 44px;
-}
-.trace-foot .btn[aria-disabled="true"] {
-	opacity: 0.4;
-	cursor: default;
-}
-.trace-foot .btn[aria-disabled="true"]:is(:hover, :active) {
-	border-color: color-mix(in oklab, var(--ink) 20%, transparent);
-	color: var(--ink);
-	scale: 1;
-}
-
-/* ---------- case 03: dumbbells ---------- */
-.badges {
-	margin: 18px 0 0 !important;
-	font-size: 15px !important;
-	color: var(--ink-2) !important;
-}
-.badges b {
-	color: var(--gold);
-	font-size: 1.3em;
-	font-weight: 700;
-	font-family: var(--sans);
-	letter-spacing: -0.01em;
-}
-/* case 03: Prisma's own words get case 02's string-literal pull quote, spanning
-   under the badges (the header is one column here, so no split) */
-.case-03 .case-quote {
-	margin: 22px 0 0;
 	max-width: 40em;
-}
-.dumbbells {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 56px;
-	margin-top: 32px;
-	padding-top: 28px;
-	border-top: 1px solid var(--rule-soft);
-}
-.dumbbell .legend {
-	margin-top: 10px;
-}
-.db-rows {
-	margin-top: 10px;
-}
-.db-row,
-.db-axis {
-	display: grid;
-	grid-template-columns: 8.5rem minmax(0, 1fr) 3.25rem;
-	grid-template-areas: "label plot delta";
-	align-items: center;
-	column-gap: 12px;
-}
-.db-row {
-	min-height: 36px;
-}
-.db-label {
-	grid-area: label;
-	font-size: 13px;
-	line-height: 1.3;
+	/* subordinate to the story: the beats' size, not larger */
+	font-size: 16.5px;
 	color: var(--ink-2);
-	min-width: 0;
+	line-height: 1.6;
 }
-.db-label.mono {
-	font-size: 12px;
-}
-.db-plot {
-	grid-area: plot;
-	position: relative;
-	container-type: inline-size;
-	height: 36px;
-	margin: 0 58px 0 44px;
-}
-.db-grid {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	width: 1px;
-	background: var(--grid);
-}
-.db-bar {
-	position: absolute;
-	top: 50%;
-	left: 0;
-	height: 2px;
-	margin-top: -1px;
-	transform: translateX(var(--a));
-	width: calc(var(--b) - var(--a));
-	transform-origin: right center;
-	background: var(--axis);
-}
-.db-dot {
-	position: absolute;
-	top: 50%;
-	left: 0;
-	z-index: 1;
-	width: 10px;
-	height: 10px;
-	margin: -5px 0 0 -5px;
-	border-radius: 50%;
-	box-shadow: 0 0 0 2px var(--surface);
-}
-.db-dot.v-before {
-	transform: translateX(var(--b));
-	background: var(--before);
-}
-.db-dot.v-after {
-	transform: translateX(var(--a));
-	background: var(--after);
-}
-.db-val {
-	position: absolute;
-	top: 50%;
-	left: 0;
-	font-size: 11.5px;
-	white-space: nowrap;
-}
-.db-val.v-before {
-	transform: translateX(var(--b));
-	translate: 10px -50%;
+.more-clients {
+	margin: 16px 0 0;
+	max-width: none;
+	font-size: 15px;
+	line-height: 1.6;
 	color: var(--ink-3);
-}
-.db-val.v-after {
-	transform: translateX(var(--a));
-	translate: calc(-100% - 10px) -50%;
-	color: var(--ink);
-	font-weight: 600;
-}
-.db-delta {
-	grid-area: delta;
-	text-align: right;
-	font-size: 13px;
-	font-weight: 600;
-	color: var(--ink);
-}
-.db-axis {
-	min-height: 24px;
-	border-top: 1px solid var(--axis);
-	font-size: 11px;
-	color: var(--ink-3);
-}
-.db-axis .db-label {
-	font-size: 11px;
-	color: var(--ink-3);
-}
-.db-axis .db-plot {
-	height: 24px;
-}
-.db-axis .db-plot span {
-	position: absolute;
-	top: 5px;
-	translate: -50% 0;
-	white-space: nowrap;
-}
-.dumbbell[data-phase="armed"] .db-dot.v-after {
-	transform: translateX(var(--b));
-}
-.dumbbell[data-phase="armed"] .db-bar {
-	scale: 0 1;
-}
-.dumbbell[data-phase="armed"] :is(.db-val.v-after, .db-delta) {
-	opacity: 0;
-}
-.dumbbell[data-phase="play"] :is(.db-dot.v-after, .db-bar) {
-	transition:
-		transform 0.7s var(--ease-out) calc(var(--i) * 120ms),
-		scale 0.7s var(--ease-out) calc(var(--i) * 120ms);
-}
-.dumbbell[data-phase="play"] :is(.db-val.v-after, .db-delta) {
-	transition: opacity 0.15s ease-out calc(0.7s + var(--i) * 120ms);
-}
-.dumbbell .case-foot {
-	margin-top: 14px;
 }
 
 /* ---------- forced colors: identity never rides on hue alone ---------- */
@@ -1587,25 +1024,13 @@ html:not(.js) :is(.merge-controls, .seg, .merge-chart .scrub) {
 		stroke: Highlight;
 	}
 	.merge-chart .dot.v-before,
-	.perf .key.v-before,
-	.perf .dot-key.v-before,
-	.db-dot.v-before,
-	.slice.violet .slice-bar,
-	.pay-track .bar.v-before {
+	.perf .key.v-before {
 		background: CanvasText;
 		border-radius: 0;
 	}
 	.merge-chart .dot.v-after,
-	.perf .key.v-after,
-	.perf .dot-key.v-after,
-	.db-dot.v-after,
-	.slice.teal .slice-bar,
-	.pay-track .bar.v-after {
+	.perf .key.v-after {
 		background: Highlight;
-	}
-	/* the stem between a dumbbell's dots */
-	.db-bar {
-		background: GrayText;
 	}
 }
 
@@ -1692,13 +1117,16 @@ html:not(.js) :is(.merge-controls, .seg, .merge-chart .scrub) {
 	.merge-code[open] > summary {
 		border-bottom: 1px solid var(--rule-soft);
 	}
-	.case-split {
-		grid-template-columns: 1fr;
-		gap: 24px;
+}
+
+/* under 1081px the margin column is ~150px: the aside goes under its beat */
+@media (max-width: 1080px) {
+	.beats {
+		grid-template-columns: max-content minmax(0, 1fr);
 	}
-	.dumbbells {
-		grid-template-columns: 1fr;
-		gap: 40px;
+	.case .beat > .beat-aside {
+		grid-column: 2;
+		margin-top: 10px;
 	}
 }
 
@@ -1708,14 +1136,40 @@ html:not(.js) :is(.merge-controls, .seg, .merge-chart .scrub) {
 		border-radius: 16px;
 		margin-inline: -4px;
 	}
-	.case-cols {
-		grid-template-columns: 1fr;
-	}
 	.case p {
 		font-size: 16px;
 	}
 	.perf-epigraph {
 		font-size: 17px;
+	}
+	/* each label stacks over its beat */
+	.beats {
+		display: block;
+		margin-top: 28px;
+	}
+	.beat {
+		display: block;
+	}
+	.beat + .beat {
+		margin-top: 24px;
+	}
+	.beat-label {
+		display: block;
+		margin-bottom: 4px;
+	}
+	.more {
+		margin-top: 44px;
+	}
+	.more-list li {
+		display: block;
+		padding: 14px 0;
+	}
+	.more-list b {
+		display: block;
+		margin-bottom: 4px;
+	}
+	.more-list p {
+		font-size: 16px;
 	}
 	.merge-chart {
 		--ml: 40px;
@@ -1797,106 +1251,62 @@ html:not(.js) :is(.merge-controls, .seg, .merge-chart .scrub) {
 		padding-right: 8px;
 		font-size: 11px;
 	}
-	.pay-top .tag {
-		margin-left: 0;
-		margin-top: 4px;
-		flex-basis: 100%;
-	}
-	.pull {
-		margin-top: 72px !important;
-		text-align: left;
-	}
-	.pull + .case {
-		margin-top: 72px;
-	}
-	.trace-body {
-		--gutter: 44px;
-		--right: 58px;
-	}
-	.slice,
-	.slice.parent {
-		height: auto;
-		display: grid;
-	}
-	/* names ride above the gold marker, on the card's surface */
-	.slice > .slice-name {
-		position: relative;
-		left: 0;
-		z-index: 2;
-		justify-self: start;
-		max-width: 100%;
-		padding-inline: 2px;
-		margin-left: -2px;
-		font-size: 11px;
-		line-height: 1.4;
-		white-space: normal;
-		margin-bottom: 3px;
-		background: var(--surface);
-	}
-	.slice-bar {
-		position: relative;
-		height: 12px;
-	}
-	.slice.parent .slice-bar {
-		margin-right: -18px;
-	}
-	.slice-bar .slice-name {
-		display: none;
-	}
-	.slice .dur,
-	.slice.parent .unpublished {
-		top: auto;
-		bottom: -4px;
-		line-height: 20px;
-		font-size: 12px;
-	}
-	.slice.parent .unpublished {
-		position: static;
-		margin-top: 3px;
-		font-size: 11px;
-		line-height: 1.3;
-	}
-	.track-label {
-		top: auto;
-		bottom: -3px;
-		font-size: 11px;
-		right: calc(100% + 8px);
-	}
-	.trace-ruler span[data-minor] {
-		display: none;
-	}
-	.db-row,
-	.db-axis {
-		grid-template-columns: 6.5rem minmax(0, 1fr);
-		grid-template-areas: "label plot" "delta plot";
-		column-gap: 8px;
-	}
-	.db-row {
-		min-height: 44px;
-	}
-	.db-delta {
-		text-align: left;
-		align-self: start;
-		font-size: 12px;
-	}
-	.db-label {
-		align-self: end;
-	}
-	.db-plot {
-		grid-row: 1 / span 2;
-		margin: 0 52px 0 40px;
-	}
-	.db-axis .db-plot {
-		grid-row: 1;
-	}
-	.db-grid:not([data-mobile]),
-	.db-axis .db-plot span:not([data-mobile]) {
-		display: none;
-	}
 }
 
 /* hydration resets the chart offscreen: no transitions for that jump */
 .merge[data-instant] *,
 .merge[data-instant] *::before {
 	transition: none !important;
+}
+
+/* ---------- print: the story's words, label beside prose ---------- */
+@media print {
+	.beats {
+		display: block;
+		margin: 4pt 0 0;
+	}
+	.beat {
+		display: grid;
+		grid-template-columns: 0.95in minmax(0, 1fr);
+		column-gap: 8pt;
+		align-items: baseline;
+		break-inside: avoid;
+	}
+	.beat + .beat {
+		margin-top: 3pt;
+	}
+	.beat-label {
+		margin: 0;
+	}
+	.case .beat > p {
+		grid-column: 2;
+	}
+	/* the chart doesn't print, so nothing is below to point at; the aside is a joke */
+	.beat-down,
+	.case .beat > .beat-aside {
+		display: none;
+	}
+	.more {
+		margin-top: 6pt;
+	}
+	.more-list {
+		border: 0;
+	}
+	.more-list li {
+		display: grid;
+		grid-template-columns: 0.95in minmax(0, 1fr);
+		column-gap: 8pt;
+		padding: 2pt 0;
+		border: 0;
+	}
+	.more-list b {
+		margin: 0;
+	}
+	.more-clients {
+		margin-top: 3pt;
+		font-size: 8.5pt !important;
+	}
+	.inline-quote {
+		text-decoration: none;
+	}
 }

@@ -1,12 +1,6 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react"
-import {
-	claims,
-	downloadsClaim,
-	type ClaimData,
-	type ClaimId
-} from "~/data/claims"
-import { formatCompact, formatStamp } from "~/lib/format"
-import { useLive } from "~/lib/live"
+import { claims, type ClaimData, type ClaimId } from "~/data/claims"
+import { formatStamp } from "~/lib/format"
 
 const hoverDelay = 120
 const supportsAnchors = () =>
@@ -33,7 +27,6 @@ export const Quickinfo = ({
 	children,
 	className = "",
 	label,
-	describedBy,
 	measure = false
 }: {
 	trigger: ReactNode
@@ -41,8 +34,6 @@ export const Quickinfo = ({
 	className?: string
 	/** accessible name for the trigger, when its text alone is ambiguous */
 	label?: string
-	/** id of the visible text that says what the trigger is (a tile's label) */
-	describedBy?: string
 	/**
 	 * Place it by measuring the trigger when it opens, even where anchors are
 	 * supported: Firefox loses a transformed, animated anchor (the footer
@@ -119,7 +110,6 @@ export const Quickinfo = ({
 				popoverTargetAction="show"
 				aria-expanded={open}
 				aria-label={label}
-				aria-describedby={describedBy}
 				style={{ anchorName: anchor } as React.CSSProperties}
 				onPointerEnter={e => onPointer(e, true)}
 				onPointerLeave={e => onPointer(e, false)}
@@ -205,13 +195,7 @@ const Doc = ({ text }: { text: string }) => (
 	</>
 )
 
-export const ClaimBody = ({
-	claim,
-	live
-}: {
-	claim: ClaimData
-	live?: string | undefined
-}) => (
+const ClaimBody = ({ claim }: { claim: ClaimData }) => (
 	<>
 		<span className="qi-body">
 			<span className="k">const</span> <span className="n">{claim.name}</span>
@@ -221,9 +205,6 @@ export const ClaimBody = ({
 			<span className="qi-line">
 				<Doc text={claim.doc} />
 			</span>
-			{claim.growth && (
-				<span className="qi-line qi-growth">{claim.growth}</span>
-			)}
 			{claim.note && <span className="qi-line qi-note">{claim.note}</span>}
 			{claim.see.map(see => (
 				<span key={see.href} className="qi-line tag">
@@ -235,11 +216,9 @@ export const ClaimBody = ({
 			))}
 		</span>
 		<span className="qi-foot">
-			{live ?
-				<span className="live">{live}</span>
-			: claim.asOf ?
+			{claim.asOf ?
 				<span>
-					{claim.live ? "snapshot" : "as of"} ·{" "}
+					as of ·{" "}
 					{claim.asOf.length > 10 ? formatStamp(claim.asOf) : claim.asOf}
 				</span>
 			:	<span>public record</span>}
@@ -257,55 +236,19 @@ export const ClaimBody = ({
 export const Claim = ({
 	id,
 	claim,
-	children,
-	className,
-	describedBy
+	children
 }: {
 	id?: ClaimId
 	claim?: ClaimData
 	children: ReactNode
-	className?: string
-	/** id of the visible label that says what the number is */
-	describedBy?: string
 }) => {
-	const snapshot: ClaimData | undefined = claim ?? (id && claims[id])
-	if (!snapshot) throw new Error(`Unknown claim ${id}`)
-	const live = useLive()
-	const fresh = snapshot.pkg && live ? live.downloads[snapshot.pkg] : undefined
-	// once npm has a newer complete window, every instance of a live claim
-	// (hero tile, Work row) shows it, and its popover describes that window
-	const data =
-		fresh === undefined || !live ?
-			snapshot
-		:	{
-				...downloadsClaim(
-					snapshot.name,
-					snapshot.pkg!,
-					{
-						downloads: fresh,
-						start: live.start,
-						end: live.end,
-						asOf: live.checkedAt
-					},
-					snapshot.note
-				),
-				pkg: snapshot.pkg!,
-				...(snapshot.growth && { growth: snapshot.growth })
-			}
+	const data: ClaimData | undefined = claim ?? (id && claims[id])
+	if (!data) throw new Error(`Unknown claim ${id}`)
+	// the words are always the ones written: a sentence that says "millions"
+	// keeps saying it, and the popover holds the exact figure
 	return (
-		<Quickinfo
-			trigger={fresh === undefined ? children : formatCompact(fresh)}
-			{...(className && { className })}
-			{...(describedBy && { describedBy })}
-		>
-			<ClaimBody
-				claim={data}
-				live={
-					live && fresh !== undefined ?
-						`live · read ${formatStamp(live.checkedAt)}`
-					:	undefined
-				}
-			/>
+		<Quickinfo trigger={children}>
+			<ClaimBody claim={data} />
 		</Quickinfo>
 	)
 }

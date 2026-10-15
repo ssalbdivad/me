@@ -39,7 +39,6 @@
 		--fs-h3: 11.5pt;
 		--fs-lede: 12pt;
 		--fs-body: 9.5pt;
-		--fs-stat: 20pt;
 		--margin: 0px;
 		--gutter: 14px;
 	}
@@ -76,7 +75,6 @@
 	.nav,
 	.skip,
 	.codecard,
-	.spark,
 	.boat-lane,
 	.theme-toggle,
 	.footer,
@@ -90,16 +88,8 @@
 	button:not(.tok),
 	.w-extra,
 	figure.merge,
-	figure.payoffs,
-	figure.trace,
-	.dumbbells,
 	.replay-block,
 	.talk-media,
-	#said,
-	/* pull quotes, Prisma's included: with them the page runs to a third sheet */
-	.case-quote,
-	.case-foot,
-	.trace-foot,
 	.talk-cap,
 	.mic,
 	.nf-actions,
@@ -174,9 +164,7 @@
 	.perf-lede,
 	.agents-intro,
 	.case-text p,
-	.w-pitch,
-	.pull blockquote,
-	.quote blockquote {
+	.w-pitch {
 		font-size: 9pt !important;
 		line-height: 1.32 !important;
 		max-width: none !important;
@@ -186,8 +174,6 @@
 	.w-role,
 	.w-links,
 	.case-meta,
-	.stat .src,
-	.badges,
 	.roles dt {
 		font-size: 7.5pt !important;
 		line-height: 1.4 !important;
@@ -237,7 +223,6 @@
 	li,
 	figure,
 	blockquote,
-	.stats,
 	.case-text h3 {
 		break-inside: avoid;
 	}
@@ -287,31 +272,9 @@
 		gap: 4pt 16pt;
 		margin: 0;
 	}
-	.stats {
-		display: grid !important;
-		grid-template-columns: repeat(4, 1fr) !important;
-		gap: 0 12pt;
-		margin-top: 12pt;
-		padding-top: 8pt;
-	}
-	.stat {
-		padding: 0 !important;
-		border: 0 !important;
-		min-height: 0 !important;
-	}
-	.stat .num,
-	.stat .val {
-		font-size: 20pt !important;
-	}
-	.stat .lbl {
-		font-size: 8.5pt;
-		margin: 2pt 0;
-	}
-	.stat .src {
-		font-size: 7pt;
-	}
 
-	/* work rows: a name column (name, role, link, metrics) beside the pitch */
+	/* work rows: a name column (name, role, links) beside the pitch, with the
+	   margin of reactions under the pitch */
 	.w-list,
 	.w-family {
 		gap: 0 !important;
@@ -326,7 +289,7 @@
 	.w-row[data-child] .w-main {
 		display: grid !important;
 		grid-template-columns: 1.9in minmax(0, 1fr) !important;
-		grid-template-areas: "head pitch" "metrics pitch";
+		grid-template-areas: "head pitch" "head margin" !important;
 		align-content: start;
 		column-gap: 14pt !important;
 		row-gap: 3pt !important;
@@ -348,15 +311,6 @@
 		grid-column: auto !important;
 		margin: 0 !important;
 	}
-	.w-metrics {
-		grid-area: metrics;
-		grid-column: auto !important;
-		display: grid !important;
-		grid-template-columns: 1fr 1fr !important;
-		gap: 6pt !important;
-		margin: 0 !important;
-		padding: 0 !important;
-	}
 	.w-name,
 	.w-row[data-child] .w-name {
 		font-size: 13pt !important;
@@ -370,26 +324,9 @@
 	.w-row[data-child] .w-links {
 		display: none !important;
 	}
-	.w-metric {
-		margin: 0 !important;
-	}
-	.w-mv,
-	.w-row[data-child] .w-mv {
-		font-size: 11pt !important;
-		line-height: 1.2 !important;
-	}
-	.w-metric .w-ml {
-		font-size: 6.5pt !important;
-		white-space: nowrap !important;
-	}
-	.w-used {
-		margin-top: 2pt !important;
-		font-size: 8.5pt !important;
-	}
 
-	/* perf: the words of each case, not the charts */
-	.perf-epigraph,
-	.badges {
+	/* perf: the words of the story, not the chart */
+	.perf-epigraph {
 		display: none !important;
 	}
 	.case {
@@ -405,14 +342,8 @@
 		gap: 4pt !important;
 		break-inside: avoid;
 	}
-	.case-text p,
-	.case-cols p {
+	.case-text p {
 		margin: 0 0 4pt !important;
-	}
-	.case-cols,
-	.case-split {
-		columns: 1 !important;
-		display: block !important;
 	}
 	.credit {
 		margin: 2pt 0 0 !important;
@@ -420,42 +351,10 @@
 		border: 0 !important;
 		font-size: 8pt !important;
 	}
-	.pull {
-		margin: 6pt 0 !important;
-		padding: 0 !important;
-	}
-	.pull {
-		text-align: left !important;
-		max-width: none !important;
-	}
-	.pull blockquote {
-		font-size: 10pt !important;
-	}
-	.pull figcaption {
-		margin: 1pt 0 0 !important;
-		font-size: 7.5pt !important;
-	}
 
-	/* agents: number, title and rule on one line each, full width */
+	/* agents */
 	.agents-intro {
 		margin-bottom: 4pt !important;
-	}
-	.principles {
-		display: grid !important;
-		grid-template-columns: 1fr 1fr;
-		column-gap: 14pt;
-	}
-	.principles li {
-		grid-template-columns: 16pt minmax(0, 1fr) !important;
-		gap: 0 4pt !important;
-		padding: 3pt 0 !important;
-	}
-	.principles li p {
-		display: none;
-	}
-	.principles .pr-t {
-		grid-column: 2 / -1 !important;
-		font-size: 9.5pt !important;
 	}
 
 	/* talks: title and venue, two columns */
@@ -475,11 +374,6 @@
 	}
 	.talk-meta {
 		margin: 1pt 0 0 !important;
-	}
-
-	/* before: one tight row each */
-	.bf-list li {
-		padding-block: 3pt !important;
 	}
 
 	/* the hero's contact line already carries all of contact */

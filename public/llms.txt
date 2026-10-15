@@ -1,6 +1,8 @@
 # David Blass
 
-> TypeScript engineer in Boston, MA (handle `ssalbdivad`, which is "davidblass" reversed). Author of ArkType, co-creator of Standard Schema and co-founder of Pullfrog. He was a TypeScript performance consultant from 2023 to 2025. He writes the TypeScript types other libraries depend on and, lately, the agents that write the rest.
+> TypeScript engineer in Boston, MA (handle `ssalbdivad`, which is "davidblass" reversed). Author of ArkType, co-creator of Standard Schema and co-founder of Pullfrog. He was a TypeScript performance consultant from 2023 to 2025. In his words: "I make TypeScript's types do things they probably shouldn't- then make them fast. Lately, I work on agents, too."
+
+He's looking for his next team.
 
 Contact: david@arktype.io. The full résumé, with every number sourced: [/resume.md](https://ssalbdivad.com/resume.md).
 
@@ -13,23 +15,23 @@ Numbers below are a snapshot as of 2026-10-13 (npm: the 30 days 2026-09-13 to 20
   - **Attest**: type-level benchmarks and assertions for TypeScript (deterministic instantiation counts, so CI can fail a PR that makes types slower). `@ark/attest`: 427,538 npm downloads in 30 days ([npm](https://api.npmjs.org/downloads/point/2026-09-13:2026-10-12/@ark/attest)).
   - **ArkSchema**: the set-theoretic type system underneath (intersections, subtyping, union discrimination at runtime).
 - **Co-creator, Standard Schema (2024–)**: [standardschema.dev](https://standardschema.dev). One interface so any TypeScript validator plugs into any framework (tRPC, TanStack, Hono, React Hook Form and more). David co-designed it with the creators of Zod and Valibot. They then co-authored Standard JSON Schema, so any validator can define tool inputs for AI agents and MCP. The `@standard-schema/spec` package: 551,490,697 npm downloads in 30 days, mostly transitive installs ([npm](https://api.npmjs.org/downloads/point/2026-09-13:2026-10-12/@standard-schema/spec)); 3,650 GitHub stars.
-- **Co-founder, Pullfrog (2025–)**: [pullfrog.com](https://pullfrog.com). AI coding agents that run in your GitHub Actions: they review PRs, triage issues, fix CI, resolve merge conflicts and test UIs in a headless browser, on your infrastructure and your keys. David built the model-agnostic agent runtime (BYOK, MCP tools, GitHub App/OIDC auth, sandboxed CI). 1,307 GitHub stars ([repo](https://github.com/pullfrog/pullfrog)); `pullfrog`: 211,712 npm downloads in 30 days.
+- **Co-founder, Pullfrog (2025–)**: [pullfrog.com](https://pullfrog.com), started with Colin McDonnell (creator of Zod). AI coding agents that run in your GitHub Actions: they review PRs, triage issues, fix CI, resolve merge conflicts and test UIs in a headless browser, on your infrastructure and your keys. David built the model-agnostic agent runtime (BYOK, MCP tools, GitHub App/OIDC auth, sandboxed CI). 1,307 GitHub stars ([repo](https://github.com/pullfrog/pullfrog)); `pullfrog`: 211,712 npm downloads in 30 days.
 - **TypeScript performance consultant (2023–2025)**: clients included tRPC, Drizzle, Prisma, Convex, AWS Amplify, Speakeasy, Stately, wevm, Vanta and Cloudinary.
 
 ## TypeScript performance, with sources
 
-- **TypeScript 5.9.** David found, minimized, benchmarked (with Attest) and drove a fix for chained Zod- and tRPC-style types that made the compiler redo every earlier link: O(3^N) instantiations. The compiler patch was written by Mateusz Burzyński (@Andarist) in [microsoft/TypeScript#61505](https://github.com/microsoft/TypeScript/pull/61505); it shipped in TS 5.9 and was ported to the Go compiler ([typescript-go#1358](https://github.com/microsoft/typescript-go/pull/1358)).
+- **TypeScript 5.9.** David found, minimized, benchmarked (with Attest) and drove a fix for chained Zod- and tRPC-style types where each link roughly tripled the compiler's work: O(3^N) instantiations. The compiler patch was written by Mateusz Burzyński (@Andarist) in [microsoft/TypeScript#61505](https://github.com/microsoft/TypeScript/pull/61505); it shipped in TS 5.9 and was ported to the Go compiler ([typescript-go#1358](https://github.com/microsoft/typescript-go/pull/1358)).
   - AnswerOverflow's dashboard: 6.66s → 3.29s check time (2.0×), mean of 5 runs each, ranges don't overlap ([comment](https://github.com/microsoft/TypeScript/pull/61535#issuecomment-2780961089)).
   - A tRPC monorepo David tested: 13.04s → 6.00s (2.1×), a single run ([comment](https://github.com/microsoft/TypeScript/pull/61505#issuecomment-2769065243)).
   - Klarna: 395.48s → 132.09s (2.9×), self-reported by one of their engineers in one comment ([comment](https://github.com/microsoft/TypeScript/pull/61505#issuecomment-3102636519)).
   - 11 chained `.merge()` calls: 1,596,004 instantiations on TS 5.8.2 vs. 976 on 5.9.3 (Attest, re-run 2026-10-13; bench in this site's repo).
 - **viem + MUD.** TypeScript spent 1.86s (1,866ms) computing the variance of one viem type; with variance annotated by hand, the whole file checked in 1,288ms. The annotations now ship in viem ([latticexyz/mud#2956](https://github.com/latticexyz/mud/pull/2956), [wevm/viem#2557](https://github.com/wevm/viem/pull/2557)).
-- **Prisma.** 45% less check time on one generated file (commonInputTypes), not the whole client ([prisma/orm#27046](https://github.com/prisma/orm/pull/27046), [6.16.0 release notes](https://github.com/prisma/orm/releases/tag/6.16.0)).
+- **Prisma.** David built their type benchmarks and helped speed up their generated types; Prisma wrote it up in its 6.16 release notes. 45% less check time on one generated file (commonInputTypes), not the whole client ([prisma/orm#27046](https://github.com/prisma/orm/pull/27046), [6.16.0 release notes](https://github.com/prisma/orm/releases/tag/6.16.0)).
 - **Mongoose 8.19.** `InferRawDocType`: 36–67% fewer instantiations on its benchmarks; the maintainer's whole-repo count was flat ([Automattic/mongoose#15588](https://github.com/Automattic/mongoose/pull/15588)).
 
 ## How David works with agents
 
-He builds Pullfrog by running many coding agents in parallel, every day, through Ntwine, a local tool he maintains. It grew out of Frizz, an earlier open-source tool, and keeps its design: every agent thread on one board, and a queue of the ones that need him. The rules David has added on top, for the agents and for himself:
+Most days he has a lot of coding agents working on Pullfrog at once. He runs them from [Ntwine](https://github.com/ssalbdivad/ntwine), a local UI he built on Colin McDonnell's original design, Frizz. The rules he's ended up with, for them and for himself:
 
 - **Size work by scope, never in days.** Agents do the building, so hours are the wrong unit. Scope is the code paths a change touches, its risk, and what needs a human decision.
 - **Report honest effect sizes.** Say how strong a claim is right next to it, and treat pushback as a bug report on the measurement before defending the result.
@@ -42,6 +44,12 @@ He builds Pullfrog by running many coding agents in parallel, every day, through
 - [TypeScript Congress 2023: ArkType, Bringing TypeScript to Runtime](https://gitnation.com/contents/arktype-bringing-typescript-to-runtime)
 - [devtools.fm #132: ArkType, better runtime type validation](https://www.devtools.fm/episode/132) (TypeScript performance from 08:35)
 - [TypeScript.fm 35B: ArkType is TypeScript's 1:1 Validator](https://typescript.fm/bonus35) (JIT-optimized codegen, optimizing types; Standard Schema from 51:55)
+
+## Outside work
+
+- A Mets fan in Boston. He built [beanemachine](https://beanemachine.com), which tells him who to start in fantasy baseball; it and its robot mascot, Billy, are both named for Billy Beane.
+- An amateur bird watcher, building [look4](https://github.com/ssalbdivad/look4), which goes through his backyard camera's footage looking for birds he hasn't seen yet.
+- Spent a day of quarantine arranging a jazz adaptation of "My Shot" from Hamilton ([video](https://www.youtube.com/watch?v=6KKGojDM1Xo)).
 
 ## Before
 

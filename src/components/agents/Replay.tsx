@@ -7,7 +7,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react"
 import { loadAnimate, warmAnimate } from "~/viz/animate"
 import { Braid } from "./Braid"
-import { layout } from "./geometry"
+import { layout, timeAt } from "./geometry"
 import {
 	allTicks,
 	clock,
@@ -30,39 +30,26 @@ const captionMs = 2400
 
 /**
  * David's rules, each paraphrased from the "Working here (David)" list in
- * his Ntwine AGENTS.md (commit 35f616c6). Rules that trace to Colin
- * McDonnell's Frizz design (the queue, the board, the worker contract, the
- * agent completion invariant) are deliberately left out: the intro credits
- * that design to Frizz instead. Array order matters: the replay's captions
+ * his Ntwine AGENTS.md (commit 35f616c6), and only his own: the ones that
+ * come from the tool's design (the queue, the board, the worker contract)
+ * are left out, since the page describes the habit, not the tool. Agents.tsx
+ * says all four in one sentence. Array order matters: the replay's captions
  * play them in this order, cued by the session itself (see `cues`).
  */
-export const principles = [
-	{
-		n: "01",
-		title: "Size work by scope, never in days.",
-		body: "Agents do the building, so hours are the wrong unit. Scope is the code paths a change touches, its risk, and what needs a human decision."
-	},
-	{
-		n: "02",
-		title: "Report honest effect sizes.",
-		body: "Say how strong a claim is right next to it, and treat pushback as a bug report on the measurement before defending the result. (The case studies above say which numbers are single runs.)"
-	},
-	{
-		n: "03",
-		title: "Lead with what changed.",
-		body: "An agent's report leads with what changed or what is true. The why goes in the commit message and code comments, where the next reader will find it- not in the chat."
-	},
-	{
-		n: "04",
-		title: "Preserve evidence.",
-		body: "Never delete or rewrite a stored measurement. Experiments are temporary: record the conclusion and its numbers, then delete the harness."
-	}
+const principles = [
+	{ n: "01", title: "Size work by scope, never in days." },
+	{ n: "02", title: "Report honest effect sizes." },
+	{ n: "03", title: "Lead with what changed." },
+	{ n: "04", title: "Preserve evidence." }
 ] as const
 
-const h = layout("h")
-const v = layout("v")
-/** both layouts share one compressed time axis; this maps p → seconds */
-const timeAt = (p: number) => (p >= 1 ? total : h.toTime(h.playhead(p)))
+/** the lanes the prerender chose, if this page was prerendered (see `lanes` in geometry) */
+const shipped = (o: "h" | "v") =>
+	typeof document === "undefined" ? undefined : (
+		document.querySelector<SVGSVGElement>(`#agents .braid-${o}`)?.dataset.lanes
+	)
+const h = layout("h", shipped("h"))
+const v = layout("v", shipped("v"))
 const pAt = (s: number) => {
 	let lo = 0
 	let hi = 1
@@ -132,25 +119,40 @@ export const Replay = () => {
 	const endTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 	const captionAt = useRef(Number.NEGATIVE_INFINITY)
 	const last = useRef(1)
+	/** the event (or -2 at the end) the state last showed: see `sync` */
+	const synced = useRef(-2)
+
+	/** writes text only when it changes, so an unchanged readout costs no layout */
+	const write = (el: HTMLElement | null, text: string) => {
+		if (el && el.textContent !== text) el.textContent = text
+	}
 
 	const sync = (value: number, fromPlayback: boolean) => {
 		const s = timeAt(value)
 		const done = value >= 1
-		setAtEnd(done)
 		const i = latestEvent(s)
-		setEvent(i)
-		setCursor(done ? Number.POSITIVE_INFINITY : (events[i]?.s ?? -1))
-		if (clockRef.current) clockRef.current.textContent = clock(s)
-		if (tallyRef.current)
-			tallyRef.current.textContent =
-				done ?
-					`${totals.subAgents} sub-agents · ${totals.toolCalls.toLocaleString("en")} tool calls · ${duration(total)} wall clock`
-				:	`${plural(running(s), "sub-agent")} running · ${plural(countUpTo(allTicks, s), "tool call")} so far`
+		// state re-renders both braids: only when the event shown changes, not
+		// every frame (an 8s replay passes 140 events in ~480 frames)
+		if ((done ? -2 : i) !== synced.current) {
+			synced.current = done ? -2 : i
+			setAtEnd(done)
+			setEvent(i)
+			setCursor(done ? Number.POSITIVE_INFINITY : (events[i]?.s ?? -1))
+		}
+		write(clockRef.current, clock(s))
+		write(
+			tallyRef.current,
+			done ?
+				`${totals.subAgents} sub-agents · ${totals.toolCalls.toLocaleString("en")} tool calls · ${duration(total)} wall clock`
+			:	`${plural(running(s), "sub-agent")} running · ${plural(countUpTo(allTicks, s), "tool call")} so far`
+		)
 		if (range.current) {
 			// always: a scrub sets p to exactly this value, so writing it back can't fight a drag,
 			// and skipping it while focused froze the slider and made the next arrow key rewind
 			range.current.value = String(Math.round(value * 1000))
-			range.current.setAttribute("aria-valuetext", `${clock(s)} UTC`)
+			const text = `${clock(s)} UTC`
+			if (range.current.getAttribute("aria-valuetext") !== text)
+				range.current.setAttribute("aria-valuetext", text)
 		}
 		if (fromPlayback) {
 			const cue = cues.find(
@@ -276,7 +278,7 @@ export const Replay = () => {
 								{ph} <span className="tnum">{n}</span>
 							</li>
 						))}
-						<li className="legend-tick">tool call</li>
+						<li className="legend-tick">thickness = calls/min</li>
 					</ul>
 				</div>
 
@@ -295,10 +297,11 @@ export const Replay = () => {
 					className="only-narrow"
 				/>
 				<p id="replay-desc" className="sr-only">
-					A braid of the session that built this page. One root thread,{" "}
-					{data.root.label}, fans out to {totals.subAgents} sub-agents across{" "}
-					{totals.phases.join(", ")}; each strand's length is its real duration
-					and each tick is one tool call. The table below lists every strand.
+					A braid of the session that built the first version of this page. One
+					root thread, {data.root.label}, fans out to {totals.subAgents}{" "}
+					sub-agents across {totals.phases.join(", ")}; each strand's length is
+					its real duration and its thickness its tool calls a minute. The table
+					below lists every strand.
 				</p>
 
 				<div className="replay-readout mono tnum">
@@ -344,15 +347,18 @@ export const Replay = () => {
 							disabled={!ready}
 							aria-valuetext={`${endClock} UTC`}
 							onInput={e => {
+								// read the scrub first: stopping the playback writes its own
+								// position back into this input
+								const value = Number(e.currentTarget.value) / 1000
 								pause()
-								p.set(Number(e.currentTarget.value) / 1000)
+								p.set(value)
 							}}
 						/>
 					</label>
 					<span className="replay-utc mono">UTC · {sessionDay}</span>
 				</div>
 				<figcaption id="replay-cap" className="sr-only">
-					Replay of the agent session that built this page
+					Replay of the agent session that built the first version of this page
 				</figcaption>
 			</figure>
 		</>

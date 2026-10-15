@@ -130,7 +130,6 @@
 	--fs-h3: clamp(1.375rem, 1.189rem + 0.762vw, 1.875rem);
 	--fs-lede: clamp(1.25rem, 1.064rem + 0.762vw, 1.75rem);
 	--fs-body: clamp(1.0625rem, 1.039rem + 0.095vw, 1.125rem);
-	--fs-stat: clamp(2.5rem, 2.129rem + 1.524vw, 3.5rem);
 
 	--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 	--ease-pop: cubic-bezier(0.16, 1, 0.3, 1);
@@ -690,16 +689,6 @@
 	.qi-foot i {
 		font-style: normal;
 		color: var(--teal);
-	}
-	.qi-foot .live::before {
-		content: "";
-		display: inline-block;
-		width: 6px;
-		height: 6px;
-		margin-right: 6px;
-		border-radius: 50%;
-		background: var(--after);
-		vertical-align: 1px;
 	}
 
 	/* ---------- twoslash code (build-time compiler output) ---------- */

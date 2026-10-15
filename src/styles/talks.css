@@ -218,102 +218,105 @@
 	color: var(--sky);
 }
 
-/* ---------- said: quotes typeset as string literals ---------- */
-.said {
-	list-style: none;
-	margin: 0;
-	padding: 0;
+/* ---------- about: off the clock ---------- */
+.ab-copy {
 	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: 44px calc(var(--gutter) * 2);
+	gap: 16px;
+	max-width: 34em;
 }
-.quote {
+.ab-copy p {
 	margin: 0;
+	color: var(--ink-2);
+	font-size: var(--fs-body);
 }
-.quote blockquote {
-	margin: 0;
+/* type loves = …: the bio as a union, opening About */
+.loves {
+	margin: 0 0 24px;
+	/* the line decides its own layout, by the width it's given */
+	container-type: inline-size;
+	font: 400 15px / 1.6 var(--mono);
+	color: var(--ink-2);
 }
-.quote blockquote p {
-	margin: 0;
-	font: 500 20px / 1.45 var(--sans);
-	letter-spacing: -0.005em;
-	color: var(--gold);
-	text-wrap: pretty;
+.loves-code {
+	font: inherit;
 }
-.q-mark {
-	font-family: var(--mono);
-	font-weight: 400;
-	color: var(--blue);
-}
-.quote blockquote p > .q-mark:first-child {
-	/* hang the opening mark so every line of the body aligns */
-	display: inline-block;
-	width: 0.6em;
-	margin-left: -0.6em;
-}
-.quote figcaption {
-	margin-top: 12px;
-	font-size: 13px;
-	line-height: 1.5;
-	color: var(--ink-3);
-}
-.quote figcaption .dash {
+.loves .k {
 	color: var(--copper);
 }
-.quote figcaption a {
+.loves .n {
 	color: var(--sky);
+	font-family: var(--cursive);
+	font-style: italic;
+	font-feature-settings: "ss01";
 }
-.quote figcaption a:hover {
+.loves .v {
+	color: var(--gold);
+}
+/* the members that go somewhere: a faint rule, unlike the dotted `loves`,
+   which only has a type to show */
+.loves a {
+	border-radius: 3px;
 	text-decoration: underline;
+	text-decoration-color: color-mix(in oklab, currentColor 30%, transparent);
 	text-underline-offset: 3px;
+	text-decoration-thickness: 1px;
+	transition: text-decoration-color 0.2s;
 }
-/* four quotes fill the grid two by two; the last word closes it, full width */
-.said-self {
-	grid-column: 1 / -1;
+.loves a:hover {
+	text-decoration-color: currentColor;
 }
-.quote-self {
-	padding-top: 20px;
-	border-top: 1px solid var(--rule-soft);
+/* prettier's layout: `type loves =`, then one indented `| "member"` a line */
+.loves .m {
+	display: block;
+	padding-left: 2ch;
+	white-space: nowrap;
 }
-.quote-self blockquote p {
-	font-size: 17px;
+/* the whole union is 87 characters: where they fit, one line, and no
+   leading bar */
+@container (min-width: 88ch) {
+	.loves .m {
+		display: inline;
+		padding-left: 0;
+	}
+	.loves .eq + .m .bar {
+		display: none;
+	}
+}
+/* the hover: wrap between members, never inside one */
+.loves-qi span[style*="--shiki-dark:#F5CF8F"] {
+	white-space: nowrap;
+}
+.loves-qi span {
+	color: var(--shiki-dark);
+}
+:root[data-theme="light"] .loves-qi span {
+	color: var(--shiki-light);
+}
+/* inline at the end of its sentence, at the sentence's own line height */
+.ab-summon {
+	font-size: 0.875em;
+	color: var(--ink-3);
+	white-space: nowrap;
+	cursor: pointer;
+}
+.ab-summon-t {
+	color: var(--sky);
+	text-decoration: underline;
+	text-decoration-color: color-mix(in oklab, var(--sky) 35%, transparent);
+	text-underline-offset: 3px;
+	text-decoration-thickness: 1px;
+	transition: text-decoration-color 0.2s;
+}
+.ab-summon:hover .ab-summon-t {
+	text-decoration-color: var(--sky);
 }
 @media (pointer: coarse) {
-	/* source links sit in running text: grow the hit area without moving layout */
-	.quote figcaption a {
+	/* grow the hit area without moving the line */
+	.ab-summon {
 		display: inline-block;
 		padding-block: 12px;
 		margin-block: -12px;
 	}
-}
-
-/* ---------- before ---------- */
-.bf-list {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	border-top: 1px solid var(--rule);
-}
-.bf-list li {
-	display: grid;
-	grid-template-columns: 96px 120px minmax(0, 1fr);
-	gap: 4px var(--gutter);
-	align-items: baseline;
-	padding: 16px 0 18px;
-	border-bottom: 1px solid var(--rule-soft);
-}
-.bf-when {
-	font-size: 14px;
-	color: var(--ink-3);
-}
-.bf-what {
-	font-weight: 700;
-	color: var(--ink);
-}
-.bf-list p {
-	margin: 0;
-	max-width: 34em;
-	color: var(--ink-2);
 }
 
 @media (max-width: 760px) {
@@ -339,21 +342,10 @@
 	.mic-ch {
 		grid-column: 1 / -1;
 	}
-	.said {
-		grid-template-columns: minmax(0, 1fr);
-		gap: 32px;
-	}
-	.quote blockquote p {
-		font-size: 18px;
-	}
-	.quote-self blockquote p {
-		font-size: 16px;
-	}
-	.bf-list li {
-		grid-template-columns: 64px minmax(0, 1fr);
-	}
-	.bf-list p {
-		grid-column: 2;
+	/* 24px rows: the two linked members stay apart as tap targets */
+	.loves {
+		font-size: 13.5px;
+		line-height: 24px;
 	}
 }
 
@@ -366,5 +358,28 @@
 	.talk-poster:hover .talk-play,
 	.talk-poster:focus-visible .talk-play {
 		scale: none;
+	}
+}
+
+/* about on paper: the union on one line, both paragraphs at full width
+   (print.css hides the summon button with every other button) */
+@media print {
+	/* paper is wide enough for the whole union on one line */
+	.loves {
+		margin: 0 0 3pt;
+	}
+	.loves .m {
+		display: inline;
+		padding-left: 0;
+	}
+	.loves .eq + .m .bar {
+		display: none;
+	}
+	.loves a {
+		text-decoration: none;
+	}
+	.ab-copy {
+		gap: 3pt;
+		max-width: none;
 	}
 }

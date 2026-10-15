@@ -17,13 +17,14 @@ export const Contact = () => (
 	>
 		<div className="contact-inner" data-reveal>
 			<span className="sec-label">
-				<b>07</b> // contact
+				<b>06</b> // contact
 			</span>
 			<h2 className="h2" id="contact-title">
 				Say hi
 			</h2>
 			<p className="sec-deck">
-				Building something hard in TypeScript or AI? I'd love to hear about it.
+				I'm looking for my next team. If you're building something hard in
+				TypeScript or AI, I'd love to hear about it.
 			</p>
 			<div className="contact-ctas">
 				{/* the address as the hero sets it: one control, copy on click */}
@@ -166,13 +167,13 @@ export const Footer = ({ numbers = true }: { numbers?: boolean }) => (
 			<div className="fine mono">
 				{numbers && (
 					<p>
-						// every code hover on this page is real compiler output, computed
-						at build
+						// the type hovers in code are real compiler output, computed at
+						build
 					</p>
 				)}
 				{numbers ?
 					<p>
-						// the headline numbers carry their source; hover or tap them{" "}
+						// numbers link to their sources; hover or tap them{" "}
 						<span className="stamp">(stats as of {statsAsOf})</span>
 					</p>
 				:	<p>// stats as of {statsAsOf}</p>}

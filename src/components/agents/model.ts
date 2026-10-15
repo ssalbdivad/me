@@ -75,8 +75,6 @@ type Group = {
 	index: number
 	phase: Phase
 	s0: number
-	/** when the last of them landed, if they all have */
-	landing: number | undefined
 	strands: Strand[]
 }
 
@@ -103,7 +101,6 @@ for (const phase of phases) {
 				index: groups.length,
 				phase,
 				s0: s.s0,
-				landing: undefined,
 				strands: []
 			}
 			groups.push(current)
@@ -112,11 +109,6 @@ for (const phase of phases) {
 		current.strands.push(s)
 	}
 }
-for (const g of groups)
-	g.landing =
-		g.strands.every(s => s.done) ?
-			Math.max(...g.strands.map(s => s.s1))
-		:	undefined
 groups.sort((a, b) => a.s0 - b.s0)
 
 /**

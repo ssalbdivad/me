@@ -5,7 +5,8 @@ const links = [
 	{ id: "work", label: "Work" },
 	{ id: "perf", label: "Perf" },
 	{ id: "agents", label: "Agents" },
-	{ id: "talks", label: "Talks" }
+	{ id: "talks", label: "Talks" },
+	{ id: "about", label: "About" }
 ] as const
 
 export const Nav = () => {

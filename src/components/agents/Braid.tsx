@@ -5,9 +5,9 @@ import type { Layout } from "./geometry"
 import { data } from "./model"
 
 /**
- * One orientation of the braid. Everything time-bound (strands, ticks, the
- * root) sits under a clip that sweeps with the replay's position; dots and
- * labels fade in once the replay passes the moment they mark.
+ * One orientation of the braid. Everything time-bound (strands, the root)
+ * sits under a clip that sweeps with the replay's position; dots and labels
+ * fade in once the replay passes the moment they mark.
  */
 export const Braid = ({
 	l,
@@ -39,6 +39,7 @@ export const Braid = ({
 			viewBox={`${vb.x} ${vb.y} ${vb.w} ${vb.h}`}
 			role="img"
 			aria-labelledby={describedBy}
+			data-lanes={l.lanes}
 		>
 			<defs>
 				<clipPath id={clipId}>
@@ -75,13 +76,23 @@ export const Braid = ({
 
 			<g clipPath={`url(#${clipId})`}>
 				<path className="b-root" d={l.root} />
-				<path className="b-root-ticks" d={l.rootTicks} />
 				{l.shapes.map(s => (
 					<g key={s.id} className={`b-strand ph-${s.phase}`}>
 						<title>{s.title}</title>
-						{s.connector && <path className="b-connector" d={s.connector} />}
+						{s.cuts.map(k => (
+							<rect
+								key={`${k.x} ${k.y}`}
+								className="b-cut"
+								x={k.x}
+								y={k.y}
+								width={k.w}
+								height={k.h}
+							/>
+						))}
 						<path className="b-line" d={s.path} />
-						<path className="b-ticks" d={s.ticks} />
+						{s.band && (
+							<path className="b-band" d={s.band} strokeWidth={s.weight} />
+						)}
 					</g>
 				))}
 			</g>
@@ -116,12 +127,31 @@ export const Braid = ({
 					<circle
 						cx={s.end.x}
 						cy={s.end.y}
-						r={s.done ? 3 : 3.5}
+						// flush, it loses the ring that covers a dot's outer unit: keep the same fill
+						r={s.flush ? s.dotR - 1 : s.dotR}
+						data-flush={s.flush || undefined}
 						data-running={!s.done || undefined}
 						data-failed={s.failed || undefined}
 					/>
 					{s.mark && (
-						<circle className="b-mark" cx={s.mark.x} cy={s.mark.y} r={3} />
+						<rect
+							className="b-mark"
+							x={s.mark.x - 4}
+							y={s.mark.y - 1.25}
+							width={8}
+							height={2.5}
+							rx={1}
+						/>
+					)}
+					{s.label && (
+						<rect
+							className="b-knock"
+							x={s.label.box.x0 - 3}
+							y={s.label.box.y0}
+							width={s.label.box.x1 - s.label.box.x0 + 6}
+							height={s.label.box.y1 - s.label.box.y0}
+							rx={3}
+						/>
 					)}
 					{s.label && (
 						<text

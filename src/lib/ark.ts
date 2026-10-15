@@ -110,7 +110,3 @@ export const allows = (def: string, data: string) => call("allows", def, data)
 
 /** `type(`${a} & ${b}`)`, so an unsatisfiable intersection returns its message. */
 export const intersect = (a: string, b: string) => call("intersect", a, b)
-
-/** npm's /downloads/range JSON, validated; rejects with ArkType's summary. */
-export const assertRange = <data>(json: unknown) =>
-	call("assertRange", json) as Promise<data>

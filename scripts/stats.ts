@@ -1,12 +1,17 @@
 /**
  * Snapshots the live numbers the site shows into src/data/stats.json, so the
- * prerendered HTML always carries real values (the client refreshes the
- * headline ones after hydration).
+ * prerendered HTML always carries real values. Nothing refreshes them on the
+ * client: the page says "millions", and the popover holds this snapshot.
+ *
+ * Only what the site reads is fetched: arktype's 30-day npm downloads (the
+ * Work section's claim), the window they cover, and the GitHub follower count
+ * (the 404 page's bit). Under STATS_STRICT an unused number going stale would
+ * fail the deploy for nothing, so nothing else is fetched.
  *
  * Every response is validated with ArkType before it is trusted. Requests
- * time out after 15s, and the groups fail independently: npm (window,
- * downloads and sparklines, all or nothing, since they must describe the
- * same window), each repo's stars, and followers. A group that fails keeps
+ * time out after 15s, and the groups fail independently: npm (window and
+ * downloads, all or nothing, since they must describe the same window) and
+ * followers. A group that fails keeps
  * its value from the previous stats.json and is logged as stale; the script
  * fails only when a group has no previous value to fall back to. With
  * STATS_STRICT=true (the scheduled deploy) any stale group fails it instead:
@@ -31,9 +36,7 @@ const Point = type({
 const Range = type({
 	downloads: type({ downloads: "number.integer >= 0", day: "string" }).array()
 })
-const Repo = type({ stargazers_count: "number.integer >= 0" })
 const User = type({ followers: "number.integer >= 0" })
-const UnghRepo = type({ repo: { stars: "number.integer >= 0" } })
 
 const getJson = async <t>(url: string, validate: (data: unknown) => t) => {
 	const headers: Record<string, string> = {
@@ -88,90 +91,27 @@ const lastMonth = async (pkg: string, start: Date, end: Date) => {
 	return data.downloads
 }
 
-// full calendar months only, so the sparkline doesn't dip at either end
-const monthly = async (pkg: string, end: Date) => {
-	const from = new Date(
-		Date.UTC(end.getUTCFullYear(), end.getUTCMonth() - 17, 1)
-	)
-	const data = await getJson(
-		`https://api.npmjs.org/downloads/range/${day(from)}:${day(end)}/${pkg}`,
-		assert(Range)
-	)
-	const totals = new Map<string, number>()
-	for (const { day, downloads } of data.downloads) {
-		const month = day.slice(0, 7)
-		totals.set(month, (totals.get(month) ?? 0) + downloads)
-	}
-	const currentMonth = day(end).slice(0, 7)
-	const firstDay = data.downloads[0]?.day ?? ""
-	return [...totals]
-		.filter(
-			([month]) =>
-				month !== currentMonth &&
-				!(firstDay.slice(0, 7) === month && !firstDay.endsWith("-01"))
-		)
-		.map(([month, downloads]) => ({ month, downloads }))
-}
-
 const npm = async () => {
 	const { start, end } = await resolveWindow()
-	const [arktype, spec, attest, pullfrog, arktypeMonthly, specMonthly] =
-		await Promise.all([
-			lastMonth("arktype", start, end),
-			lastMonth("@standard-schema/spec", start, end),
-			lastMonth("@ark/attest", start, end),
-			lastMonth("pullfrog", start, end),
-			monthly("arktype", end),
-			monthly("@standard-schema/spec", end)
-		])
 	return {
 		window: { start: day(start), end: day(end) },
-		npm: {
-			arktype: { downloads: arktype, monthly: arktypeMonthly },
-			"@standard-schema/spec": { downloads: spec, monthly: specMonthly },
-			"@ark/attest": { downloads: attest },
-			pullfrog: { downloads: pullfrog }
-		}
+		npm: { arktype: { downloads: await lastMonth("arktype", start, end) } }
 	}
 }
-
-const stars = async (repo: string) => {
-	try {
-		const data = await getJson(
-			`https://api.github.com/repos/${repo}`,
-			assert(Repo)
-		)
-		return data.stargazers_count
-	} catch {
-		const data = await getJson(
-			`https://ungh.cc/repos/${repo}`,
-			assert(UnghRepo)
-		)
-		return data.repo.stars
-	}
-}
-
-const repos = [
-	"arktypeio/arktype",
-	"standard-schema/standard-schema",
-	"pullfrog/pullfrog"
-] as const
 
 type Stats = Awaited<ReturnType<typeof npm>> & {
 	fetchedAt: string
-	stars: Record<(typeof repos)[number], number>
 	followers: number
 }
 
 const previous: Partial<Stats> =
 	existsSync(out) ? JSON.parse(readFileSync(out, "utf8")) : {}
 
-const [npmResult, followersResult, ...starResults] = await Promise.allSettled([
+const [npmResult, followersResult] = await Promise.allSettled([
 	npm(),
 	getJson("https://api.github.com/users/ssalbdivad", assert(User)).then(
 		user => user.followers
-	),
-	...repos.map(stars)
+	)
 ])
 
 const stale: string[] = []
@@ -194,16 +134,10 @@ const settle = <t>(
 const npmStats = settle(
 	"npm",
 	npmResult,
-	previous.window && previous.npm ?
-		{ window: previous.window, npm: previous.npm }
+	previous.window && previous.npm?.arktype ?
+		{ window: previous.window, npm: { arktype: previous.npm.arktype } }
 	:	undefined
 )
-const starCounts = Object.fromEntries(
-	repos.map((repo, i) => [
-		repo,
-		settle(`stars ${repo}`, starResults[i]!, previous.stars?.[repo])
-	])
-) as Stats["stars"]
 const followers = settle("followers", followersResult, previous.followers)
 
 const stats: Stats = {
@@ -211,7 +145,6 @@ const stats: Stats = {
 	fetchedAt:
 		stale.length && previous.fetchedAt ? previous.fetchedAt : now.toISOString(),
 	...npmStats,
-	stars: starCounts,
 	followers
 }
 
@@ -228,8 +161,6 @@ console.log(
 	JSON.stringify({
 		window: stats.window,
 		arktype: stats.npm.arktype.downloads,
-		spec: stats.npm["@standard-schema/spec"].downloads,
-		stars: stats.stars,
 		followers: stats.followers
 	})
 )

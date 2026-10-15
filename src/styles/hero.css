@@ -142,6 +142,7 @@
 .lede .decl.agents {
 	color: var(--sky);
 }
+
 .roles {
 	margin: 24px 0 0;
 	display: grid;
@@ -190,8 +191,8 @@
 	margin-top: 28px;
 	align-items: center;
 }
-/* the rise animation makes the row a stacking context, and the stat strip
-   after it would paint over the copy bubble */
+/* the rise animation makes the row a stacking context, and the code card
+   after it (stacked below, under 1081px) would paint over the copy bubble */
 .ctas:has(.ce-pop) {
 	position: relative;
 	z-index: 2;
@@ -372,13 +373,6 @@
 		0 30px 60px -30px rgb(0 0 0 / 0.7),
 		0 0 80px -30px rgb(64 143 222 / 0.35);
 }
-/* It follows the stat strip in the source; on desktop it goes back up beside
-   the text. Never on the base rule: below 1081 it stacks after the strip. */
-@media (min-width: 1081px) {
-	.codecard {
-		grid-row: 1;
-	}
-}
 /* Until the card's last child has parsed, hold its space unpainted, and its
    entrance with it: a half-parsed card would paint and then grow. Browsers
    without :has() drop the rule and show the card as it streams. */
@@ -461,109 +455,6 @@
 	color: var(--teal);
 }
 
-/* ---------- stat strip ---------- */
-.stats {
-	grid-column: 1 / -1;
-	display: grid;
-	grid-template-columns: repeat(4, minmax(0, 1fr));
-	margin: 0;
-	border-top: 1px solid var(--rule);
-	border-bottom: 1px solid var(--rule-soft);
-}
-.stat {
-	position: relative;
-	padding: 22px 24px 20px;
-	display: grid;
-	grid-template-rows: auto auto 1fr;
-}
-.stat + .stat {
-	border-left: 1px solid var(--rule-soft);
-}
-.stat:first-child {
-	padding-left: 0;
-}
-.stat .num {
-	display: flex;
-	align-items: flex-end;
-	justify-content: space-between;
-	gap: 12px;
-}
-.stat .val {
-	margin: 0;
-	font-size: var(--fs-stat);
-	font-weight: 800;
-	line-height: 1;
-	letter-spacing: -0.035em;
-	color: var(--gold);
-}
-.stat .val .tok {
-	text-underline-offset: 0.14em;
-	text-decoration-thickness: 2px;
-}
-.stat .lbl {
-	margin: 10px 0 0;
-	font-size: 15.5px;
-	line-height: 1.4;
-	color: var(--ink);
-	max-width: 24ch;
-}
-.stat .src {
-	margin: 10px 0 0;
-	align-self: end;
-	font: 400 12px / 1.4 var(--mono);
-	color: var(--ink-3);
-}
-.stat .src .nowrap {
-	white-space: nowrap;
-}
-.spark {
-	width: 108px;
-	height: 30px;
-	flex: none;
-	overflow: visible;
-	margin-bottom: 4px;
-}
-.spark .l {
-	fill: none;
-	stroke: color-mix(in oklab, var(--ink-3) 85%, transparent);
-	stroke-width: 1.5;
-	stroke-linejoin: round;
-	stroke-linecap: round;
-	vector-effect: non-scaling-stroke;
-}
-.spark .tip {
-	fill: none;
-	stroke: var(--gold);
-	stroke-width: 1.5;
-	stroke-linecap: round;
-}
-.spark circle {
-	fill: var(--gold);
-	stroke: var(--bg);
-	stroke-width: 2;
-}
-/* drawn once the tiles are mostly in, and still (tip landed, ~1.2s after
-   first style) before the handle demo starts at 1.7s: two motions never
-   compete. Reduced motion: drawn from the start. */
-@media (prefers-reduced-motion: no-preference) {
-	.spark .l {
-		stroke-dasharray: 1;
-		animation: spark-draw 0.7s var(--ease-draw) 0.3s both;
-	}
-	.spark .tip,
-	.spark circle {
-		animation: rise-fade 0.3s ease-out 0.9s both;
-	}
-}
-@keyframes spark-draw {
-	from {
-		stroke-dashoffset: 1;
-	}
-	to {
-		stroke-dashoffset: 0;
-	}
-}
-
 /* ---------- tablet ---------- */
 @media (max-width: 1080px) and (min-width: 761px) {
 	.hero-text {
@@ -571,41 +462,6 @@
 	}
 	.codecard {
 		grid-column: 1 / -1;
-	}
-	.lede {
-		max-width: 23.4em; /* 36ch */
-	}
-	.stats {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-	}
-	.stat:nth-child(3) {
-		border-left: 0;
-		padding-left: 0;
-	}
-	.stat:nth-child(n + 3) {
-		border-top: 1px solid var(--rule-soft);
-	}
-}
-/* wide tablets (1024×768): one row of four, so all four numbers make the fold */
-@media (min-width: 900px) and (max-width: 1080px) {
-	.stats {
-		grid-template-columns: repeat(4, minmax(0, 1fr));
-	}
-	.stat {
-		padding-inline: 16px;
-	}
-	.stat:nth-child(n + 3) {
-		border-top: 0;
-	}
-	.stat:nth-child(3) {
-		border-left: 1px solid var(--rule-soft);
-		padding-left: 16px;
-	}
-	.stat .val {
-		font-size: 44px;
-	}
-	.spark {
-		display: none;
 	}
 }
 
@@ -695,121 +551,16 @@
 	.codecard-foot span:first-child {
 		display: none;
 	}
-	.stats {
-		grid-template-columns: 1fr 1fr;
-	}
-	.stat {
-		padding: 18px 14px 16px;
-	}
-	.stat:nth-child(odd) {
-		padding-left: 0;
-		border-left: 0;
-	}
-	.stat:nth-child(n + 3) {
-		border-top: 1px solid var(--rule-soft);
-	}
-	.stat .lbl {
-		font-size: 14px;
-	}
-	.stat .src {
-		font-size: 11px;
-	}
-	.stat .src .long {
-		display: none;
-	}
-	.spark {
-		display: none;
-	}
 }
 
-/*
- * ---------- phones with their browser chrome showing ----------
- * A 390×844 phone shows about 390×664 of page under Safari's toolbars, and
- * 412×783 under Chrome's. Tighten the hero so all four numbers, with their
- * labels, are on the first screen. The two download tiles drop their source
- * line (npm, @standard-schema/spec); their popovers still carry it. The 2×
- * keeps its own: its runs and role aren't anywhere else on the tile.
- */
-@media (max-width: 760px) and (max-height: 820px) {
-	.hero {
-		padding-top: 8px;
-		row-gap: 12px;
-	}
-	.eyebrow {
-		margin-bottom: 10px;
-	}
-	.eyebrow .avatar {
-		width: 32px;
-		height: 32px;
-	}
-	.display {
-		font-size: 52px;
-	}
-	.lede {
-		margin-top: 10px;
-		font-size: 17px;
-		line-height: 1.4;
-	}
-	.roles {
-		margin-top: 12px;
-		font-size: 14px;
-	}
-	.ctas {
-		margin-top: 14px;
-	}
-	.stat {
-		padding: 8px 12px 6px;
-	}
-	.stat .val {
-		font-size: 32px;
-	}
-	.stat .lbl {
-		margin-top: 4px;
-		font-size: 13px;
-		line-height: 1.3;
-	}
-	.stat .src {
-		margin-top: 6px;
-	}
-	.stat:nth-child(-n + 2) .src {
-		display: none;
-	}
-}
-/* 360×640 (small Androids): the Pullfrog row wraps here, so take the rest
-   out of the type and the gaps */
-@media (max-width: 370px) and (max-height: 820px) {
-	.hero {
-		row-gap: 8px;
-	}
-	.eyebrow .avatar {
-		width: 28px;
-		height: 28px;
-	}
-	.display {
-		font-size: 46px;
-	}
-	.lede {
-		line-height: 1.3;
-	}
-	.roles {
-		margin-top: 10px;
-	}
-	.roles dt {
-		line-height: 1.6;
-	}
-	.roles dd {
-		line-height: 1.45;
-	}
-	.ctas {
-		margin-top: 12px;
-	}
-	.stat .val {
-		font-size: 30px;
-	}
-}
-
-/* ---------- 320px: the 40-column snippet must fit without panning ---------- */
+/* ---------- 380px and under (375, 360, 320) ---------- */
 @media (max-width: 380px) {
+	/* at 15px the Pullfrog gloss wraps at 375, and the consultant row breaks
+	   inside "2023–25" at 360 */
+	.roles {
+		font-size: 14px;
+	}
+	/* the 40-column snippet must fit at 320 without panning */
 	.codecard .code {
 		padding-inline: 12px;
 	}
@@ -835,67 +586,20 @@
 }
 
 /*
- * ---------- short laptop viewports (1366×657, 1440×789, 1536×730) ----------
- * The fold promise was proven at 1440×900. Shorter desktops scale the
- * display type with the viewport height and tighten the rhythm so the stat
- * strip, numbers and sources, still lands above the fold.
+ * ---------- short laptop viewports (1366×657 and below) ----------
+ * The hero fits unaided down to about 650px of height, buttons included.
+ * Under 700 the name and the lede scale with the height, reaching their full
+ * sizes right at 700, so the buttons hold above the fold to 1280×600.
  */
-@media (min-width: 1081px) and (max-height: 860px) {
-	.hero {
-		padding-top: 8px;
-		row-gap: 24px;
-	}
-	.eyebrow {
-		margin-bottom: 12px;
-	}
-	.display {
-		font-size: clamp(3.5rem, 10.5vh, 6.5rem);
-	}
-	.lede {
-		margin-top: 12px;
-		font-size: clamp(1.25rem, 3.2vh, 1.75rem);
-		max-width: 22.1em; /* 34ch */
-	}
-	.roles {
-		margin-top: 14px;
-		row-gap: 0;
-	}
-	.ctas {
-		margin-top: 18px;
-	}
-	.codecard figcaption {
-		padding-block: 10px;
-	}
-	/* 164px, not less: the pinned popover must clear the footer rule */
-	.codecard .code {
-		padding-top: 14px;
-		padding-bottom: 164px;
-	}
-	.codecard-foot span:first-child {
-		display: none;
-	}
-	.stat {
-		padding-block: 14px 12px;
-	}
-	.stat .lbl,
-	.stat .src {
-		margin-top: 6px;
-	}
-}
-
-/* shorter still (1366×657 and below): smaller numbers, tighter rows */
 @media (min-width: 1081px) and (max-height: 700px) {
 	.hero {
-		row-gap: 16px;
+		padding-top: 24px;
 	}
 	.display {
-		font-size: clamp(3.5rem, 9.5vh, 6.5rem);
+		font-size: clamp(3.5rem, 15vh, 6.5rem);
 	}
-	.stat .val {
-		font-size: clamp(2.25rem, 6.4vh, 3.5rem);
-	}
-	.stat {
-		padding-top: 12px;
+	.lede {
+		font-size: clamp(1.25rem, 4vh, 1.75rem);
 	}
 }
 

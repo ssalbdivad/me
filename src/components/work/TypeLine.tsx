@@ -98,6 +98,31 @@ const matching = (filter: string) =>
 
 const zDot = /(?:^|[^\w$.'"])z\.(\w*)$/
 
+const ghosting = (phase: Phase) => phase === "ghost" || phase === "waiting"
+
+/**
+ * The run a double-click at `at` selects: the word it touches (the one on its
+ * right first), else the run of operators or blanks there. Past the end of
+ * the line, that's the last one. A word is any letters, digits and marks, as
+ * natively (naïve, café), plus _ and $. A CJK run is one word, where each
+ * engine's dictionary splits it its own way.
+ */
+const runAt = (src: string, at: number): [number, number] => {
+	const kind = (c: string | undefined) =>
+		c === undefined ? undefined
+		: /[\p{L}\p{N}\p{M}_$]/u.test(c) ? "word"
+		: /\s/.test(c) ? "blank"
+		: "op"
+	const left = kind(src[at - 1])
+	const right = kind(src[at])
+	const k = right === "word" || left === "word" ? "word" : (right ?? left)
+	let from = at
+	let to = at
+	while (from > 0 && kind(src[from - 1]) === k) from--
+	while (to < src.length && kind(src[to]) === k) to++
+	return [from, to]
+}
+
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 const keywords = new Set([
@@ -113,25 +138,126 @@ const keywords = new Set([
 	"object"
 ])
 
-/** ArkType's in-string grammar, the way its VS Code extension colors it. */
-const highlight = (src: string): ReactNode[] =>
-	[...src.matchAll(/(\s+)|(\d+(?:\.\d+)?)|([A-Za-z_$][\w$]*)|([^\s\w$])/g)].map(
-		(m, i) => {
-			const [text, space, digits, word] = m
-			// a word after "." is a subalias (string.email, z.string), never a keyword
-			const member = src[(m.index ?? 0) - 1] === "."
-			const cls =
-				space ? undefined
-				: digits || (word && !member && keywords.has(word)) ? "hl-kw"
-				: word ? "hl-id"
-				: "hl-op"
-			return (
-				<span key={i} className={cls}>
-					{text}
-				</span>
-			)
+/**
+ * ArkType's in-string grammar, the way its VS Code extension colors it.
+ *
+ * Whitespace renders like VS Code's "boundary" mode: every run but a single
+ * space between words is drawn as faint dots, so " " can't pass for an
+ * empty line. "·" is one cell like " ", so the mirror stays aligned with the
+ * input's own (invisible) glyphs and its caret. Tabs keep their width and
+ * stay blank: Cascadia's subset has no arrow to draw them with.
+ *
+ * Any other invisible character is boxed, one per char, like VS Code's
+ * unicodeHighlight, so a pasted NBSP can't pass for a space (or nothing).
+ * Each keeps its own glyph, so its width is the input's whatever the font:
+ * wide spaces (U+3000) stay wide, and zero-width ones (U+200B) stay zero
+ * wide, marked by a tick painted on their empty box. Every char keeps its
+ * UTF-16 length, so a mirror offset is an input offset (see offsetX).
+ *
+ * A token never splits a grapheme cluster: a char inside one (a combining
+ * accent, a flag's second half, a skin tone) joins the token before it, so é
+ * takes its e's color. A joiner inside one (the ZWJs of 👩‍💻) is part of a
+ * glyph and goes unmarked; one dangling at a cluster's end (a ZWJ after an
+ * ASCII letter) is marked. The markers are paint only, never a pseudo-element:
+ * an out-of-flow box between two chars splits the browsers' shaping, which
+ * then draws 👩‍💻 as 👩 and 💻, wider than the input's own glyph.
+ */
+// zero-width chars; other blanks (NBSP, wide spaces, Hangul fillers)
+const zeroWidth =
+	"[\\u00ad\\u200b-\\u200f\\u202a-\\u202e\\u2060-\\u2064\\u2066-\\u2069\\ufeff]"
+const oddBlank = "[^\\S \\t]|[\\u115f\\u1160\\u2800\\u3164\\uffa0]"
+// zero-width, other blanks, spaces and tabs, numbers, words, operators
+const token = new RegExp(
+	`(${zeroWidth})|(${oddBlank})|([ \\t]+)|(\\d+(?:\\.\\d+)?)|([A-Za-z_$][\\w$]*)|([^\\s\\w$])`,
+	"gu"
+)
+const invisible = new RegExp(`(${zeroWidth})|(${oddBlank})`, "gu")
+
+const graphemes = new Intl.Segmenter(undefined, { granularity: "grapheme" })
+
+/** Where each grapheme cluster of `src` starts, and its end. */
+const clusterBounds = (src: string) => {
+	const bounds = new Set([src.length])
+	for (const { index } of graphemes.segment(src)) bounds.add(index)
+	return bounds
+}
+
+/**
+ * Whether a char matched at `at` is drawn on its own: it starts a cluster,
+ * or it's a zero-width one dangling at a cluster's end. Any other is part of
+ * a glyph (a combining accent, the ZWJs of \ud83d\udc69\u200d\ud83d\udcbb).
+ */
+const standsAlone = (
+	bounds: Set<number>,
+	at: number,
+	text: string,
+	zero: boolean
+) => bounds.has(at) || (zero && bounds.has(at + text.length))
+
+const highlight = (src: string): ReactNode[] => {
+	const bounds = clusterBounds(src)
+	// `dots`: a space run drawn in boundary style
+	const tokens: { className?: string; text: string; dots?: true }[] = []
+	for (const m of src.matchAll(token)) {
+		const [text, zero, odd, space, digits, word] = m
+		const at = m.index
+		const last = tokens.at(-1)
+		if (last && !standsAlone(bounds, at, text, !!zero)) {
+			last.text += text
+			continue
 		}
-	)
+		if (zero || odd) {
+			tokens.push({ className: zero ? "hl-zw" : "hl-uws", text })
+			continue
+		}
+		if (space) {
+			const between =
+				text === " " &&
+				/\S/.test(src[at - 1] ?? "") &&
+				/\S/.test(src[at + 1] ?? "")
+			tokens.push(between ? { text } : { className: "hl-ws", text, dots: true })
+			continue
+		}
+		// a word after "." is a subalias (string.email, z.string), never a keyword
+		const member = src[at - 1] === "."
+		const className =
+			digits || (word && !member && keywords.has(word)) ? "hl-kw"
+			: word ? "hl-id"
+			: "hl-op"
+		tokens.push({ className, text })
+	}
+	return tokens.map(({ className, text, dots }, i) => (
+		<span key={i} className={className}>
+			{dots ? text.replaceAll(" ", "·") : text}
+		</span>
+	))
+}
+
+/**
+ * ArkType's message with the invisible chars marked as the mirror marks
+ * them, so "'string​' is unresolvable" can't read as plain 'string'
+ * under the line that boxes its ZWSP. Spaces stay plain: a message's own
+ * edge spaces are trimmed (" " says "Expected an expression") and its inner
+ * ones are prose. The sr-only verdict keeps the raw text.
+ */
+const marked = (text: string): ReactNode[] => {
+	const bounds = clusterBounds(text)
+	const out: ReactNode[] = []
+	let from = 0
+	for (const m of text.matchAll(invisible)) {
+		const [char, zero] = m
+		if (!standsAlone(bounds, m.index, char, !!zero)) continue
+		if (m.index > from) out.push(text.slice(from, m.index))
+		out.push(
+			<span key={m.index} className={zero ? "hl-zw" : "hl-uws"}>
+				{char}
+			</span>
+		)
+		from = m.index + char.length
+	}
+	if (from < text.length) out.push(text.slice(from))
+	return out
+}
 
 export const TypeLine = () => {
 	const [value, setValue] = useState(FINAL)
@@ -141,45 +267,61 @@ export const TypeLine = () => {
 	const [menu, setMenu] = useState<Menu | null>(null)
 	const [squiggle, setSquiggle] = useState(0)
 	const [scroll, setScroll] = useState(0)
+	// a parse is in flight: the verdict on screen is about older text
+	const [pending, setPending] = useState(false)
+	// what the live region says, once typing pauses
+	const [spoken, setSpoken] = useState("")
+	// bumped to remount the input, dropping its native undo history
+	const [epoch, setEpoch] = useState(0)
 	const root = useRef<HTMLDivElement>(null)
 	const input = useRef<HTMLInputElement>(null)
 	const ghost = useRef({ cancelled: false })
 	const latest = useRef(0)
+	const edited = useRef(false)
+	const pointer = useRef("")
+	// where the last press went down, before any touch adjustment moved it
+	const down = useRef({ x: 0, y: 0 })
 	const listId = useId()
+	const msgId = useId()
 	const list = useRef<HTMLSpanElement>(null)
 
 	const statusLine = useRef<HTMLDivElement>(null)
 	const hl = useRef<HTMLSpanElement>(null)
+	const scrollBox = useRef<HTMLSpanElement>(null)
 
 	// keep the completion list inside the viewport. On touch it opens below
 	// the status line, so the message it answers stays readable. Opened from
-	// the z.string() chip with a mouse, it must not cover the other chips (the
-	// next click would pick a completion): it opens upward, or, when that would
-	// tuck it under the nav, below the chip row, over the aside.
+	// the z.string() chip, it must not cover the other chips (the next tap or
+	// click would pick a completion): with a mouse it opens upward, and on
+	// touch, or when upward would tuck it under the nav, below the chip row,
+	// over the aside.
 	useLayoutEffect(() => {
 		const el = list.current
-		if (!el) return
+		if (!el || !menu) return
+		// under its z., measured on the mirror: wide chars (字, emoji) aren't
+		// 1ch, and the list's own ch is its 14px font's
+		el.style.setProperty("--at-x", `${offsetX(menu.start)}px`)
 		el.style.translate = ""
 		el.style.top = ""
 		el.style.bottom = ""
 		const field = el.parentElement?.getBoundingClientRect()
 		const below = statusLine.current?.getBoundingClientRect()
-		if (field && below && matchMedia("(pointer: coarse)").matches)
-			el.style.top = `${below.bottom - field.top + 4}px`
-		else if (field && menu?.fromChip) {
+		const coarse = matchMedia("(pointer: coarse)").matches
+		if (field && menu?.fromChip) {
 			const chips = root.current
 				?.querySelector(".tl-chips")
 				?.getBoundingClientRect()
-			if (field.top - el.offsetHeight - 6 >= 80) {
+			if (!coarse && field.top - el.offsetHeight - 6 >= 80) {
 				el.style.top = "auto"
 				el.style.bottom = "calc(100% + 6px)"
 			} else if (chips) el.style.top = `${chips.bottom - field.top + 6}px`
-		}
+		} else if (field && below && coarse)
+			el.style.top = `${below.bottom - field.top + 4}px`
 		const overflow =
 			el.getBoundingClientRect().right -
 			(document.documentElement.clientWidth - 12)
 		if (overflow > 0) el.style.translate = `${-overflow}px 0`
-	}, [menu?.start, menu?.filter, menu?.fromChip, scroll])
+	}, [menu?.start, menu?.filter, menu?.fromChip, scroll, value])
 
 	// a tap anywhere outside the field dismisses the list (touch has no blur
 	// when the input was never focused); options live inside the field
@@ -192,6 +334,79 @@ export const TypeLine = () => {
 		document.addEventListener("pointerdown", close, true)
 		return () => document.removeEventListener("pointerdown", close, true)
 	}, [menuOpen])
+
+	/**
+	 * The mirror follows the input's scroll directly, not through a render: the
+	 * scroll event fires in the frame's own rendering step, so the glyphs move
+	 * with the caret on the same paint. React state (for the menu's position)
+	 * would trail it by a frame or more. Also marks which edges hide text.
+	 */
+	const syncScroll = () => {
+		const el = input.current
+		const box = scrollBox.current
+		if (!el || !box) return
+		const x = el.scrollLeft
+		box.style.translate = x ? `${-x}px 0` : ""
+		const start = x > 0.5
+		const end = x < el.scrollWidth - el.clientWidth - 0.5
+		const clip =
+			start && end ? "both"
+			: start ? "start"
+			: end ? "end"
+			: ""
+		if (clip) box.parentElement?.setAttribute("data-clip", clip)
+		else box.parentElement?.removeAttribute("data-clip")
+		setScroll(x)
+	}
+
+	/**
+	 * Where the boundary before `at` sits on the unscrolled line, read off the
+	 * mirror, whose text has the input's offsets char for char (see highlight).
+	 */
+	const offsetX = (at: number) => {
+		const text = hl.current
+		if (!text) return 0
+		const walk = document.createTreeWalker(text, NodeFilter.SHOW_TEXT)
+		let rest = at
+		for (let node = walk.nextNode(); node; node = walk.nextNode()) {
+			const length = (node as Text).length
+			if (rest <= length) {
+				const range = document.createRange()
+				range.setStart(node, rest)
+				return (
+					range.getBoundingClientRect().left - text.getBoundingClientRect().left
+				)
+			}
+			rest -= length
+		}
+		return text.offsetWidth
+	}
+
+	/**
+	 * Scroll the caret at `at` into view, as typing would. Chromium skips its
+	 * own reveal for a selection set from script, so a press on the row (focused
+	 * with preventScroll) or an inserted completion would leave the caret
+	 * offscreen on a value wider than the field until the next keystroke.
+	 */
+	const reveal = (at: number) => {
+		const el = input.current
+		if (!el) return
+		const x = offsetX(at)
+		// the caret is drawn just right of its boundary
+		if (x < el.scrollLeft) el.scrollLeft = x
+		else if (x + 2 > el.scrollLeft + el.clientWidth)
+			el.scrollLeft = x + 2 - el.clientWidth
+		syncScroll()
+	}
+
+	// the field's width follows the viewport too (max-width: 100%)
+	useEffect(() => {
+		const field = input.current?.parentElement
+		if (!field) return
+		const resized = new ResizeObserver(syncScroll)
+		resized.observe(field)
+		return () => resized.disconnect()
+	}, [])
 
 	const show = (next: Status) =>
 		setStatus(prev => {
@@ -207,6 +422,7 @@ export const TypeLine = () => {
 	 */
 	const parse = async (src: string) => {
 		const id = ++latest.current
+		setPending(true)
 		let parsed: ark.Parsed
 		let final: Note | undefined
 		try {
@@ -215,13 +431,29 @@ export const TypeLine = () => {
 				src === FINAL ? extendsNote() : undefined
 			])
 		} catch {
-			if (id === latest.current) setStatus({ kind: "none" })
+			if (id === latest.current) {
+				setPending(false)
+				setStatus({ kind: "none" })
+			}
 			return
 		}
 		if (id !== latest.current) return
+		setPending(false)
 		show(toStatus(parsed))
 		setNote(prev => final ?? (prev?.kind === "quip" ? prev : null))
 	}
+
+	// screen readers hear the verdict once typing pauses, not one per keystroke
+	// over their own key echo; the ghost and the prerendered line say nothing
+	useEffect(() => {
+		if (!edited.current || pending || status.kind === "none") return
+		const t = setTimeout(
+			() =>
+				setSpoken(status.kind === "ok" ? `Valid: ${status.text}` : status.text),
+			700
+		)
+		return () => clearTimeout(t)
+	}, [status, pending])
 
 	useEffect(() => {
 		const el = root.current
@@ -314,7 +546,7 @@ export const TypeLine = () => {
 		if (token.cancelled) return
 		// typing kept the caret end in view; at rest a narrow phone shows the start
 		if (input.current) input.current.scrollLeft = 0
-		setScroll(0)
+		syncScroll()
 		setNote(final)
 		setPhase("live")
 	}
@@ -330,7 +562,7 @@ export const TypeLine = () => {
 		setPhase("live")
 	}
 	const stopGhost = () => {
-		if (phase !== "ghost" && phase !== "waiting") return
+		if (!ghosting(phase)) return
 		ghost.current.cancelled = true
 		ghost.current = { cancelled: false }
 		land()
@@ -341,33 +573,82 @@ export const TypeLine = () => {
 		if (!m) return setMenu(null)
 		const filter = m[1] ?? ""
 		if (!matching(filter).length) return setMenu(null)
-		setMenu({ start: caret - filter.length, end: caret, filter, active: 0 })
+		const start = caret - filter.length
+		// re-reading the same word (a select event after the edit) keeps the
+		// highlighted option
+		setMenu(prev =>
+			prev && !prev.fromChip && prev.start === start && prev.filter === filter ?
+				prev
+			:	{ start, end: caret, filter, active: 0 }
+		)
 	}
 
 	const edit = (src: string, caret: number) => {
 		stopGhost()
+		edited.current = true
 		setValue(src)
 		setNote(null)
+		setSpoken("")
 		void parse(src)
 		openMenuAt(src, caret)
 	}
 
+	/**
+	 * Replace [start, end) the way typing would, so it is one native undo step.
+	 * Assigning the value from React would drop the browser's undo history, and
+	 * Chromium would later replay stale entries onto the new text. insertText
+	 * fires a real input event, so onChange runs edit() as for a keystroke. It
+	 * needs focus; a chip tapped on touch must not raise the keyboard, so there
+	 * the value is set directly and the input remounted with a fresh history.
+	 */
+	const replace = (
+		start: number,
+		end: number,
+		text: string,
+		focus: boolean
+	) => {
+		const el = input.current
+		if (!el) return
+		const focused = document.activeElement === el
+		const caret = start + text.length
+		// by the next frame the mirror shows the new text to measure the caret on
+		const settle = () =>
+			requestAnimationFrame(() => {
+				const el = input.current
+				if (!el || document.activeElement !== el) return
+				el.setSelectionRange(caret, caret)
+				reveal(caret)
+			})
+		if (focused || focus) {
+			el.focus({ preventScroll: true })
+			el.setSelectionRange(start, end)
+			if (document.execCommand("insertText", false, text)) return settle()
+		}
+		const src = `${el.value.slice(0, start)}${text}${el.value.slice(end)}`
+		if (focused) settle()
+		else setEpoch(n => n + 1)
+		edit(src, caret)
+	}
+
 	const pick = (item: Completion) => {
 		if (!menu) return
-		const src = `${value.slice(0, menu.start)}${item.name}()${value.slice(menu.end).replace(/^\w*\(?\)?/, "")}`
+		const src = input.current?.value ?? value
+		// swallow the rest of the word and an empty call after it (z.ba|ck()),
+		// never a paren that opens the text that follows (z.|(string))
+		const rest = /^\w*(?:\(\))?/.exec(src.slice(menu.end))?.[0].length ?? 0
+		replace(menu.start, menu.end + rest, `${item.name}()`, false)
 		setMenu(null)
-		setValue(src)
-		void parse(src)
-		const caret = menu.start + item.name.length + 2
-		requestAnimationFrame(() => input.current?.setSelectionRange(caret, caret))
 		setNote({ kind: "quip", item })
 	}
 
-	const runChip = (chip: string, focus: boolean) => {
+	/**
+	 * `focus`: false for a tap on touch, which shouldn't raise the keyboard.
+	 * Otherwise the replacement goes through the input (see replace()), and
+	 * focus returns to the chip unless z.string() opened a menu to pick from.
+	 */
+	const runChip = (chip: string, focus: boolean, button: HTMLElement) => {
 		stopGhost()
-		setValue(chip)
-		setNote(null)
-		void parse(chip)
+		replace(0, input.current?.value.length ?? value.length, chip, focus)
 		if (chip.startsWith("z.")) {
 			// tapping z.string() offers the alternatives
 			setMenu({
@@ -377,11 +658,10 @@ export const TypeLine = () => {
 				active: 0,
 				fromChip: true
 			})
-			if (focus)
-				requestAnimationFrame(() =>
-					input.current?.focus({ preventScroll: true })
-				)
-		} else setMenu(null)
+		} else {
+			setMenu(null)
+			if (focus) button.focus({ preventScroll: true })
+		}
 	}
 
 	const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -395,7 +675,7 @@ export const TypeLine = () => {
 				...menu,
 				active: (menu.active + step + items.length) % items.length
 			})
-		} else if (e.key === "Enter" || e.key === "Tab") {
+		} else if (e.key === "Enter" || (e.key === "Tab" && !e.shiftKey)) {
 			const item = items[menu.active]
 			if (!item) return
 			e.preventDefault()
@@ -403,35 +683,201 @@ export const TypeLine = () => {
 		} else if (e.key === "Escape") {
 			e.preventDefault()
 			setMenu(null)
+		} else if (e.key === "Tab") setMenu(null)
+	}
+
+	// the list follows the caret, as in VS Code: an arrow, Home or a click that
+	// leaves the z. word closes it, so Enter can't complete somewhere else
+	const onSelect = (e: React.SyntheticEvent<HTMLInputElement>) => {
+		if (!menu) return
+		const el = e.currentTarget
+		const at = el.selectionStart ?? 0
+		if (el.selectionEnd !== at) setMenu(null)
+		else if (!menu.fromChip) openMenuAt(el.value, at)
+		else if (at < menu.start || at > menu.end) setMenu(null)
+	}
+
+	/**
+	 * Where a press at (x, y) on the row puts the caret, as a code editor
+	 * would: within the field, the nearest boundary (the browser's own answer,
+	 * so wide glyphs and emoji resolve as a click on the input would); left of
+	 * it, the start; right of it, the end. On a phone the row is stacked, and
+	 * the line above or below the value decides instead.
+	 */
+	const caretAt = (x: number, y: number) => {
+		const el = input.current!
+		const box = el.getBoundingClientRect()
+		const end = el.value.length
+		const open = root.current
+			?.querySelector(".tl-open")
+			?.getBoundingClientRect()
+		const stacked = !!open && open.bottom <= box.top + 1
+		if (stacked && y < box.top) return 0
+		if (stacked && y > box.bottom) return end
+		if (x <= box.left) return 0
+		if (x >= box.right) return end
+		const hit = document.caretPositionFromPoint?.(x, box.top + box.height / 2)
+		if (hit?.offsetNode === el) return hit.offset
+		const ch = (hl.current?.offsetWidth ?? 0) / end || 9
+		return Math.min(end, Math.round((x - box.left + el.scrollLeft) / ch))
+	}
+
+	/**
+	 * The whole type("…") row is the editor. A press on the input itself stays
+	 * native (drag-select, double-click); anywhere else on the row focuses it
+	 * and places the caret, and a drag from there extends the selection. During
+	 * the ghost, a press lands the line with the caret at its end, never at
+	 * the old x against the longer text.
+	 */
+	const press = (x: number, y: number, extend: boolean) => {
+		const el = input.current
+		if (!el) return
+		el.focus({ preventScroll: true })
+		if (ghosting(phase)) {
+			stopGhost()
+			caretToEnd()
+			return
 		}
+		const at = caretAt(x, y)
+		const anchor =
+			!extend ? at
+			: el.selectionDirection === "backward" ? (el.selectionEnd ?? at)
+			: (el.selectionStart ?? at)
+		const select = (to: number) => {
+			el.setSelectionRange(
+				Math.min(anchor, to),
+				Math.max(anchor, to),
+				to < anchor ? "backward" : "forward"
+			)
+			reveal(to)
+		}
+		select(at)
+		return select
+	}
+
+	const onRowMouseDown = (e: React.MouseEvent) => {
+		const target = e.target as Element
+		if (
+			pointer.current !== "mouse" ||
+			e.button !== 0 ||
+			target.closest(".tl-menu") ||
+			(target === input.current && !ghosting(phase))
+		)
+			return
+		e.preventDefault()
+		const select = press(e.clientX, e.clientY, e.shiftKey)
+		if (!select) return
+		// a double-click selects the word at the caret, a triple-click the
+		// line, as on the input itself
+		const el = input.current!
+		if (e.detail >= 2 && !e.shiftKey) {
+			const [from, to] =
+				e.detail >= 3 ?
+					[0, el.value.length]
+				:	runAt(el.value, el.selectionStart ?? 0)
+			el.setSelectionRange(from, to)
+			return
+		}
+		const move = (ev: MouseEvent) => {
+			if (!(ev.buttons & 1)) return up()
+			select(caretAt(ev.clientX, ev.clientY))
+		}
+		const up = () => {
+			removeEventListener("mousemove", move)
+			removeEventListener("mouseup", up)
+		}
+		addEventListener("mousemove", move)
+		addEventListener("mouseup", up)
+	}
+
+	/**
+	 * After the events that landed the ghost, put the caret at the end of the
+	 * finished line, in view. Not over a chip's text, which replaced it.
+	 */
+	const caretToEnd = () =>
+		requestAnimationFrame(() => {
+			const el = input.current
+			if (!el || document.activeElement !== el || el.value !== FINAL) return
+			el.setSelectionRange(FINAL.length, FINAL.length)
+			reveal(FINAL.length)
+		})
+
+	/**
+	 * Focus mid-ghost (a tap on the input, or Tab) lands the line, but a tap
+	 * then puts the native caret where it fell in the shorter text, splitting
+	 * a word. Once the tap's events are done, the caret goes to the end, as a
+	 * press on the row puts it.
+	 */
+	const onFocus = () => {
+		if (!ghosting(phase)) return
+		stopGhost()
+		caretToEnd()
+	}
+
+	/**
+	 * On touch the row answers a tap (a click), never the press, so a scroll
+	 * that starts on it passes through. A tap on the input keeps its native
+	 * caret, unless the finger was off it: Chromium's touch adjustment snaps a
+	 * tap on a quote, or on the type( or ) line of the stacked row, onto the
+	 * input, and its caret onto the visible edge of a long value or the middle
+	 * of the word under it. The press's own point, not the click's adjusted
+	 * one, decides; where the row isn't stacked, caretAt() resolves a tap just
+	 * above or below the input by its x alone.
+	 */
+	const onRowClick = (e: React.MouseEvent) => {
+		const target = e.target as Element
+		if (pointer.current === "mouse" || target.closest(".tl-menu")) return
+		if (target !== input.current) return press(e.clientX, e.clientY, false)
+		const box = target.getBoundingClientRect()
+		const { x, y } = down.current
+		if (x <= box.left || x >= box.right || y < box.top || y > box.bottom)
+			press(x, y, false)
 	}
 
 	const items = menu ? matching(menu.filter) : []
 	const editable = phase !== "static"
 	// the prerender sizes the field in ch per UTF-16 unit, exact for ASCII in
-	// a monospace font
-	const width = `calc(${Math.max(value.length, 1)}ch + 2px)`
+	// a monospace font. Empty is 2px, just the caret: type("") reads as empty,
+	// and clicks don't need the room, since the whole row takes them.
+	const width = `calc(${value.length}ch + 2px)`
 
 	// Anything else (full-width CJK, emoji) is sized from the highlighted
 	// mirror, so it isn't clipped. ASCII keeps the ch width, pixel for pixel.
+	// An edit can move the input's scroll before its scroll event arrives
+	// (Backspace near the end), so the mirror re-syncs here too.
 	useLayoutEffect(() => {
 		const field = input.current?.parentElement
 		const text = hl.current
 		if (!field || !text) return
 		field.style.width =
-			/^[\x20-\x7e]*$/.test(value) ? width : (
-				`${Math.max(text.offsetWidth, 8) + 2}px`
-			)
+			/^[\x20-\x7e]*$/.test(value) ? width : `${text.offsetWidth + 2}px`
+		syncScroll()
 	}, [value])
 
 	return (
 		// a touch on the card is usually a scroll passing through, so only a
-		// mouse press or focusing the input interrupts the ghost
+		// mouse press, a tap on the code row or focusing the input interrupts
+		// the ghost (the row lands it itself, to place the caret after)
 		<div
 			className="tl"
 			ref={root}
 			data-phase={phase}
-			onPointerDown={e => e.pointerType === "mouse" && stopGhost()}
+			data-menu={
+				menu && items.length ?
+					menu.fromChip ?
+						"chip"
+					:	"typed"
+				:	undefined
+			}
+			onPointerDown={e => {
+				pointer.current = e.pointerType
+				down.current = { x: e.clientX, y: e.clientY }
+				if (
+					e.pointerType === "mouse" &&
+					!(e.target as Element).closest(".tl-code")
+				)
+					stopGhost()
+			}}
 		>
 			<div className="tl-card">
 				<p className="tl-cap mono">
@@ -441,7 +887,11 @@ export const TypeLine = () => {
 					</span>
 					<span className="tl-hint">type anything</span>
 				</p>
-				<div className="tl-code mono">
+				<div
+					className="tl-code mono"
+					onMouseDown={editable ? onRowMouseDown : undefined}
+					onClick={editable ? onRowClick : undefined}
+				>
 					<span className="tl-open" aria-hidden>
 						<span className="decl tl-fn">type</span>
 						<span className="tl-paren">(</span>
@@ -450,12 +900,14 @@ export const TypeLine = () => {
 						<span className="tl-q" aria-hidden>
 							"
 						</span>
-						<span className="tl-field" style={{ width }}>
+						<span
+							className="tl-field"
+							style={{ width }}
+							data-empty={value === "" || undefined}
+							data-err={status.kind === "err" || undefined}
+						>
 							<span className="tl-mirror" aria-hidden>
-								<span
-									className="tl-scroll"
-									style={{ translate: `${-scroll}px 0` }}
-								>
+								<span className="tl-scroll" ref={scrollBox}>
 									<span
 										key={squiggle}
 										className="tl-squig"
@@ -469,11 +921,13 @@ export const TypeLine = () => {
 								</span>
 							</span>
 							<input
+								key={epoch}
 								ref={input}
 								className="tl-input"
 								value={value}
 								readOnly={!editable}
 								aria-label="An ArkType definition, parsed as you type"
+								aria-describedby={msgId}
 								role="combobox"
 								aria-autocomplete="list"
 								aria-expanded={!!menu && items.length > 0}
@@ -494,8 +948,9 @@ export const TypeLine = () => {
 									)
 								}
 								onKeyDown={onKeyDown}
-								onScroll={e => setScroll(e.currentTarget.scrollLeft)}
-								onFocus={stopGhost}
+								onSelect={onSelect}
+								onScroll={syncScroll}
+								onFocus={onFocus}
 								onBlur={() => setMenu(null)}
 							/>
 							{menu && items.length > 0 && (
@@ -507,7 +962,6 @@ export const TypeLine = () => {
 									aria-label="Completions"
 									style={
 										{
-											"--at": menu.start,
 											"--scroll": `${scroll}px`
 										} as React.CSSProperties
 									}
@@ -545,12 +999,15 @@ export const TypeLine = () => {
 				<div className="tl-status mono" ref={statusLine}>
 					<p
 						className="tl-msg"
+						id={msgId}
 						data-kind={status.kind}
-						role="status"
-						aria-live={phase === "live" ? "polite" : "off"}
+						data-pending={pending || undefined}
 					>
 						{status.kind === "ok" && <span className="tl-check">✓ </span>}
-						{status.kind !== "none" && status.text}
+						{status.kind !== "none" && marked(status.text)}
+					</p>
+					<p className="sr-only" role="status">
+						{spoken}
 					</p>
 					<NoteLine note={note} />
 				</div>
@@ -566,7 +1023,8 @@ export const TypeLine = () => {
 						onClick={e =>
 							runChip(
 								chip,
-								e.detail === 0 || !matchMedia("(pointer: coarse)").matches
+								e.detail === 0 || !matchMedia("(pointer: coarse)").matches,
+								e.currentTarget
 							)
 						}
 					>
@@ -590,6 +1048,7 @@ const NoteLine = ({ note }: { note: Note }) => {
 				<span className="hl-id">email</span> <span className="hl-op">→</span>{" "}
 				<span className="hl-kw">{String(note.holds)}</span>
 				{note.reduced && <span className="tl-dim"> · union reduced</span>}
+				<span className="tl-mail">// that's my email, by the way</span>
 			</p>
 		)
 	return (

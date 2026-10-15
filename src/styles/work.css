@@ -128,68 +128,59 @@
 		color: var(--ink);
 		font-weight: 650;
 	}
-	.w-pitch code,
-	.w-cmd {
+	.w-pitch code {
 		font-family: var(--mono);
 		font-size: 0.86em;
 		color: var(--gold);
 		white-space: nowrap;
 	}
-	.w-cmd {
-		padding: 1px 6px;
-		border-radius: 4px;
-		background: color-mix(in oklab, var(--sunk) 70%, transparent);
-		border: 1px solid var(--rule-soft);
-	}
-	.w-used {
-		display: block;
-		margin-top: 10px;
-		font-size: 15px;
-		color: var(--ink-3);
-	}
-	.w-metrics {
+
+	/* the margin: reactions to the thing (or one fact, said small) beside it, as comments */
+	.w-margin {
 		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 18px 24px;
-	}
-	.w-metric {
+		gap: 14px;
 		margin: 0;
-		display: grid;
-		gap: 4px;
-	}
-	.w-mv {
-		font-size: 26px;
-		font-weight: 800;
-		letter-spacing: -0.03em;
-		line-height: 1.1;
-		color: var(--gold);
-	}
-	.w-ml {
-		font-size: 12px;
-		line-height: 1.4;
+		/* the first line sits on the pitch's first baseline */
+		padding: 5px 0 0;
+		list-style: none;
+		font-size: 13px;
+		line-height: 1.6;
 		color: var(--ink-3);
-		white-space: nowrap;
+	}
+	.w-note {
+		display: block;
+	}
+	/* the opening quote and the // hang, so wrapped lines align with the words */
+	.w-quote {
+		padding-left: 1ch;
+		text-indent: -1ch;
+	}
+	.w-comment {
+		padding-left: 3ch;
+		text-indent: -3ch;
+	}
+	/* links inside a comment-grey note need more than the ↗ to read as links */
+	.w-comment a {
+		text-decoration: underline;
+		text-decoration-color: color-mix(in oklab, currentColor 35%, transparent);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+	}
+	.w-margin a {
+		transition: color 0.16s;
+	}
+	.w-margin a:hover {
+		color: var(--ink-2);
+	}
+	.w-ext {
+		margin-left: 0.18em;
+		font-size: 0.85em;
+		color: var(--sky);
 	}
 	.w-extra {
 		grid-column: 2 / -1;
 		padding-bottom: 40px;
 		min-width: 0;
-	}
-	.w-aside {
-		margin: 20px 0 0;
-		max-width: 72ch;
-		/* the // hangs, so wrapped lines align with the text after it */
-		padding-left: 3ch;
-		text-indent: -3ch;
-		font-size: 13px;
-		line-height: 1.6;
-		color: var(--ink-3);
-	}
-	.w-aside a:hover {
-		color: var(--ink-2);
-	}
-	.w-aside-ext {
-		color: var(--sky);
 	}
 
 	/* the Ark family: child rows hang off a 1px copper rail, each with a ↳ elbow */
@@ -250,14 +241,12 @@
 	.w-row[data-child] .w-name {
 		font-size: 26px;
 	}
-	.w-row[data-child] .w-mv {
-		font-size: 22px;
-	}
 
 	/* ---------- the type() line ---------- */
 	.tl {
 		position: relative;
 		max-width: 760px;
+		--squig: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 3' width='6' height='3'%3E%3Cg fill='%239558f8'%3E%3Cpolygon points='5.5,0 2.5,3 1.1,3 4.1,0'/%3E%3Cpolygon points='4,0 6,2 6,0.6 5.4,0'/%3E%3Cpolygon points='0,2 1,3 2.4,3 0,0.6'/%3E%3C/g%3E%3C/svg%3E");
 	}
 	.tl-card {
 		position: relative;
@@ -313,6 +302,8 @@
 		line-height: 1.6;
 		white-space: pre;
 		color: var(--ink);
+		/* the whole row is the editor (TypeLine's press()) */
+		cursor: text;
 	}
 	.tl-fn {
 		color: var(--sky);
@@ -333,8 +324,26 @@
 		position: relative;
 		display: inline-block;
 		flex: 0 1 auto;
-		min-width: 2ch;
+		min-width: 2px;
 		max-width: 100%;
+	}
+	/* an empty value's error has no text to underline: a short squiggle at the
+	   caret instead, across the quotes, like VS Code's zero-width diagnostics.
+	   The box always exists and only its paint toggles: creating or removing a
+	   pseudo-element rebuilds its parent's frames in Firefox, the input's
+	   editor among them, and that wipes the undo history. */
+	.tl-field::after {
+		content: "";
+		position: absolute;
+		left: -1ch;
+		bottom: 2px;
+		width: calc(2ch + 2px);
+		height: 3px;
+		pointer-events: none;
+	}
+	.tl-field[data-empty][data-err]::after {
+		background: var(--squig) repeat-x left top / 6px 3px;
+		animation: tl-squig 0.18s var(--ease-out) both;
 	}
 	.tl-input {
 		position: relative;
@@ -364,6 +373,22 @@
 		overflow: hidden;
 		pointer-events: none;
 	}
+	/* a scrolled value fades out at whichever edge hides more of it, so the
+	   first visible fragment doesn't read as a whole identifier */
+	.tl-mirror[data-clip="start"] {
+		mask-image: linear-gradient(to right, transparent, #000 1.5ch);
+	}
+	.tl-mirror[data-clip="end"] {
+		mask-image: linear-gradient(to left, transparent, #000 1.5ch);
+	}
+	.tl-mirror[data-clip="both"] {
+		mask-image: linear-gradient(
+			to right,
+			transparent,
+			#000 1.5ch calc(100% - 1.5ch),
+			transparent
+		);
+	}
 	.tl-scroll {
 		position: relative;
 		display: inline-block;
@@ -386,6 +411,29 @@
 	.hl-str {
 		color: var(--gold);
 	}
+	.hl-ws {
+		color: var(--ink-3);
+		opacity: 0.7;
+	}
+	/* any other invisible char, boxed like VS Code's unicodeHighlight. Paint
+	   only: the char keeps its own glyph and width, so the mirror stays aligned
+	   with the input. No pseudo-element either: an out-of-flow box between two
+	   chars splits their shaping (TypeLine's highlight) */
+	.hl-uws {
+		border-radius: 2px;
+		box-shadow: inset 0 0 0 1px
+			color-mix(in oklab, var(--copper) 75%, transparent);
+		background: radial-gradient(circle, var(--ink-3) 1px, transparent 1.5px)
+			center no-repeat;
+	}
+	/* zero wide: the shadow of its empty box, a bar straddling the boundary,
+	   clipped to a tick through the baseline so it can't pass for a second
+	   caret (full height) when the real one blinks off. clip-path is paint
+	   only, like the shadow, and clips the forced-colors outline too */
+	.hl-zw {
+		box-shadow: 0 0 0 1px var(--copper);
+		clip-path: inset(0.55em -1px 0.05em -1px);
+	}
 	.tl-squig {
 		position: absolute;
 		inset: 0;
@@ -394,8 +442,7 @@
 	}
 	.tl-squig[data-on] {
 		visibility: visible;
-		background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 3' width='6' height='3'%3E%3Cg fill='%239558f8'%3E%3Cpolygon points='5.5,0 2.5,3 1.1,3 4.1,0'/%3E%3Cpolygon points='4,0 6,2 6,0.6 5.4,0'/%3E%3Cpolygon points='0,2 1,3 2.4,3 0,0.6'/%3E%3C/g%3E%3C/svg%3E")
-			repeat-x left calc(100% - 2px) / 6px 3px;
+		background: var(--squig) repeat-x left calc(100% - 2px) / 6px 3px;
 		animation: tl-squig 0.18s var(--ease-out) both;
 	}
 	@keyframes tl-squig {
@@ -407,11 +454,13 @@
 		}
 	}
 
+	/* room for the finished line's three (verdict, extends, email), so the
+	   card doesn't grow when the ghost-typing lands on them */
 	.tl-status {
 		padding: 4px 18px 16px;
 		font-size: 13.5px;
 		line-height: 1.55;
-		min-height: calc(2 * 1.55em + 20px);
+		min-height: calc(3 * 1.55em + 20px);
 	}
 	.tl-msg,
 	.tl-note {
@@ -424,6 +473,27 @@
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
+		transition: opacity 0.15s;
+	}
+	/* the verdict is about older text until the parser answers: dimmed, and
+	   never a check mark. The delay keeps a warm reply (~ms) from flickering. */
+	.tl-msg[data-pending] {
+		opacity: 0.45;
+		transition-delay: 0.12s;
+	}
+	.tl-check {
+		transition: visibility 0s;
+	}
+	.tl-msg[data-pending] .tl-check {
+		visibility: hidden;
+		transition-delay: 0.12s;
+	}
+	/* with a mouse, the list typing opens sits on the verdict, which is only
+	   "'z.' is unresolvable" until a pick; hide it rather than show it torn */
+	@media not (pointer: coarse) {
+		.tl[data-menu="typed"] .tl-msg {
+			visibility: hidden;
+		}
 	}
 	.tl-msg[data-kind="ok"] {
 		color: var(--teal);
@@ -433,6 +503,9 @@
 	}
 	.tl-note {
 		color: var(--ink-3);
+	}
+	.tl-mail {
+		display: block;
 	}
 	.tl-dim {
 		color: var(--ink-3);
@@ -453,7 +526,7 @@
 		position: absolute;
 		z-index: 12;
 		top: calc(100% + 6px);
-		left: max(-4ch, calc(var(--at) * 1ch - 35px - var(--scroll, 0px)));
+		left: max(-4ch, calc(var(--at-x, 0px) - 35px - var(--scroll, 0px)));
 		display: block;
 		width: max-content;
 		min-width: 15rem;
@@ -950,10 +1023,12 @@
 		.w-row {
 			grid-template-columns: 40px minmax(0, 2.4fr) minmax(0, 4.6fr);
 		}
-		.w-metrics {
-			grid-column: 2 / -1;
-			grid-template-columns: repeat(2, 11rem);
-			margin-top: 20px;
+		/* the margin drops under the pitch, in the pitch's column */
+		.w-margin {
+			grid-column: 3;
+			max-width: 530px;
+			margin-top: 18px;
+			padding-top: 0;
 		}
 		.w-name[data-long] {
 			font-size: clamp(24px, calc(3.9vw - 5px), 31px);
@@ -997,9 +1072,10 @@
 		.w-pitch {
 			font-size: 16.5px;
 		}
-		.w-metrics {
-			justify-content: start;
+		.w-margin {
+			gap: 12px;
 			margin-top: 4px;
+			padding-top: 0;
 		}
 		.w-extra {
 			grid-column: 1;
@@ -1078,10 +1154,56 @@
 	}
 }
 
-/* forced colors drop the card's focus ring; the input itself has no outline by design */
+/* forced colors drop the card's focus ring (the input itself has no outline
+   by design) and the invisible-char markers' shadows and dot; an outline
+   survives, and paints without moving a glyph. The input opts out: Chromium
+   would back its transparent text with an opaque plate, over the mirror's
+   markers */
 @media (forced-colors: active) {
 	.tl-card:has(.tl-input:focus-visible) {
 		outline: 2px solid Highlight;
 		outline-offset: 2px;
+	}
+	.tl-input {
+		forced-color-adjust: none;
+		caret-color: CanvasText;
+	}
+	.tl-input::selection {
+		background: Highlight;
+	}
+	.hl-uws,
+	.hl-zw {
+		outline: 1px solid CanvasText;
+	}
+	.hl-uws {
+		outline-offset: -1px;
+	}
+}
+
+/*
+ * Paper (print.css lays a row out as head | pitch): the margin runs under the
+ * pitch, at the annotation size. Unlayered and !important, like print.css,
+ * so the screen's in-between breakpoint (Chrome matches it against the
+ * sheet's width) can't give it a column of its own.
+ */
+@media print {
+	.w-margin {
+		grid-area: margin !important;
+		gap: 1pt !important;
+		margin: 2pt 0 0 !important;
+		padding: 0 !important;
+	}
+	.w-margin li {
+		font-size: 7.5pt !important;
+		line-height: 1.4 !important;
+	}
+	/* a child row prints as its pitch alone, like its links (print.css): with
+	   ArkRegex's, Attest's and ArkSchema's reactions the home page ran to a
+	   third sheet, three rows of "before" on their own */
+	.w-row[data-child] .w-margin {
+		display: none !important;
+	}
+	.w-ext {
+		display: none;
 	}
 }

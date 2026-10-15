@@ -1,9 +1,6 @@
-import { measuredDay, MONGOOSE, PRISMA, TS59_CREDIT } from "~/data/caseStudies"
-import { formatNumber } from "~/lib/format"
-import { Dumbbell } from "./perf/Dumbbell"
+import type { ReactNode } from "react"
+import { measuredDay, TS59_CREDIT } from "~/data/caseStudies"
 import { MergeChart } from "./perf/MergeChart"
-import { Payoffs } from "./perf/Payoffs"
-import { ViemTrace } from "./perf/ViemTrace"
 import { Claim, Quickinfo } from "./Quickinfo"
 import { Section } from "./Section"
 
@@ -29,27 +26,15 @@ export const Perf = () => (
 					</a>
 				</blockquote>
 				<p className="perf-lede">
-					Clients have included tRPC, Drizzle, Prisma, Convex, AWS Amplify,
-					Speakeasy, Stately, wevm, Vanta and Cloudinary. Most of that work is
-					private; these three cases are public.
+					Most of my consulting happened in private repos. This one ended up in
+					the compiler.
 				</p>
 			</>
 		}
 	>
 		<CaseTs59 />
-		<PullQuote />
-		<CaseViem />
-		<CasePrisma />
+		<More />
 	</Section>
-)
-
-const Meta = ({ n, what, year }: { n: string; what: string; year: string }) => (
-	<div className="case-meta mono">
-		<b>case {n}</b>
-		<span>{what}</span>
-		<span aria-hidden>·</span>
-		<span>{year}</span>
-	</div>
 )
 
 const Ts2589 = () => (
@@ -78,40 +63,120 @@ const Ts2589 = () => (
 	</Quickinfo>
 )
 
+/** One step of the story: a copper mono label beside its prose (perf.css `.beats`). */
+const Beat = ({ label, children }: { label: string; children: ReactNode }) => (
+	<li className="beat">
+		<span className="beat-label mono">{label}</span>
+		{children}
+	</li>
+)
+
 const CaseTs59 = () => (
 	<article className="case case-01" aria-labelledby="case-01-title" data-reveal>
 		<div className="case-text">
-			<Meta n="01" what="TypeScript compiler" year="2025" />
+			<div className="case-meta mono">
+				<b>TypeScript 5.9</b>
+				<span aria-hidden>·</span>
+				<span>2025</span>
+			</div>
 			<h3 className="h3" id="case-01-title">
-				Two innocent-looking <span className="decl fn">useMutation</span> calls
+				Two innocuous-looking <span className="decl fn">useMutation</span> calls
 				took about 2 seconds each to type-check.
 			</h3>
-			<div className="case-cols">
+		</div>
+		<ol className="beats">
+			<Beat label="the itch">
 				<p>
-					Chained Zod- and tRPC-style types made the compiler redo every earlier
-					link- O(3
-					<sup>N</sup>) instantiations, ending in <Ts2589 /> errors.
+					I was digging into tRPC type performance, and those two calls were in
+					AnswerOverflow, a public tRPC app.{" "}
+					<a
+						className="link ext"
+						href="https://github.com/ssalbdivad/trpc-tsperf/blob/main/answeroverflow/client/summary.txt"
+					>
+						The trace is still up
+					</a>
+					. Zod schemas built up in chains like theirs are really common,
+					especially in the repos I look at for type performance.
 				</p>
+			</Beat>
+			<Beat label="the hunt">
 				<p>
-					<b>I traced it into TypeScript itself,</b> minimized the repro,
-					benchmarked it with Attest and argued it through review- including my
-					reply to Anders Hejlsberg:{" "}
+					I cut it down to a chain of merges, the kind Zod's{" "}
+					<code>.merge().pick().omit()</code> and tRPC's{" "}
+					<code>{"merge<merge<…>>"}</code> produce. Each link roughly tripled
+					the compiler's work, until it gave up: <Ts2589 />. I counted it with
+					Attest{" "}
+					<span className="beat-down" aria-hidden="true">
+						↓
+					</span>
+				</p>
+				<MergeChart />
+			</Beat>
+			<Beat label="the fix">
+				<p>
+					I worked on it with Andarist (Mateusz Burzyński), who wrote the
+					compiler patch: cache instantiations on type mappers, so a chain
+					reuses work it has already done. His PR opens:{" "}
+					<a className="inline-quote" href={TS59_CREDIT.pr}>
+						"@ssalbdivad found out that a chain of somewhat trivial operations
+						can easily end up with dreaded 'Type instantiation is excessively
+						deep and possibly infinite'."
+					</a>{" "}
+					I tested it on <Claim id="ts59Trpc">a bunch of tRPC monorepos</Claim>:
+					it removed the depth errors, cut check time in half or better, or
+					both.
+				</p>
+				{/* in the margin from 1024px, like Work's reactions; under the beat below that */}
+				<p className="beat-aside mono">
+					<a
+						className="ext"
+						href="https://bsky.app/profile/ssalbdivad.dev/post/3laetuvq4ac2u"
+					>
+						<span aria-hidden="true">// </span>"How has this man not been hired
+						by the TypeScript team yet?" — me, about Andarist, 2024
+					</a>
+				</p>
+			</Beat>
+			<Beat label="the review">
+				<p>
+					Anders Hejlsberg's review asked to cache only the expensive
+					instantiations. My reply:{" "}
 					<a
 						className="inline-quote"
 						href="https://github.com/microsoft/TypeScript/pull/61505#issuecomment-2816034728"
 					>
-						"…if there are O(3^N) of them, they will eventually dominate the
-						check time of the entire type."
-					</a>{" "}
-					Mateusz Burzyński (@Andarist) wrote the compiler patch; it shipped in
-					TypeScript 5.9 and was ported to the Go compiler.
+						"whether or not individual instantiations are expensive, if there
+						are O(3^N) of them, they will eventually dominate the check time of
+						the entire type."
+					</a>
 				</p>
-			</div>
-		</div>
-		<MergeChart />
-		<Payoffs />
+			</Beat>
+			<Beat label="shipped">
+				<p>
+					It merged in June 2025 and shipped in TypeScript 5.9 as "Cache
+					Instantiations on Mappers"; the release notes name Zod and tRPC. Jake
+					Bailey ported it to the Go compiler.
+				</p>
+			</Beat>
+			<Beat label="what repos saw">
+				<p>
+					Type-checking AnswerOverflow's dashboard dropped from{" "}
+					<Claim id="ts59AnswerOverflow">about 6.7s to 3.3s</Claim> (5 runs
+					each, no overlap), and Jake Bailey on the TypeScript team got the same
+					halving on the same repo. At Klarna, an engineer reported their check
+					time dropping from{" "}
+					<Claim id="ts59Klarna">six and a half minutes to about two</Claim>:{" "}
+					<a
+						className="inline-quote"
+						href="https://github.com/microsoft/TypeScript/pull/61505#issuecomment-3102636519"
+					>
+						"This was a game-changer PR for us."
+					</a>
+				</p>
+			</Beat>
+		</ol>
 		<p className="credit">
-			Compiler patch by Mateusz Burzyński (@Andarist) ·{" "}
+			{TS59_CREDIT.text} ·{" "}
 			<a className="link ext" href={TS59_CREDIT.pr}>
 				microsoft/TypeScript#61505
 			</a>{" "}
@@ -124,209 +189,61 @@ const CaseTs59 = () => (
 				typescript-go#1358
 			</a>
 		</p>
-		<p className="case-foot">
-			The ~2× is 5 runs per side with no overlap. My 13.04s → 6.00s is one run.
-			Klarna's ~3× is self-reported, in one comment.
-		</p>
 	</article>
 )
 
-const PullQuote = () => (
-	<figure className="pull" data-reveal>
-		<blockquote>
-			<span className="qm">"</span>Please contact @ssalbdivad. He is probably
-			the best TypeScript performance consultant in the world…
-			<span className="qm">"</span>
-		</blockquote>
-		<figcaption className="mono">
-			a stranger in Prisma's issue tracker ·{" "}
-			<a
-				className="link"
-				href="https://github.com/prisma/orm/issues/29011#issuecomment-4167854903"
-			>
-				prisma/orm#29011
-			</a>
-		</figcaption>
-	</figure>
-)
-
-const CaseViem = () => (
-	<article className="case case-02" aria-labelledby="case-02-title" data-reveal>
-		<div className="case-text case-split">
-			<div>
-				<Meta n="02" what="viem + MUD" year="2024" />
-				<h3 className="h3" id="case-02-title">
-					One type. Nine type parameters.
-					<br />
-					<Claim id="viemVariance">1.86 seconds.</Claim>
-				</h3>
+/** The public rest, one line each: no charts, a link where the receipt lives. */
+const More = () => (
+	<div className="more" data-reveal>
+		<h3 className="more-label mono">
+			<span aria-hidden="true">// </span>a few more, briefly
+		</h3>
+		<ul className="more-list">
+			<li>
+				<b className="mono">viem</b>
 				<p>
-					In MUD's build, TypeScript spent 1.86s just computing the variance of
-					one viem type, and instantiation counts never showed it. Only a trace
-					did. With variance annotated by hand, the entire file checked in
-					1.28s. Explicit <code className="kw">in</code>/
-					<code className="kw">out</code> annotations now ship in viem itself,
-					so every consumer skips that work.
-				</p>
-			</div>
-			<figure className="case-quote">
-				<blockquote>
-					<span className="qm">"</span>avoiding the variance checks reduced the
-					check time for a simple repo by over a second locally.
-					<span className="qm">"</span>
-				</blockquote>
-				<figcaption className="mono">
-					— me, in{" "}
-					<a className="link" href="https://github.com/wevm/viem/pull/2557">
-						wevm/viem#2557
+					In MUD's build, TypeScript spent{" "}
+					<Claim id="viemVariance">almost two seconds</Claim> just working out
+					the variance of one viem type. I added <code className="kw">in</code>/
+					<code className="kw">out</code> annotations to{" "}
+					<a className="link ext" href="https://github.com/wevm/viem/pull/2557">
+						viem itself
 					</a>
-				</figcaption>
-			</figure>
-		</div>
-		<ViemTrace />
-		<p className="case-foot">
-			Slices aligned at 0; offsets within the original Perfetto trace omitted.
-			Source:{" "}
-			<a className="link" href="https://github.com/latticexyz/mud/pull/2956">
-				latticexyz/mud#2956
-			</a>
-			.
+					, so apps that use it skip that work.
+				</p>
+			</li>
+			<li>
+				<b className="mono">Prisma</b>
+				<p>
+					I built their type benchmarks and helped speed up their generated
+					types; Prisma wrote it up in its{" "}
+					<a
+						className="link ext"
+						href="https://github.com/prisma/orm/releases/tag/6.16.0"
+					>
+						6.16 release notes
+					</a>
+					.
+				</p>
+			</li>
+			<li>
+				<b className="mono">Mongoose</b>
+				<p>
+					I reworked how <code className="kw">InferRawDocType</code> infers
+					schemas; it shipped in{" "}
+					<a
+						className="link ext"
+						href="https://github.com/Automattic/mongoose/pull/15588"
+					>
+						8.19
+					</a>
+					.
+				</p>
+			</li>
+		</ul>
+		<p className="more-clients">
+			Clients have included tRPC, Drizzle, Prisma, Convex, AWS Amplify,
+			Speakeasy, Stately, wevm, Vanta and Cloudinary.
 		</p>
-	</article>
-)
-
-const pctOf = (before: number, after: number) => (after / before) * 100
-
-const CasePrisma = () => (
-	<article className="case case-03" aria-labelledby="case-03-title" data-reveal>
-		<div className="case-text">
-			<Meta n="03" what="Prisma ORM + Mongoose" year="2025" />
-			<h3 className="h3" id="case-03-title">
-				Prisma: 45% less check time on the generated file we restructured.
-			</h3>
-			<p className="badges mono">
-				<Claim id="prismaCheck">
-					<b>−45%</b> check time · <b>−75%</b> lines
-				</Claim>
-			</p>
-			<figure className="case-quote">
-				<blockquote>
-					<span className="qm">"</span>We've worked with TypeScript expert David
-					Blass to find ways for improving the type checking performance in
-					Prisma ORM…<span className="qm">"</span>
-				</blockquote>
-				<figcaption className="mono">
-					—{" "}
-					<a className="link" href={PRISMA.sources[1]}>
-						Prisma 6.16.0 release notes
-					</a>
-				</figcaption>
-			</figure>
-		</div>
-		<div className="dumbbells">
-			<Dumbbell
-				title={
-					<>
-						Prisma · <code>{PRISMA.file}</code>, % of before
-					</>
-				}
-				rows={PRISMA.rows.map(r => ({
-					label: r.label,
-					code: r.unit === "µs",
-					before: 100,
-					after: pctOf(r.before, r.after),
-					beforeText:
-						r.unit === "µs" ? `${formatNumber(r.before)}µs` : String(r.before),
-					afterText:
-						r.unit === "µs" ? `${formatNumber(r.after)}µs` : String(r.after)
-				}))}
-				max={100}
-				ticks={[0, 25, 50, 75, 100]}
-				mobileTicks={[0, 50, 100]}
-				tickLabel={v => `${v}%`}
-				axisTitle="% of before"
-				describe="Prisma generated file, as a share of before: check 54.6 percent, parse 30.9, bind 27.0, lines of code 24.2."
-			>
-				<p className="case-foot">
-					The 45% is one file (<code>{PRISMA.file}</code>), not the whole
-					client. Measured in{" "}
-					<a className="link" href={PRISMA.sources[0]}>
-						prisma/orm#27046
-					</a>
-					; Prisma reports the same result on{" "}
-					<a className="link" href={PRISMA.sources[2]}>
-						its blog
-					</a>
-					.
-				</p>
-				<DumbbellTable
-					unit="µs or lines"
-					rows={PRISMA.rows.map(r => [
-						r.label,
-						`${formatNumber(r.before)} ${r.unit}`,
-						`${formatNumber(r.after)} ${r.unit}`
-					])}
-				/>
-			</Dumbbell>
-			<Dumbbell
-				title={
-					<>
-						Also shipped: Mongoose 8.19, <code>InferRawDocType</code>,{" "}
-						<Claim id="mongooseInst">36–67% fewer instantiations</Claim>.
-					</>
-				}
-				rows={MONGOOSE.rows}
-				max={4500}
-				ticks={[0, 1000, 2000, 3000, 4000]}
-				mobileTicks={[0, 2000, 4000]}
-				tickLabel={v => (v ? `${v / 1000}K` : "0")}
-				axisTitle="instantiations"
-				describe="Mongoose instantiations before and after: simple 501 to 320, mixed 1,626 to 535, nested 4,214 to 2,097."
-			>
-				<p className="case-foot">
-					On its benchmarks. The maintainer's whole-repo count was flat (+0.9%).{" "}
-					<a className="link" href={MONGOOSE.sources[0]}>
-						Automattic/mongoose#15588
-					</a>
-					.
-				</p>
-				<DumbbellTable
-					unit="instantiations"
-					rows={MONGOOSE.rows.map(r => [
-						r.label,
-						formatNumber(r.before),
-						formatNumber(r.after)
-					])}
-				/>
-			</Dumbbell>
-		</div>
-	</article>
-)
-
-const DumbbellTable = ({ rows, unit }: { rows: string[][]; unit: string }) => (
-	<details className="viz-table twin">
-		<summary>Data</summary>
-		<div className="viz-table-scroll">
-			<table className="mono tnum">
-				<caption className="sr-only">{unit}</caption>
-				<thead>
-					<tr>
-						<th scope="col" />
-						<th scope="col">before</th>
-						<th scope="col">after</th>
-					</tr>
-				</thead>
-				<tbody>
-					{rows.map(([label, ...cells]) => (
-						<tr key={label}>
-							<th scope="row">{label}</th>
-							{cells.map((c, i) => (
-								<td key={i}>{c}</td>
-							))}
-						</tr>
-					))}
-				</tbody>
-			</table>
-		</div>
-	</details>
+	</div>
 )

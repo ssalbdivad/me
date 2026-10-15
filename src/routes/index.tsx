@@ -1,12 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { About } from "~/components/About"
 import { Agents } from "~/components/Agents"
-import { Before } from "~/components/Before"
 import { Eggs } from "~/components/Eggs"
 import { Contact, Footer } from "~/components/Footer"
 import { Hero } from "~/components/Hero"
 import { Nav } from "~/components/Nav"
 import { Perf } from "~/components/Perf"
-import { Said } from "~/components/Said"
 import { Talks } from "~/components/Talks"
 import { Work } from "~/components/Work"
 import { useReveals } from "~/lib/reveal"
@@ -44,8 +43,7 @@ function Home() {
 				<Perf />
 				<Agents />
 				<Talks />
-				<Said />
-				<Before />
+				<About />
 				<Contact />
 			</main>
 			<Footer />

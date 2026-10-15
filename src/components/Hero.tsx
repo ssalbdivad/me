@@ -1,15 +1,12 @@
 import { useEffect, useRef, useState } from "react"
 import handleQueries from "~/data/snippets/handle.queries.json"
 import regexHtml from "~/data/snippets/regex.html?raw"
-import stats from "~/data/stats.json"
 import * as ark from "~/lib/ark"
 import { dependencies } from "../../package.json"
-import { formatCompact, formatDay } from "~/lib/format"
-import { useLive } from "~/lib/live"
 import { prefersReducedMotion } from "~/lib/motion"
 import { session } from "~/lib/storage"
 import { CopyEmail } from "./CopyEmail"
-import { Claim, Quickinfo } from "./Quickinfo"
+import { Quickinfo } from "./Quickinfo"
 import { GitHubIcon, LinkedInIcon } from "./icons"
 
 export const Hero = () => (
@@ -30,9 +27,9 @@ export const Hero = () => (
 			</div>
 			<h1 className="display rise-fade">David Blass</h1>
 			<p className="lede rise" style={{ "--i": 2 } as React.CSSProperties}>
-				I write the TypeScript <span className="decl types">types</span> other
-				libraries depend on- and lately, the{" "}
-				<span className="decl agents">agents</span> that write the rest.
+				I make TypeScript's <span className="decl types">types</span> do things
+				they probably shouldn't- then make them fast. Lately, I work on{" "}
+				<span className="decl agents">agents</span>, too.
 			</p>
 			<dl className="roles rise" style={{ "--i": 3 } as React.CSSProperties}>
 				<dt>author</dt>
@@ -79,10 +76,6 @@ export const Hero = () => (
 				</a>
 			</div>
 		</div>
-		{/* stats before the card in source order: a slow connection paints the
-		    page as it parses, and a card parsed first would sit where the
-		    strip belongs until the strip arrived and pushed it down */}
-		<StatStrip />
 		<CodeCard />
 	</header>
 )
@@ -132,9 +125,9 @@ const Handle = () => {
 
 	/**
 	 * Once per session, show recruiters what the handle is: 1.7s after the
-	 * page started loading, once the entrance and the sparklines are still
-	 * (never sooner than 250ms after hydration), and only while the whole
-	 * handle is on screen below the nav in a visible tab. A demo that can't
+	 * page started loading, well after the entrance is still (never sooner
+	 * than 250ms after hydration), and only while the whole handle is on
+	 * screen below the nav in a visible tab. A demo that can't
 	 * play isn't spent. '@davidblass' then holds, fully zipped, for 1.6s: the
 	 * hold is chained off the flip and counted from when the last pair lands,
 	 * so a long main-thread task can delay the demo but never shorten it.
@@ -320,106 +313,3 @@ const CodeCard = () => (
 		</p>
 	</figure>
 )
-
-const Spark = ({
-	series
-}: {
-	series: readonly { month: string; downloads: number }[]
-}) => {
-	const w = 108
-	const h = 30
-	const max = Math.max(...series.map(p => p.downloads))
-	const pts = series.map((p, i) => [
-		(i / (series.length - 1)) * w,
-		h - (p.downloads / max) * (h - 2)
-	])
-	const d = pts
-		.map(([x, y], i) => `${i ? "L" : "M"}${x!.toFixed(1)} ${y!.toFixed(1)}`)
-		.join("")
-	const last = pts.at(-1)!
-	const prev = pts.at(-2)!
-	return (
-		<svg className="spark" viewBox={`0 0 ${w} ${h}`} aria-hidden>
-			<path className="l" d={d} pathLength={1} />
-			<path
-				className="tip"
-				d={`M${prev[0]} ${prev[1]}L${last[0]} ${last[1]}`}
-			/>
-			<circle cx={last[0]} cy={last[1]} r={3.5} />
-		</svg>
-	)
-}
-
-const StatStrip = () => {
-	// the strip is what starts the refresh; every live <Claim> follows it
-	const live = useLive(true)
-	const through = live?.end ?? stats.window.end
-	return (
-		<div className="stats rise" style={{ "--i": 5 } as React.CSSProperties}>
-			<div className="stat">
-				<div className="num">
-					<p className="val">
-						<Claim id="arktypeDownloads" describedBy="stat-arktype">
-							{formatCompact(stats.npm.arktype.downloads)}
-						</Claim>
-					</p>
-					<Spark series={stats.npm.arktype.monthly} />
-				</div>
-				<p className="lbl" id="stat-arktype">
-					ArkType downloads a month
-				</p>
-				<p className="src">
-					npm <span className="long">· 30 days to {formatDay(through)}</span>
-				</p>
-			</div>
-			<div className="stat">
-				<div className="num">
-					<p className="val">
-						<Claim id="specDownloads" describedBy="stat-spec">
-							{formatCompact(stats.npm["@standard-schema/spec"].downloads)}
-						</Claim>
-					</p>
-					<Spark series={stats.npm["@standard-schema/spec"].monthly} />
-				</div>
-				<p className="lbl" id="stat-spec">
-					Standard Schema spec downloads a month
-				</p>
-				<p className="src">
-					@standard-schema/spec{" "}
-					<span className="long">· via AI SDK, Redux Toolkit</span>
-				</p>
-			</div>
-			<div className="stat">
-				<div className="num">
-					<p className="val">
-						<Claim id="ts59AnswerOverflow" describedBy="stat-ts59">
-							2×
-						</Claim>
-					</p>
-				</div>
-				<p className="lbl" id="stat-ts59">
-					faster type-checks on real tRPC apps in TS 5.9
-				</p>
-				<p className="src">
-					6.7s → 3.3s <span className="long">· 5 runs</span> ·{" "}
-					<span className="nowrap">found &amp; drove it</span>
-				</p>
-			</div>
-			<div className="stat">
-				<div className="num">
-					<p className="val">
-						<Claim id="arkregexLaunchViews" describedBy="stat-arkregex">
-							733K
-						</Claim>
-					</p>
-				</div>
-				<p className="lbl" id="stat-arkregex">
-					views on the ArkRegex launch post
-				</p>
-				<p className="src">
-					@arktypeio on X <span className="long">· Oct 28, 2025</span>
-				</p>
-			</div>
-		</div>
-	)
-}

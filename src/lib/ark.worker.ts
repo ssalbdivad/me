@@ -29,17 +29,6 @@ const parse = (src: string): Parsed => {
 	}
 }
 
-let range: ((data: unknown) => unknown) | undefined
-/** npm's /downloads/range response for a 30-day window */
-const Range = () =>
-	(range ??= type({
-		start: "string.date",
-		end: "string.date",
-		downloads: type({ downloads: "number.integer >= 0", day: "string.date" })
-			.array()
-			.exactlyLength(30)
-	}))
-
 const ops = {
 	parse: (src: string) => parse(src),
 	/** whether type(a) is a subtype of type(b) */
@@ -52,13 +41,7 @@ const ops = {
 			:	{ ok: true as const }
 	},
 	/** the real result of type(`${a} & ${b}`), error message included */
-	intersect: (a: string, b: string) => parse(`${a} & ${b}`),
-	/** the validated data, or a thrown ArkErrors summary */
-	assertRange: (json: unknown) => {
-		const out = Range()(json)
-		if (out instanceof type.errors) throw new Error(out.summary)
-		return out
-	}
+	intersect: (a: string, b: string) => parse(`${a} & ${b}`)
 }
 
 export type Ops = typeof ops
