@@ -25,7 +25,7 @@ Numbers: a snapshot of 2026-10-13; npm figures cover 2026-09-13 to 2026-10-12; e
 
 - Co-founded [Pullfrog](https://pullfrog.com) with Colin McDonnell (creator of Zod): an open-source platform running AI coding agents in GitHub Actions ([1.3K stars](https://github.com/pullfrog/pullfrog)). Agents review PRs, triage issues, fix CI, resolve merge conflicts and test UIs in a headless browser.
 - Built the model-agnostic agent runtime: OpenCode, BYOK, MCP tools, GitHub App/OIDC auth, sandboxed CI.
-- Built [ntwine](https://github.com/ssalbdivad/ntwine), a local UI for running many coding agents at once; used daily to develop Pullfrog.
+- Building [ntwine](https://github.com/ssalbdivad/ntwine) to run many coding agents in parallel and queue up the ones that need a human; used daily to develop Pullfrog.
 
 ### TypeScript performance consultant · 2023–2025
 
@@ -45,7 +45,7 @@ Numbers: a snapshot of 2026-10-13; npm figures cover 2026-09-13 to 2026-10-12; e
 
 ## How I work with agents
 
-Most days I have a lot of coding agents working on Pullfrog at once. I run them from [ntwine](https://github.com/ssalbdivad/ntwine), a local UI I built. The rules I've ended up with, for them and for me: size work by scope, never in days; report honest effect sizes; lead with what changed; preserve evidence.
+Most days I have a lot of coding agents working on Pullfrog at once. I run them from [ntwine](https://github.com/ssalbdivad/ntwine), which I'm building to run them in parallel and queue up the ones that need me. The rules I've ended up with, for them and for me: size work by scope, never in days; report honest effect sizes; lead with what changed; preserve evidence.
 
 ## Talks
 

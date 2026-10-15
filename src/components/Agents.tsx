@@ -57,9 +57,10 @@ export const Agents = () => (
 			>
 				ntwine
 			</a>
-			, a local UI I built. The rules I've ended up with, for them and for me:
-			size work by scope, never in days; report honest effect sizes; lead with
-			what changed; preserve evidence.
+			, which I'm building to run them in parallel and queue up the ones that
+			need me. The rules I've ended up with, for them and for me: size work by
+			scope, never in days; report honest effect sizes; lead with what changed;
+			preserve evidence.
 		</p>
 
 		<div className="replay-block">
