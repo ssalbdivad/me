@@ -28,8 +28,8 @@ export const Hero = () => (
 			<h1 className="display rise-fade">David Blass</h1>
 			<p className="lede rise" style={{ "--i": 2 } as React.CSSProperties}>
 				I make TypeScript's <span className="decl types">types</span> do things
-				they probably shouldn't- then make them fast. Lately, I work on{" "}
-				<span className="decl agents">agents</span>, too.
+				they probably shouldn't- then make them fast. Lately:{" "}
+				<span className="decl agents">agents</span> × DX.
 			</p>
 			<dl className="roles rise" style={{ "--i": 3 } as React.CSSProperties}>
 				<dt>author</dt>
