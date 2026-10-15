@@ -22,7 +22,7 @@ export const Hero = () => (
 				/>
 				<Handle />
 				<span className="where">
-					<span className="slash">//</span> TypeScript engineer · Boston, MA
+					<span className="slash">//</span> types for a living · Boston, MA
 				</span>
 			</div>
 			<h1 className="display rise-fade">David Blass</h1>
