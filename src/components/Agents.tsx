@@ -10,6 +10,7 @@ import {
 } from "./agents/model"
 import { Replay } from "./agents/Replay"
 import { Section } from "./Section"
+import since from "~/data/agent-since.json"
 
 const verbs: Record<Phase, string> = {
 	research: "researched",
@@ -76,6 +77,11 @@ export const Agents = () => (
 			</h3>
 			<Replay />
 			<p className="replay-copy">{colophon}</p>
+			<p className="replay-copy">
+				Every change since, this sentence included, went the same way:{" "}
+				{since.toolCalls.toLocaleString("en")} more tool calls across{" "}
+				{since.threads} threads.
+			</p>
 			<p className="replay-note mono">
 				// scripts/replay.ts reads the session's transcript metadata (labels,
 				timestamps, tool-call counts) into a snapshot taken{" "}

@@ -247,6 +247,52 @@ const scan = (path: string) => {
 	}
 }
 
+/**
+ * --since: rolls up every tool call made in this project after the stored
+ * braid ends, across all threads and their sub-agents, into
+ * src/data/agent-since.json. The braid snapshot itself is left untouched.
+ */
+if (args.includes("--since")) {
+	const cutoff = Date.parse(
+		JSON.parse(
+			readFileSync(
+				new URL("../src/data/agent-replay.json", import.meta.url),
+				"utf8"
+			)
+		).root.endedAt
+	)
+	let threads = 0
+	let toolCalls = 0
+	for (const f of readdirSync(project).filter(f => f.endsWith(".jsonl"))) {
+		const dir = join(project, f.replace(/\.jsonl$/, ""))
+		const subs =
+			existsSync(dir) ?
+				readdirSync(dir, { recursive: true, encoding: "utf8" }).filter(p =>
+					/(^|\/)agent-[^/]+\.jsonl$/.test(p)
+				)
+			:	[]
+		const calls = [join(project, f), ...subs.map(p => join(dir, p))]
+			.flatMap(p => scan(p).tools)
+			.filter(t => t > cutoff).length
+		if (calls) threads++
+		toolCalls += calls
+	}
+	const since = {
+		after: new Date(cutoff).toISOString(),
+		generatedAt: new Date().toISOString(),
+		threads,
+		toolCalls
+	}
+	writeFileSync(
+		new URL("../src/data/agent-since.json", import.meta.url),
+		`${JSON.stringify(since, null, "\t")}\n`
+	)
+	console.log(
+		`since ${since.after}: ${threads} threads, ${toolCalls} tool calls`
+	)
+	process.exit(0)
+}
+
 const sessionDir = join(project, session)
 const rootScan = scan(join(project, `${session}.jsonl`))
 if (rootScan.start === undefined)
