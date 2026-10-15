@@ -39,35 +39,40 @@ const prompts =
 	: `one brief and ${direction - 1} follow-ups`
 const colophon =
 	totals.running > 0 ?
-		`This page is being ${list(totals.phases.map(p => verbs[p]))} by one agent thread. So far: ${totals.subAgents} sub-agents, ${calls}, ${duration(totals.agentSeconds)} of agent time. I set the bar in ${prompts}; they do the legwork. Every strand and timestamp above is from the session.`
-	:	`${capitalize(list(totals.phases.map(p => verbs[p])))} by one agent thread that fanned out to ${totals.subAgents} sub-agents: ${calls}, ${duration(totals.agentSeconds)} of agent time in ${duration(totals.wallSeconds)} of wall clock. I set the bar in ${prompts}; they did the legwork. Every strand and timestamp above is from the session.`
+		`This page is being ${list(totals.phases.map(p => verbs[p]))} by one agent thread. So far: ${totals.subAgents} sub-agents, ${calls} and ${duration(totals.agentSeconds)} of agent time. I set the bar in ${prompts}; they do the legwork. Every strand and timestamp above is from the session.`
+	:	`${capitalize(list(totals.phases.map(p => verbs[p])))} by one agent thread that fanned out to ${totals.subAgents} sub-agents: ${calls} and ${duration(totals.agentSeconds)} of agent time, folded into ${duration(totals.wallSeconds)} of wall clock. I set the bar in ${prompts}; they did the legwork. Every strand and timestamp above is from the session.`
 
 const span = (iso: string, s1: number) => `${iso.slice(11, 19)}–${clock(s1)}`
 
 export const Agents = () => (
-	<Section id="agents" index="03" label="agents" title="How I work with agents">
+	<Section
+		id="agents"
+		index="03"
+		label="agents"
+		title="How I keep up with agents"
+	>
 		{/* the replay's captions play these four rules; this sentence is where
 		    no-JS readers and the prerender get them */}
 		<p className="agents-intro" data-reveal>
-			Most days I have a lot of coding agents working on Pullfrog at once. I run
-			them from{" "}
+			Most days I have more coding agents working on Pullfrog at once than I can
+			pay attention to. I run them from{" "}
 			<a
 				className="link ext nowrap"
 				href="https://github.com/ssalbdivad/ntwine"
 			>
 				ntwine
 			</a>
-			, which I'm building to run them in parallel and queue up the ones that
-			need me. The rules I've ended up with, for them and for me: size work by
-			scope, never in days; report honest effect sizes; lead with what changed;
-			preserve evidence.
+			, the agent orchestrator I'm building: it runs them in parallel and queues
+			up the ones that need me. The rules I've ended up with, for them and for
+			me: size work by scope, never in days; report honest effect sizes; lead
+			with what changed; preserve evidence.
 		</p>
 
 		<div className="replay-block">
 			<h3 className="h3 replay-title" data-reveal>
 				{totals.running > 0 ?
-					"This page is being built that way."
-				:	"The first version of this page was built that way."}
+					"Exhibit A: this page, mid-build."
+				:	"Exhibit A: the first version of this page."}
 			</h3>
 			<Replay />
 			<p className="replay-copy">{colophon}</p>

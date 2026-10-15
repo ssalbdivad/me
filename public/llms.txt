@@ -10,10 +10,10 @@ Numbers below are a snapshot as of 2026-10-13 (npm: the 30 days 2026-09-13 to 20
 
 ## Roles
 
-- **Author, ArkType ecosystem (2022–)**: [ArkType](https://arktype.io), TypeScript's 1:1 validator, optimized from editor to runtime. A parser written in TypeScript's type system infers TS syntax from strings as you type, and at runtime the same definitions compile to JIT-friendly validation code. 9,055,997 npm downloads in 30 days ([npm](https://api.npmjs.org/downloads/point/2026-09-13:2026-10-12/arktype)), 7,874 GitHub stars ([repo](https://github.com/arktypeio/arktype)).
+- **Author, ArkType ecosystem (2022–)**: [ArkType](https://arktype.io), TypeScript's 1:1 validator, optimized from editor to runtime. A parser written in TypeScript's type system infers types from TS syntax in strings as you type, and at runtime the same definitions compile to JIT-friendly validation code. 9,055,997 npm downloads in 30 days ([npm](https://api.npmjs.org/downloads/point/2026-09-13:2026-10-12/arktype)), 7,874 GitHub stars ([repo](https://github.com/arktypeio/arktype)).
   - **ArkRegex**: the first library to validate and infer regex from TypeScript's type system. The launch post had 733,569 views on X ([post](https://x.com/arktypeio/status/1983210635266498649), read via the fxtwitter mirror).
   - **Attest**: type-level benchmarks and assertions for TypeScript (deterministic instantiation counts, so CI can fail a PR that makes types slower). `@ark/attest`: 427,538 npm downloads in 30 days ([npm](https://api.npmjs.org/downloads/point/2026-09-13:2026-10-12/@ark/attest)).
-  - **ArkSchema**: the set-theoretic type system underneath (intersections, subtyping, union discrimination at runtime).
+  - **ArkSchema**: the set-theoretic type system underneath (canonical reduction, intersections, subtyping, union discrimination at runtime).
 - **Co-creator, Standard Schema (2024–)**: [standardschema.dev](https://standardschema.dev). One interface so any TypeScript validator plugs into any framework (tRPC, TanStack, Hono, React Hook Form and more). David co-designed it with the creators of Zod and Valibot. They then co-authored Standard JSON Schema, so any validator can define tool inputs for AI agents and MCP. The `@standard-schema/spec` package: 551,490,697 npm downloads in 30 days, mostly transitive installs ([npm](https://api.npmjs.org/downloads/point/2026-09-13:2026-10-12/@standard-schema/spec)); 3,650 GitHub stars.
 - **Co-founder, Pullfrog (2025–)**: [pullfrog.com](https://pullfrog.com), started with Colin McDonnell (creator of Zod). AI coding agents that run in your GitHub Actions: they review PRs, triage issues, fix CI, resolve merge conflicts and test UIs in a headless browser, on your infrastructure and your keys. David built the model-agnostic agent runtime (BYOK, MCP tools, GitHub App/OIDC auth, sandboxed CI). 1,307 GitHub stars ([repo](https://github.com/pullfrog/pullfrog)); `pullfrog`: 211,712 npm downloads in 30 days.
 - **TypeScript performance consultant (2023–2025)**: clients included tRPC, Drizzle, Prisma, Convex, AWS Amplify, Speakeasy, Stately, wevm, Vanta and Cloudinary.
@@ -31,7 +31,7 @@ Numbers below are a snapshot as of 2026-10-13 (npm: the 30 days 2026-09-13 to 20
 
 ## How David works with agents
 
-Most days he has a lot of coding agents working on Pullfrog at once. He runs them from [ntwine](https://github.com/ssalbdivad/ntwine), which he's building to run them in parallel and queue up the ones that need him. The rules he's ended up with, for them and for himself:
+Most days he has more coding agents working on Pullfrog at once than he can pay attention to. He runs them from [ntwine](https://github.com/ssalbdivad/ntwine), the agent orchestrator he's building: it runs them in parallel and queues up the ones that need him. The rules he's ended up with, for them and for himself:
 
 - **Size work by scope, never in days.** Agents do the building, so hours are the wrong unit. Scope is the code paths a change touches, its risk, and what needs a human decision.
 - **Report honest effect sizes.** Say how strong a claim is right next to it, and treat pushback as a bug report on the measurement before defending the result.

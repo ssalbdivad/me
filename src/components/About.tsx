@@ -87,15 +87,15 @@ export const About = () => (
 				</button>
 			</p>
 			<p>
-				I'm also an amateur bird watcher. Lately I've been building{" "}
+				I'm also an amateur bird watcher, which lately means building{" "}
 				<a
 					className="link ext nowrap"
 					href="https://github.com/ssalbdivad/look4"
 				>
 					look4
-				</a>
-				, which goes through my backyard camera's footage looking for birds I
-				haven't seen yet.
+				</a>{" "}
+				to do the watching for me: it goes through my backyard camera's footage
+				looking for birds I haven't seen yet.
 			</p>
 			<p>
 				When quarantine gave me the chance to spend a day arranging a jazz

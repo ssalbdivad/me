@@ -13,7 +13,7 @@ import css from "../styles.css?url"
 const title = "David Blass · ArkType, Standard Schema, Pullfrog"
 // ≤160 chars, so search results don't cut it mid-name
 const description =
-	"ArkType author, Standard Schema co-creator, Pullfrog co-founder (AI coding agents). TypeScript performance consultant to tRPC, Prisma and Drizzle, 2023–25."
+	"I make TypeScript's types do things they probably shouldn't- then make them fast. ArkType author, Standard Schema co-creator, Pullfrog co-founder."
 const origin = "https://ssalbdivad.com"
 const imageAlt = "David Blass: ArkType, Standard Schema, Pullfrog"
 

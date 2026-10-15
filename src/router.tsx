@@ -10,7 +10,7 @@ const ErrorPage = () => (
 	<main className="error-page wrap">
 		<h1 className="h2">David Blass</h1>
 		<p className="sec-deck">
-			Something on this page broke. Reload to try again, or write to{" "}
+			Something broke- despite the types. Reload to try again, or write to{" "}
 			<span className="mono">{email}</span>.
 		</p>
 	</main>

@@ -88,24 +88,24 @@ const CaseTs59 = () => (
 			<Beat label="the itch">
 				<p>
 					I was digging into tRPC type performance, and those two calls were in
-					AnswerOverflow, a public tRPC app.{" "}
+					AnswerOverflow, a public tRPC app- so, for once,{" "}
 					<a
 						className="link ext"
 						href="https://github.com/ssalbdivad/trpc-tsperf/blob/main/answeroverflow/client/summary.txt"
 					>
-						The trace is still up
+						the trace is still up
 					</a>
-					. Zod schemas built up in chains like theirs are really common,
-					especially in the repos I look at for type performance.
+					. Zod schemas derived in chains like theirs are very common in the
+					wild, especially in the repos I investigate.
 				</p>
 			</Beat>
 			<Beat label="the hunt">
 				<p>
-					I cut it down to a chain of merges, the kind Zod's{" "}
+					I minimized it to a chain of merges, the kind Zod's{" "}
 					<code>.merge().pick().omit()</code> and tRPC's{" "}
 					<code>{"merge<merge<…>>"}</code> produce. Each link roughly tripled
-					the compiler's work, until it gave up: <Ts2589 />. I counted it with
-					Attest{" "}
+					the compiler's work until, 13 links in, TypeScript declared the chain{" "}
+					<Ts2589 />. I counted it with Attest{" "}
 					<span className="beat-down" aria-hidden="true">
 						↓
 					</span>
@@ -162,9 +162,9 @@ const CaseTs59 = () => (
 				<p>
 					Type-checking AnswerOverflow's dashboard dropped from{" "}
 					<Claim id="ts59AnswerOverflow">about 6.7s to 3.3s</Claim> (5 runs
-					each, no overlap), and Jake Bailey on the TypeScript team got the same
-					halving on the same repo. At Klarna, an engineer reported their check
-					time dropping from{" "}
+					each, no overlap), and Jake Bailey on the TypeScript team
+					independently reproduced the halving on the same repo. At Klarna, an
+					engineer reported their check time dropping from{" "}
 					<Claim id="ts59Klarna">six and a half minutes to about two</Claim>:{" "}
 					<a
 						className="inline-quote"
@@ -203,20 +203,20 @@ const More = () => (
 				<b className="mono">viem</b>
 				<p>
 					In MUD's build, TypeScript spent{" "}
-					<Claim id="viemVariance">almost two seconds</Claim> just working out
-					the variance of one viem type. I added <code className="kw">in</code>/
+					<Claim id="viemVariance">almost two seconds</Claim> just computing the
+					variance of one viem type. I added <code className="kw">in</code>/
 					<code className="kw">out</code> annotations to{" "}
 					<a className="link ext" href="https://github.com/wevm/viem/pull/2557">
 						viem itself
 					</a>
-					, so apps that use it skip that work.
+					, so apps that use it don't pay that cost.
 				</p>
 			</li>
 			<li>
 				<b className="mono">Prisma</b>
 				<p>
 					I built their type benchmarks and helped speed up their generated
-					types; Prisma wrote it up in its{" "}
+					types, which Prisma kindly wrote up in its{" "}
 					<a
 						className="link ext"
 						href="https://github.com/prisma/orm/releases/tag/6.16.0"
@@ -230,7 +230,7 @@ const More = () => (
 				<b className="mono">Mongoose</b>
 				<p>
 					I reworked how <code className="kw">InferRawDocType</code> infers
-					schemas; it shipped in{" "}
+					types from schemas; it shipped in{" "}
 					<a
 						className="link ext"
 						href="https://github.com/Automattic/mongoose/pull/15588"
@@ -243,7 +243,10 @@ const More = () => (
 		</ul>
 		<p className="more-clients">
 			Clients have included tRPC, Drizzle, Prisma, Convex, AWS Amplify,
-			Speakeasy, Stately, wevm, Vanta and Cloudinary.
+			Speakeasy, Stately, wevm, Vanta and Cloudinary. Some stuff that looks
+			super expensive is actually irrelevant; some stuff that looks innocuous is
+			actually a massive problem. All you can do is learn heuristics, iterate
+			and pray.
 		</p>
 	</div>
 )

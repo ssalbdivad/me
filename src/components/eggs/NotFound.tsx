@@ -144,7 +144,7 @@ export const NotFoundPage = () => {
 						style={{ "--i": 1 } as React.CSSProperties}
 					>
 						Worse: your URL isn’t even a valid type. ArkType reads a leading{" "}
-						<code className="mono">/</code> as a regex.
+						<code className="mono">/</code> as the start of a regex literal.
 					</p>
 
 					<figure

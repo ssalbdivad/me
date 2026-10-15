@@ -191,8 +191,8 @@ export const Talks = () => (
 				<h3 className="talk-title">ArkType: Bringing TypeScript to Runtime</h3>
 				<p className="talk-meta mono">TypeScript Congress 2023</p>
 				<p className="talk-cap">
-					How the type-level parser works, from top-down to shift-reduce, and
-					what it buys you at runtime.
+					How the type-level parser works, top-down to shift-reduce, and what
+					abusing the type system buys you at runtime.
 				</p>
 			</article>
 		</div>

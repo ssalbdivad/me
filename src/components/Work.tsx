@@ -136,10 +136,11 @@ export const Work = () => (
 				lead="It started as a question I didn't think had a good answer: how close can you get to TypeScript at runtime?"
 				body={
 					<>
-						Pretty close, it turns out. You write types in TypeScript's own
-						syntax, and a parser written in the type system checks each
-						character as you type. At runtime, the same definition compiles to
-						fast validation code. It's downloaded{" "}
+						Pretty close, it turns out. If you already know TypeScript,
+						congratulations- you just learned most of ArkType's syntax. The
+						parser is isomorphic: one implementation lives in the type system,
+						checking each character as you type, and its runtime twin compiles
+						the same definition to JIT-friendly validation code. It's downloaded{" "}
 						<Claim id="arktypeDownloads">millions of times a month</Claim>, and
 						the TypeScript team runs it in their regression tests, which gives
 						me a lot of peace of mind.
@@ -182,16 +183,18 @@ export const Work = () => (
 					body={
 						<>
 							Typed regex is a pipe dream- or at least, it was. ArkRegex parses
-							your pattern in the type system, so capture groups come back typed
+							your pattern in the type system, so capture groups are inferred
 							and a malformed pattern is a type error.{" "}
 							<a className="link" href="#top">
 								(That's it up top.)
-							</a>
+							</a>{" "}
+							I've learned a lot about regex that I probably didn't want to
+							know.
 						</>
 					}
 					margin={[
 						<Comment>
-							a lot of the replies were some version of "wtf" (
+							many of the replies reduced to "wtf" (
 							<a
 								href="https://x.com/aidenybai/status/1983212326464397535"
 								{...out}
@@ -228,12 +231,12 @@ export const Work = () => (
 					lead="Type-level benchmarks and assertions."
 					body={
 						<>
-							I couldn't make ArkType's types faster without measuring them, so
-							I built a way to. Attest counts the compiler's work instead of
-							timing it, so the number is the same on every machine, and CI can
-							catch a PR that makes types slower. It's how I measured the
-							TypeScript fix below. Other projects use it for their own perf
-							work, like <Claim id="i18next">i18next</Claim>.
+							I had to build it to build ArkType: I couldn't make the types
+							faster without measuring them. Attest counts type instantiations
+							instead of timing the compiler, so the result is deterministic and
+							CI can catch a PR that makes types slower. It's how I measured the
+							compiler fix below, and how projects like{" "}
+							<Claim id="i18next">i18next</Claim> benchmark their own types.
 						</>
 					}
 					margin={[
@@ -254,11 +257,12 @@ export const Work = () => (
 					lead="The set theory underneath."
 					body={
 						<>
-							It knows <code>number &gt; 5</code> fits inside{" "}
-							<code>number &gt; 0</code>, and that divisible by 2 and by 3 means
-							divisible by 6, so ArkType can compare, intersect and narrow types
-							at runtime. Reducing types to their simplest form is one of my
-							favorite problems in the world. The 13-minute version is{" "}
+							It knows <code>number &gt; 5</code> is a subtype of{" "}
+							<code>number &gt; 0</code>, and that divisible by 2 and by 3
+							reduces to divisible by 6, so ArkType can compare, intersect and
+							narrow types at runtime. Finding a type's fully reduced form is
+							one of my favorite problems in the world. If that didn't scare you
+							off, the 13-minute version is{" "}
 							<a className="link" href="#talks">
 								my Effect Days talk<span aria-hidden> ↓</span>
 							</a>
@@ -283,14 +287,15 @@ export const Work = () => (
 				links={[
 					{ href: "https://standardschema.dev", label: "standardschema.dev" }
 				]}
-				lead="One small interface, so any validator plugs into any framework."
+				lead="One small interface every validator and framework can agree on."
 				body={
 					<>
-						I co-designed it with the creators of Zod and Valibot to make the
-						TypeScript ecosystem a little more open. Now tRPC, TanStack, Hono,
-						React Hook Form and dozens more accept whichever validator you use,
-						with no adapters. Then we wrote Standard JSON Schema, so the same
-						validators can describe tool inputs for AI agents and MCP.
+						I co-designed it with the creators of Zod and Valibot, so a
+						framework could accept all of us at once. Now tRPC, TanStack, Hono,
+						React Hook Form and dozens more accept whichever validator you use-
+						no adapters, no meta-adapters. Then we wrote Standard JSON Schema,
+						which lets the same validators double as tool input schemas for AI
+						agents and MCP.
 					</>
 				}
 				margin={[
@@ -315,16 +320,17 @@ export const Work = () => (
 				lead="Coding agents in your GitHub Actions."
 				body={
 					<>
-						It runs the agent you already use (Claude Code, Codex, OpenCode)
-						with your own keys, on your PRs, issues and failing CI, and it just
-						gets better as your agents do. I started it with{" "}
+						It's agent-agnostic: it runs whichever agent you already use (Claude
+						Code, Codex, OpenCode) with your own keys, on your PRs, issues and
+						failing CI, and it just gets better as your agents do. I started it
+						with{" "}
 						<a className="link ext" href="https://github.com/colinhacks">
 							Colin McDonnell
 						</a>
-						, who made Zod. I built the runtime underneath it, and I build it
-						with{" "}
+						, who made Zod. I built the agent runtime underneath it, and these
+						days{" "}
 						<a className="link" href="#agents">
-							a lot of agents, too<span aria-hidden> ↓</span>
+							a lot of agents help me build it<span aria-hidden> ↓</span>
 						</a>
 					</>
 				}

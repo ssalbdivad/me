@@ -1036,6 +1036,9 @@
 	}
 
 	@media (max-width: 760px) {
+		.ss-cap-tail {
+			display: none;
+		}
 		.w-row {
 			grid-template-columns: minmax(0, 1fr);
 		}

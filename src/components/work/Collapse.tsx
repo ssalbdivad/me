@@ -347,8 +347,18 @@ export const Collapse = () => {
 				every tool
 			</>
 		:	<>
-				<b className="t">{integrations} integrations</b> instead of {adapters}{" "}
-				adapters · <Claim claim={ecosystem}>30+ validators · 60+ tools</Claim>
+				{/* each equation stays on one line, so a wrap never splits the sum; on a
+				phone the ecosystem tail goes, so the arithmetic keeps its two lines */}
+				<span className="nowrap">
+					{validators.length} + {consumers.length} ={" "}
+					<b className="t">{integrations} integrations</b>,
+				</span>{" "}
+				<span className="nowrap">
+					not {validators.length} × {consumers.length} = {adapters} adapters
+				</span>{" "}
+				<span className="ss-cap-tail">
+					· <Claim claim={ecosystem}>30+ validators · 60+ tools</Claim>
+				</span>
 			</>
 
 	return (

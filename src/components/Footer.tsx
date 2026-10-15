@@ -232,7 +232,7 @@ const Boat = () => {
 						<span className="k">:</span> <span className="v">"⛵"</span>
 					</span>
 					<span className="qi-doc">
-						An homage to the boat that floats across{" "}
+						A literal boat. The original floats across{" "}
 						<a href="https://arktype.io" className="ext">
 							arktype.io
 						</a>
