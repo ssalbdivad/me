@@ -1197,6 +1197,11 @@
 		font-size: 7.5pt !important;
 		line-height: 1.4 !important;
 	}
+	/* paper keeps a row's first two notes: four ArkType reactions ran the
+	   home page to a third sheet */
+	.w-margin li:nth-child(n + 3) {
+		display: none !important;
+	}
 	/* a child row prints as its pitch alone, like its links (print.css): with
 	   ArkRegex's, Attest's and ArkSchema's reactions the home page ran to a
 	   third sheet, three rows of "before" on their own */

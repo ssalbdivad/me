@@ -148,11 +148,30 @@ export const Work = () => (
 				}
 				margin={[
 					<Quote
-						href="https://x.com/arktypeio/status/1900623527520116816"
-						who="@arktypeio"
+						href="https://x.com/AndaristRake/status/1658758179159769089"
+						who="Andarist"
 					>
-						It's true- our static parser is the most flagrant abuse of the type
-						system in a mainstream library.
+						this is truly the darkest TypeScript magic I've seen
+					</Quote>,
+					<Quote
+						href="https://x.com/mattpocockuk/status/1911109041650385015"
+						who="Matt Pocock"
+					>
+						…a LOT of Arktype evangelists in the comments. Really having a
+						moment, eh?
+					</Quote>,
+					<Quote
+						href="https://x.com/BHolmesDev/status/1880045919225409776"
+						who="Ben Holmes"
+					>
+						If Zod is the Toyota pickup of validators, Arktype is the lambo
+					</Quote>,
+					<Quote
+						href="https://bsky.app/profile/mapleleaf.dev/post/3lkbxtgisdk27"
+						who="MapleLeaf"
+					>
+						arktype is such a nonsensically impressive piece of tech that it
+						feels like it shouldn't exist lmao
 					</Quote>
 				]}
 			>
@@ -193,6 +212,19 @@ export const Work = () => (
 						</>
 					}
 					margin={[
+						<Quote
+							href="https://x.com/mattpocockuk/status/1983583863776346556"
+							who="Matt Pocock"
+						>
+							I stop talking about TS for 10 minutes and the barbarians take
+							over
+						</Quote>,
+						<Quote
+							href="https://x.com/colinhacks/status/1983219486195884489"
+							who="Colin McDonnell"
+						>
+							this guy must be stopped
+						</Quote>,
 						<Comment>
 							many of the replies reduced to "wtf" (
 							<a
@@ -210,14 +242,16 @@ export const Work = () => (
 								TkDodo
 								<Ext />
 							</a>
+							,{" "}
+							<a
+								href="https://x.com/heyImMapleLeaf/status/1983327330060902898"
+								{...out}
+							>
+								MapleLeaf
+								<Ext />
+							</a>
 							)
-						</Comment>,
-						<Quote
-							href="https://bsky.app/profile/gwen.works/post/3m4bl54jd4k2p"
-							who="@gwen.works"
-						>
-							we got a regex parser in typescript types before gta vi 😭
-						</Quote>
+						</Comment>
 					]}
 				/>
 				<Row
@@ -342,7 +376,13 @@ export const Work = () => (
 					</Quote>,
 					<Comment>
 						used by Sanity, Trigger.dev, Zed, Unkey, Remotion and Inkeep
-					</Comment>
+					</Comment>,
+					<Quote
+						href="https://x.com/zeddotdev/status/2054288085165223986"
+						who="Zed"
+					>
+						Good frog
+					</Quote>
 				]}
 			/>
 		</div>
