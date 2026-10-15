@@ -55,11 +55,11 @@ export const Agents = () => (
 				className="link ext nowrap"
 				href="https://github.com/ssalbdivad/ntwine"
 			>
-				Ntwine
+				ntwine
 			</a>
-			, a local UI I built on Colin's original design, Frizz. The rules I've
-			ended up with, for them and for me: size work by scope, never in days;
-			report honest effect sizes; lead with what changed; preserve evidence.
+			, a local UI I built. The rules I've ended up with, for them and for me:
+			size work by scope, never in days; report honest effect sizes; lead with
+			what changed; preserve evidence.
 		</p>
 
 		<div className="replay-block">
