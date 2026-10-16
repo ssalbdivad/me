@@ -9,8 +9,10 @@ const summonBilly = () => window.dispatchEvent(new Event("billy:summon"))
 const bio = "https://gitnation.com/person/david_blass"
 
 // parsers and types live in the sections above; this one is everything else
-const loves: { value: string; href?: string }[] = [
+const loves: { value: string; href?: string; clip?: string }[] = [
 	{ value: "the Mets" },
+	// Faker's front roll onto the Worlds 2015 finals stage
+	{ value: "T1", clip: "/clips/faker-roll.mp4" },
 	{ value: "birds" },
 	{ value: "my dog, cat and tortoise" },
 	{ value: "bow ties" },
@@ -47,7 +49,7 @@ const Loves = () => (
 				</span>
 			</Quickinfo>{" "}
 			<span className="k eq">=</span>
-			{loves.map(({ value, href }) => (
+			{loves.map(({ value, href, clip }) => (
 				<span key={value} className="m">
 					{" "}
 					<span className="k bar" aria-hidden>
@@ -57,6 +59,19 @@ const Loves = () => (
 						<a className="v" href={href}>
 							"{value}"
 						</a>
+					: clip ?
+						<Quickinfo trigger={<span className="v">"{value}"</span>}>
+							<video
+								className="loves-clip"
+								src={clip}
+								autoPlay
+								muted
+								loop
+								playsInline
+								preload="none"
+								aria-label={`${value}: Faker front-rolls onto the Worlds 2015 finals stage`}
+							/>
+						</Quickinfo>
 					:	<span className="v">"{value}"</span>}
 				</span>
 			))}

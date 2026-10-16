@@ -271,9 +271,9 @@
 	padding-left: 2ch;
 	white-space: nowrap;
 }
-/* the whole union is 87 characters: where they fit, one line, and no
+/* the whole union is 94 characters: where they fit, one line, and no
    leading bar */
-@container (min-width: 88ch) {
+@container (min-width: 95ch) {
 	.loves .m {
 		display: inline;
 		padding-left: 0;
@@ -281,6 +281,15 @@
 	.loves .eq + .m .bar {
 		display: none;
 	}
+}
+/* "T1"'s hover is a clip, not a type */
+.loves-clip {
+	display: block;
+	width: 270px;
+	max-width: 100%;
+	aspect-ratio: 16 / 9;
+	border-radius: 4px;
+	background: #000;
 }
 /* the hover: wrap between members, never inside one */
 .loves-qi span[style*="--shiki-dark:#F5CF8F"] {
