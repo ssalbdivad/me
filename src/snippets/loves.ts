@@ -1,3 +1,3 @@
 //! hover: loves
-type loves = "parsers" | "types" | "the Mets" | "bow ties" | "my wife's vegan cooking"
+type loves = "the Mets" | "birds" | "my dog, cat and tortoise" | "bow ties" | "my wife's vegan cooking"
 //   ^?

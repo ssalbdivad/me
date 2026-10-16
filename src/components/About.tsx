@@ -5,20 +5,21 @@ import { Section } from "./Section"
 // Eggs.tsx listens for this
 const summonBilly = () => window.dispatchEvent(new Event("billy:summon"))
 
-/** where the union comes from, word for word */
+/** where the union started, before the work moved upstairs */
 const bio = "https://gitnation.com/person/david_blass"
 
-// "the Mets" stays plain: the paragraph under it has Billy's button
-const loves = [
-	{ value: "parsers", href: "#arktype" },
-	{ value: "types", href: "#arkschema" },
+// parsers and types live in the sections above; this one is everything else
+const loves: { value: string; href?: string }[] = [
 	{ value: "the Mets" },
+	{ value: "birds" },
+	{ value: "my dog, cat and tortoise" },
 	{ value: "bow ties" },
 	{ value: "my wife's vegan cooking" }
 ]
 
 /**
- * The 2023 GitNation speaker bio, as a union. It goes on one line where all
+ * The 2023 GitNation speaker bio, as a union, minus the parts that are
+ * inside the type system. It goes on one line where all
  * of it fits; anywhere narrower it wraps the way prettier would, one member
  * a line (talks.css). The tokens are hand-set in the handle doc's colors;
  * the hover on `loves` is real twoslash.
@@ -32,8 +33,8 @@ const Loves = () => (
 					<span dangerouslySetInnerHTML={{ __html: lovesQueries[0] ?? "" }} />
 				</span>
 				<span className="qi-doc">
-					"Predictably, David loves parsers and types, but also bow ties and his
-					wife's vegan cooking." —{" "}
+					Adapted from "Predictably, David loves parsers and types, but also bow
+					ties and his wife's vegan cooking." —{" "}
 					<a href={bio} className="ext">
 						my speaker bio, 2023
 					</a>
