@@ -1,13 +1,13 @@
 {
-	"fetchedAt": "2026-10-15T18:34:15.337Z",
+	"fetchedAt": "2026-10-27T22:04:21.274Z",
 	"window": {
-		"start": "2026-09-13",
-		"end": "2026-10-12"
+		"start": "2026-09-27",
+		"end": "2026-10-26"
 	},
 	"npm": {
 		"arktype": {
-			"downloads": 9055997
+			"downloads": 8459975
 		}
 	},
-	"followers": 404
+	"followers": 409
 }

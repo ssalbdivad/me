@@ -271,9 +271,9 @@
 	padding-left: 2ch;
 	white-space: nowrap;
 }
-/* the whole union is 94 characters: where they fit, one line, and no
+/* the whole union is 109 characters: where they fit, one line, and no
    leading bar */
-@container (min-width: 95ch) {
+@container (min-width: 110ch) {
 	.loves .m {
 		display: inline;
 		padding-left: 0;

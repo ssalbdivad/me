@@ -14,6 +14,7 @@ const loves: { value: string; href?: string; clip?: string }[] = [
 	// Faker's front roll onto the Worlds 2015 finals stage
 	{ value: "T1", clip: "/clips/faker-roll.mp4" },
 	{ value: "birds" },
+	{ value: "crosswords" },
 	{ value: "my dog, cat and tortoise" },
 	{ value: "bow ties" },
 	{ value: "my wife's vegan cooking" }
